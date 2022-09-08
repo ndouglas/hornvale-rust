@@ -17,11 +17,13 @@ extern crate serde;
 extern crate serde_json;
 extern crate uuid;
 
-pub mod cli;
-pub use cli::*;
 #[macro_use]
 pub mod macros;
 pub use macros::*;
+pub mod cli;
+pub use cli::*;
+pub mod io;
+pub use io::*;
 
 pub mod test {
   use super::*;

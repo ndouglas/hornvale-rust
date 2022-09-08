@@ -28,5 +28,7 @@ fn main() {
   pretty_env_logger::init();
   trace_enter!();
 
-  let args = Arguments::parse();
+  let _args = Arguments::parse();
+
+  read_input();
 }
