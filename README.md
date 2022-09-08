@@ -15,6 +15,7 @@ Elements this would keep/not keep from each genre (traditionally speaking):
     - procedural generation
     - permadeath
     - general complexity and depth of play
+    - combat system
   - _not_ keep:
     - the top-down dungeon view
 - MUDs:
@@ -22,6 +23,7 @@ Elements this would keep/not keep from each genre (traditionally speaking):
     - prose descriptions of areas
     - realtime (actions take place in the world regardless of player action)
     - broad focus (multiple areas, factions, quests, plotlines, etc)
+    - combat system
   - _not_ keep:
     - multiplayer
     - pre-written world
@@ -29,6 +31,19 @@ Elements this would keep/not keep from each genre (traditionally speaking):
   - keep:
     - focus on prose
     - focus on an individual's journey
+    - complex, interactive NPCs and devices
   - _not_ keep:
     - narrow focus (anything not directly serving the principal narrative should be discarded)
-    - puzzle-based quests
+    - puzzle-based quests (these would tend to lose novelty very quickly)
+
+More specific ideas:
+
+- TA/MUD-like movement (`enter`/`exit`/<Compass Directions (`north`, `ne`)>/<Contextual (`board ship`, `jump off cliff`)>)
+- Multiple levels of movement (macroscopic [traveling across the plains] and microscopic [moving between rooms in a house or dungeon]), moved between via `enter`/`exit` (the town/the castle/whatever)
+- Heavy focus on procedural generation.  If it can't be procedurally generated, it shouldn't be in the game.
+- Weather systems/celestial phenomenae/etc.  See _Minecraft_, etc.
+- Very, very complex NPCs.  See _Dwarf Fortress_.
+- Idling.  You should be able to just sit and watch interactions between NPCs.
+- Persistence.  I'd like NPCs, the player, etc, to have measureable, visible effects on their environment.  If goblins deforest an area, that should mean something within the world of the game.
+- Extensibility.  I want this to be data-oriented, very well-factored, and easy to extend.
+
