@@ -23,6 +23,10 @@ pub use hornvale::*;
 
 use clap::Parser;
 
+#[named]
 fn main() {
-    println!("Hello, world!");
+  pretty_env_logger::init();
+  trace_enter!();
+
+  let args = Arguments::parse();
 }
