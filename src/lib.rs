@@ -15,15 +15,22 @@ extern crate pretty_env_logger;
 extern crate serde;
 #[macro_use]
 extern crate serde_json;
+#[macro_use]
+extern crate specs;
 extern crate uuid;
 
 #[macro_use]
 pub mod macros;
 pub use macros::*;
+
 pub mod cli;
 pub use cli::*;
+pub mod ecs;
+pub use ecs::*;
 pub mod io;
 pub use io::*;
+pub mod state;
+pub use state::*;
 
 pub mod test {
   use super::*;
