@@ -31,6 +31,10 @@ construct_dispatcher!(
   (Visibility, "visibility", &[])  
 );
 
+#[named]
 pub fn get_new_dispatcher() -> Box<dyn UnifiedDispatcher + 'static> {
-  new_dispatch()
+  trace_enter!();
+  let result = new_dispatch();
+  trace_exit!();
+  result
 }

@@ -13,6 +13,5 @@ pub fn read_input() {
   if let Some('\r') = s.chars().next_back() {
     s.pop();
   }
-  println!("You typed: {}", s);
   trace_exit!();
 }

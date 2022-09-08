@@ -39,6 +39,7 @@ fn main() {
     .ecs
     .create_entity()
     .with(HasName { name: "Test Room".into() })
+    .with(HasDescription { description: "This is just a nondescript room.".into() })
     .with(IsARoom {})
     .build();
   let player = state
@@ -50,6 +51,10 @@ fn main() {
     .build();
 
   // END TEMP
-  state.tick();
-  read_input();
+
+  while true {
+    state.tick();
+    read_input();  
+  }
+
 }

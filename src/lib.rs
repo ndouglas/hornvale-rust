@@ -27,6 +27,8 @@ pub mod cli;
 pub use cli::*;
 pub mod ecs;
 pub use ecs::*;
+pub mod effects;
+pub use effects::*;
 pub mod io;
 pub use io::*;
 pub mod state;
