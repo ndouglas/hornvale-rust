@@ -5,7 +5,7 @@ pub use run_mode::*;
 
 use crate::ecs::components::*;
 use crate::ecs::dispatcher::{get_new_dispatcher, UnifiedDispatcher};
-use crate::ecs::resources::Tick;
+use crate::ecs::resources::*;
 
 pub struct State {
   pub ecs: World,
@@ -20,7 +20,7 @@ impl State {
     trace_enter!();
     let mut ecs = World::new();
     register_components(&mut ecs);
-    ecs.insert(Tick(0));
+    insert_resources(&mut ecs);
     let result = State {
       ecs,
       dispatcher: get_new_dispatcher(),

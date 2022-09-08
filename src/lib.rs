@@ -31,6 +31,8 @@ pub mod effects;
 pub use effects::*;
 pub mod io;
 pub use io::*;
+pub mod parser;
+pub use parser::*;
 pub mod state;
 pub use state::*;
 

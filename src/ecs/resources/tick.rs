@@ -1,4 +1,4 @@
 use serde::*;
 
-#[derive(Clone, Copy, Debug, Default, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct Tick(pub u64);

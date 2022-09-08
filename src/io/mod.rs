@@ -1,7 +1,10 @@
 use std::io::{stdin, stdout, Write};
 
+use crate::parse;
+use crate::State;
+
 #[named]
-pub fn read_input() {
+pub fn read_input(state: &mut State) {
   trace_enter!();
   let mut s = String::new();
   print!("> ");
@@ -13,5 +16,6 @@ pub fn read_input() {
   if let Some('\r') = s.chars().next_back() {
     s.pop();
   }
+  parse(s, state);
   trace_exit!();
 }
