@@ -30,11 +30,11 @@ fn main() {
   pretty_env_logger::init();
   trace_enter!();
 
-  let _args = Arguments::parse();
-  let mut state = State::new();
+  let _args = cli::Arguments::parse();
+  let mut state = state::State::new();
 
   loop {
     state.tick();
-    read_input(&mut state);
+    crate::io::read_input(&mut state);
   }
 }

@@ -8,8 +8,8 @@ pub mod tick;
 pub use tick::*;
 
 use crate::ecs::components::*;
-use crate::CompassDirection;
-use crate::RoomExit;
+use crate::model::CompassDirection;
+use crate::model::RoomExit;
 
 #[named]
 pub fn create_room(ecs: &mut World, name: String) -> Entity {

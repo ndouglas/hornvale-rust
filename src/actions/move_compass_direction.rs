@@ -14,7 +14,6 @@ pub struct MoveCompassDirectionAction {
 }
 
 impl Actionable for MoveCompassDirectionAction {
-
   #[named]
   fn perform(&self, ecs: &mut World) {
     trace_enter!();
@@ -35,7 +34,12 @@ impl Actionable for MoveCompassDirectionAction {
             if room_exit.compass_direction == self.compass_direction {
               let new_room_entity = room_exit.room_entity;
               is_in_room_storage
-                .insert(self.entity, IsInRoom { entity: new_room_entity })
+                .insert(
+                  self.entity,
+                  IsInRoom {
+                    entity: new_room_entity,
+                  },
+                )
                 .expect("Unable to insert entity in new room!");
               found = true;
               break;
@@ -47,12 +51,9 @@ impl Actionable for MoveCompassDirectionAction {
         } else {
           print!("Somebody is unable to move in that direction!\n");
         }
-
       }
       None => {}
     }
     trace_exit!();
   }
-
-
 }

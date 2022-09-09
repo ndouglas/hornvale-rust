@@ -4,7 +4,8 @@ use crate::commands::*;
 use crate::ecs::components::*;
 use crate::ecs::resources::Player;
 use crate::model::CompassDirection;
-use crate::State;
+use crate::state::State;
+use crate::traits::WorldUsable;
 
 #[named]
 pub fn get_command(entity: Entity, string: String) -> Option<Command> {
@@ -33,16 +34,9 @@ pub fn get_command(entity: Entity, string: String) -> Option<Command> {
 #[named]
 pub fn parse(string: String, state: &mut State) {
   trace_enter!();
-  let player_entity;
-  {
-    player_entity = state.ecs.fetch::<Player>().0;
-  }
+  let player_entity = state.ecs.get_player_entity();
   if let Some(command) = get_command(player_entity, string) {
-    state
-      .ecs
-      .write_storage::<HasCommand>()
-      .insert(player_entity, HasCommand { command })
-      .expect(format!("Could not insert command {:?} for entity {:?}", command, player_entity).as_str());
+    state.ecs.insert_command(player_entity, command);
   }
   trace_exit!();
 }

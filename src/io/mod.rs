@@ -1,7 +1,7 @@
 use std::io::{stdin, stdout, Write};
 
-use crate::parse;
-use crate::State;
+use crate::parser::parse;
+use crate::state::State;
 
 #[named]
 pub fn read_input(state: &mut State) {

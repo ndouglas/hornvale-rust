@@ -6,9 +6,9 @@ use crate::ecs::components::*;
 use crate::model::CompassDirection;
 use crate::traits::commandable::Commandable;
 
-pub struct Command {}
+pub struct CommandSystem {}
 
-impl<'a> System<'a> for Command {
+impl<'a> System<'a> for CommandSystem {
   type SystemData = (Entities<'a>, WriteStorage<'a, HasCommand>, WriteStorage<'a, HasAction>);
 
   #[named]

@@ -2,12 +2,12 @@ use specs::prelude::*;
 
 use crate::actions::Action as ActionEnum;
 use crate::ecs::components::*;
-use crate::enqueue_action;
+use crate::queue::enqueue_action;
 use crate::traits::Actionable;
 
-pub struct Action {}
+pub struct ActionSystem {}
 
-impl<'a> System<'a> for Action {
+impl<'a> System<'a> for ActionSystem {
   type SystemData = (Entities<'a>, WriteStorage<'a, HasAction>);
 
   #[named]
