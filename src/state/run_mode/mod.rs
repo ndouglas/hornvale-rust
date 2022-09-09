@@ -8,7 +8,6 @@ pub enum RunMode {
 }
 
 impl RunMode {
-
   #[named]
   pub fn tick(self, ecs: &mut World) -> Option<RunMode> {
     trace_enter!();

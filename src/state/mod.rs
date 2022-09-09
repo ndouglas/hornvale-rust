@@ -14,7 +14,6 @@ pub struct State {
 }
 
 impl State {
-
   #[named]
   pub fn new() -> Self {
     trace_enter!();

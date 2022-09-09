@@ -28,7 +28,8 @@ impl fmt::Display for Box<dyn UnifiedDispatcher + 'static> {
 }
 
 construct_dispatcher!(
-  (Visibility, "visibility", &[])  
+  (Movement, "movement", &[]),
+  (Visibility, "visibility", &[])
 );
 
 #[named]

@@ -35,7 +35,6 @@ fn main() {
 
   loop {
     state.tick();
-    read_input(&mut state);  
+    read_input(&mut state);
   }
-
 }
