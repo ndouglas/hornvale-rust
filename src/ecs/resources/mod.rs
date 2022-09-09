@@ -49,14 +49,24 @@ pub fn insert_resources(ecs: &mut World) {
   ecs.insert(Player(player));
   {
     let mut has_room_exit_storage = ecs.write_storage::<HasRoomExits>();
-    has_room_exit_storage.insert(spawn_room, HasRoomExits { room_exits: vec![RoomExit {
-      compass_direction: CompassDirection::Northeast,
-      room_entity: ne_room,
-    }]});
-    has_room_exit_storage.insert(ne_room, HasRoomExits { room_exits: vec![RoomExit {
-      compass_direction: CompassDirection::Southwest,
-      room_entity: spawn_room,
-    }]});
+    has_room_exit_storage.insert(
+      spawn_room,
+      HasRoomExits {
+        room_exits: vec![RoomExit {
+          compass_direction: CompassDirection::Northeast,
+          room_entity: ne_room,
+        }],
+      },
+    );
+    has_room_exit_storage.insert(
+      ne_room,
+      HasRoomExits {
+        room_exits: vec![RoomExit {
+          compass_direction: CompassDirection::Southwest,
+          room_entity: spawn_room,
+        }],
+      },
+    );
   }
 
   trace_exit!();

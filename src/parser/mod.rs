@@ -38,7 +38,8 @@ pub fn parse(string: String, state: &mut State) {
     player_entity = state.ecs.fetch::<Player>().0;
   }
   if let Some(command) = get_command(string) {
-    state.ecs
+    state
+      .ecs
       .write_storage::<HasCommand>()
       .insert(player_entity, HasCommand { command })
       .expect(format!("Could not insert command {:?} for entity {:?}", command, player_entity).as_str());

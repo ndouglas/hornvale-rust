@@ -54,6 +54,12 @@ macro_rules! trace_exit {
 macro_rules! trace_result {
   ($var: ident) => {
     #[cfg(debug_assertions)]
-    trace!("[EXIT] {} @ line {} with {}: {:?}", function_name!(), line!(), stringify!($var), $var);
+    trace!(
+      "[EXIT] {} @ line {} with {}: {:?}",
+      function_name!(),
+      line!(),
+      stringify!($var),
+      $var
+    );
   };
 }
