@@ -47,6 +47,23 @@ More specific ideas:
 - Persistence.  I'd like NPCs, the player, etc, to have measureable, visible effects on their environment.  If goblins deforest an area, that should mean something within the world of the game.
 - Extensibility.  I want this to be data-oriented, very well-factored, and easy to extend.
 
+General Flow:
+
+- **Command**: Some entity wants to do something.  For the player, this can be in or out of character.  This is indicated by a `HasCommand` component.  A system will translate these into Actions.
+- **Action**: Some entity attempts to do something.  This will fire a sequence of **Checks** and **Events**.
+  - **Checks**: Checks whether the action should go through.
+    - **ShouldPerformAction**: Checks whether the entity _should_ do something.  For instance, if an action was enqueued to attack a goblin, but the goblin is dead.  This is the entity having a chance to abort its own action.
+    - **CanPerformAction**: Checks whether the entity _can_ do something.  Continuing the above example, an action was enqueued to attack a goblin, but the player has no arms.  This is the game enforcing rules preventing the expressed intent.
+    - **TryPerformAction**: Checks whether the entity can _successfully_ do something.
+  - **Events**: Informs the entity and/or others of the progress of the attempted action.
+    - **CouldNotPerformAction**: Event informs the entity that the entity could not do something.  This is generally (always?) invisible to other entities.
+    - **WillPerformAction**: Event informs the entity and others that the entity will do something.  If an action was enqueued to attack a goblin, the goblin gets a chance to duck, or block, or make a saving throw or whatever.  A sufficiently fast and powerful entity can prevent actions of another (though this should be generally uncommon and determined by skill, etc).
+    - **WillFailToPerformAction**: Event informs the entity and others that the entity is in the process of failing to perform an action.
+    - **DidPerformAction**: Event informs the entity and others that the entity did do something.  Messages like "You hit the goblin!" or "The player hits you!", or informing the entity that the player pickpocketed them sloppily and they should retaliate.
+    - **DidFailToPerformAction**: Event informs the entity and others that the entity failed to do something.  Messages like "You swing at the goblin, but miss!".
+- **Effect**: Any sort of effect on the game world or anything in it.  Damage, unlocking a door, a bird singing (which dispatches events), etc.
+  
+
 ## Current Status
 
 At present, you can navigate between rooms... provided you created the connections between those rooms in a rather painstaking process, lol.
