@@ -47,3 +47,23 @@ More specific ideas:
 - Persistence.  I'd like NPCs, the player, etc, to have measureable, visible effects on their environment.  If goblins deforest an area, that should mean something within the world of the game.
 - Extensibility.  I want this to be data-oriented, very well-factored, and easy to extend.
 
+## Current Status
+
+At present, you can navigate between rooms... provided you created the connections between those rooms in a rather painstaking process, lol.
+
+```
+Spawn Room
+This is just a nondescript room.
+
+> ne
+
+Northeast Room
+This is just a nondescript room.
+
+> sw
+
+Spawn Room
+This is just a nondescript room.
+
+>
+```
