@@ -22,23 +22,18 @@ impl Actionable for MoveCompassDirectionAction {
       let mut is_in_room_storage = ecs.write_storage::<IsInRoom>();
       let has_room_exits_storage = ecs.read_storage::<HasRoomExits>();
       if let Some(exits) = has_room_exits_storage.get(room_entity) {
-        let mut found = false;
-        for room_exit in exits.room_exits.iter() {
-          if room_exit.compass_direction == self.compass_direction {
-            let new_room_entity = room_exit.room_entity;
-            is_in_room_storage
-              .insert(
-                self.entity,
-                IsInRoom {
-                  entity: new_room_entity,
-                },
-              )
-              .expect("Unable to insert entity in new room!");
-            found = true;
-            break;
-          }
+        if let Some(exit) = exits.room_exits.get(&self.compass_direction) {
+          let new_room_entity = exit.room_entity;
+          is_in_room_storage
+          .insert(
+            self.entity,
+            IsInRoom {
+              entity: new_room_entity,
+            },
+          )
+          .expect("Unable to insert entity in new room!");
         }
-        if !found {
+        else {
           print!("Somebody is unable to move in that direction!\n");
         }
       } else {

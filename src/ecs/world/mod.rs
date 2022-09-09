@@ -1,13 +1,17 @@
 use specs::prelude::*;
+use std::collections::HashMap;
 
 use crate::commands::Command;
 use crate::ecs::components::HasCommand;
 use crate::ecs::components::HasDescription;
 use crate::ecs::components::HasName;
+use crate::ecs::components::HasRoomExits;
 use crate::ecs::components::IsInRoom;
 use crate::ecs::resources::Player;
 use crate::ecs::resources::SpawnRoom;
 use crate::ecs::resources::Tick;
+use crate::model::CompassDirection;
+use crate::model::RoomExit;
 use crate::traits::WorldUsable;
 
 impl WorldUsable for World {
@@ -58,6 +62,31 @@ impl WorldUsable for World {
     let mut result = None;
     if let Some(description) = description_storage.get(entity) {
       result = Some(description.description.to_owned());
+    }
+    trace_exit!();
+    result
+  }
+
+  #[named]
+  fn get_room_entity_exits_hashmap(&self, entity: Entity) -> Option<HashMap<CompassDirection, RoomExit>> {
+    trace_enter!();
+    let has_room_exits_storage = self.read_storage::<HasRoomExits>();
+    let mut result = None;
+    if let Some(has_room_exits) = has_room_exits_storage.get(entity) {
+      result = Some(has_room_exits.room_exits.to_owned());
+    }
+    trace_exit!();
+    result
+  }
+
+  #[named]
+  fn get_room_entity_exit(&self, entity: Entity, direction: CompassDirection) -> Option<RoomExit> {
+    trace_enter!();
+    let mut result = None;
+    if let Some(hashmap) = self.get_room_entity_exits_hashmap(entity) {
+      if let Some(room_exit) = hashmap.get(&direction) {
+        result = Some(room_exit.to_owned());
+      }  
     }
     trace_exit!();
     result

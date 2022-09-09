@@ -1,7 +1,7 @@
 use serde::*;
 use std::fmt;
 
-#[derive(Copy, Clone, Debug, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub enum CompassDirection {
   Northwest,
   North,

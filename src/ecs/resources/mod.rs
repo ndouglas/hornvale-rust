@@ -1,4 +1,5 @@
 use specs::prelude::*;
+use std::collections::HashMap;
 
 pub mod player;
 pub use player::*;
@@ -52,19 +53,29 @@ pub fn insert_resources(ecs: &mut World) {
     has_room_exit_storage.insert(
       spawn_room,
       HasRoomExits {
-        room_exits: vec![RoomExit {
-          compass_direction: CompassDirection::Northeast,
-          room_entity: ne_room,
-        }],
+        room_exits: HashMap::from([
+          ( 
+            CompassDirection::Northeast, 
+            RoomExit {
+              compass_direction: CompassDirection::Northeast,
+              room_entity: ne_room,
+            }
+          )
+        ]),
       },
     );
     has_room_exit_storage.insert(
       ne_room,
       HasRoomExits {
-        room_exits: vec![RoomExit {
-          compass_direction: CompassDirection::Southwest,
-          room_entity: spawn_room,
-        }],
+        room_exits: HashMap::from([
+          ( 
+            CompassDirection::Southwest, 
+            RoomExit {
+              compass_direction: CompassDirection::Southwest,
+              room_entity: spawn_room,
+            }
+          )
+        ]),
       },
     );
   }
