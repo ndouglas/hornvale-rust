@@ -3,6 +3,9 @@ use specs::prelude::*;
 use crate::actions::*;
 use crate::commands::Command;
 use crate::ecs::components::*;
+use crate::effects::Effect;
+use crate::effects::MoveEntityEffect;
+use crate::queue::enqueue_effect;
 use crate::model::CompassDirection;
 use crate::traits::Actionable;
 use crate::traits::Commandable;
@@ -21,13 +24,11 @@ impl Actionable for MoveCompassDirectionAction {
     if let Some(room_entity) = ecs.get_entity_room_entity(self.entity) {
       if let Some(exit) = ecs.get_room_entity_exit(room_entity, self.compass_direction) {
         let new_room_entity = exit.room_entity;
-        let mut is_in_room_storage = ecs.write_storage::<IsInRoom>();
-        is_in_room_storage
-          .insert(
-            self.entity,
-            IsInRoom(new_room_entity),
-          )
-          .expect("Unable to insert entity in new room!");
+        enqueue_effect(Effect::MoveEntity(MoveEntityEffect {
+          entity: self.entity,
+          from: room_entity,
+          to: new_room_entity,
+        }));
       }
       else {
         print!("Somebody is unable to move in that direction!\n");
