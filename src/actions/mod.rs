@@ -1,3 +1,5 @@
+use specs::prelude::*;
+
 use crate::traits::Actionable;
 
 pub mod look;
@@ -11,4 +13,39 @@ pub enum Action {
   MoveCompassDirection(MoveCompassDirectionAction),
 }
 
-impl Actionable for Action {}
+impl Actionable for Action {
+  #[named]
+  fn should_perform(&self, ecs: &mut World) -> bool {
+    trace_enter!();
+    use Action::*;
+    let result = match self {
+      Look(action) => action.should_perform(ecs),
+      MoveCompassDirection(action) => action.should_perform(ecs),
+    };
+    trace_exit!();
+    result
+  }
+
+  #[named]
+  fn can_perform(&self, ecs: &mut World) -> bool {
+    trace_enter!();
+    use Action::*;
+    let result = match self {
+      Look(action) => action.can_perform(ecs),
+      MoveCompassDirection(action) => action.can_perform(ecs),
+    };
+    trace_exit!();
+    result
+  }
+
+  #[named]
+  fn perform(&self, ecs: &mut World) {
+    trace_enter!();
+    use Action::*;
+    match self {
+      Look(action) => action.perform(ecs),
+      MoveCompassDirection(action) => action.perform(ecs),
+    }
+    trace_exit!();
+  }
+}

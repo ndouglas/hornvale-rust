@@ -1,15 +1,16 @@
 #[macro_export]
 macro_rules! cmd_move_to {
-  ($var: ident) => {
+  ($entity: ident, $dir: ident) => {
     Command::MoveCompassDirection(MoveCompassDirectionCommand {
-      compass_direction: CompassDirection::$var,
+      entity: $entity,
+      compass_direction: CompassDirection::$dir,
     })
   };
 }
 
 #[macro_export]
 macro_rules! cmd_look {
-  () => {
-    Command::Look(LookCommand {})
+  ($entity: ident) => {
+    Command::Look(LookCommand { entity: $entity })
   };
 }

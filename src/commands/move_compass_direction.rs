@@ -9,6 +9,7 @@ use crate::traits::Commandable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct MoveCompassDirectionCommand {
+  pub entity: Entity,
   pub compass_direction: CompassDirection,
 }
 
@@ -17,6 +18,7 @@ impl Commandable for MoveCompassDirectionCommand {
   fn get_action(&self) -> Action {
     trace_enter!();
     let result = Action::MoveCompassDirection(MoveCompassDirectionAction {
+      entity: self.entity,
       compass_direction: self.compass_direction,
     });
     trace_exit!();

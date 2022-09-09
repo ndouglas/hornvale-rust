@@ -41,7 +41,7 @@ impl<'a> System<'a> for Movement {
         .iter()
       {
         let room_entity = &is_in_room.entity;
-        if let Action::MoveCompassDirection(MoveCompassDirectionAction { compass_direction }) = has_action.action {
+        if let Action::MoveCompassDirection(MoveCompassDirectionAction { compass_direction, .. }) = has_action.action {
           if let Some(exits) = &has_room_exits_storage.get(*room_entity) {
             let mut found = false;
             for room_exit in exits.room_exits.iter() {

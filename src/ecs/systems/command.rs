@@ -11,7 +11,9 @@ pub struct Command {}
 impl<'a> System<'a> for Command {
   type SystemData = (Entities<'a>, WriteStorage<'a, HasCommand>, WriteStorage<'a, HasAction>);
 
+  #[named]
   fn run(&mut self, data: Self::SystemData) {
+    trace_enter!();
     let (entities, mut has_command_storage, mut has_action_storage) = data;
     let mut entities_commanded: Vec<Entity> = Vec::new();
     {
@@ -32,5 +34,6 @@ impl<'a> System<'a> for Command {
         has_command_storage.remove(*entity);
       }
     }
+    trace_exit!();
   }
 }

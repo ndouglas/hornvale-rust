@@ -6,6 +6,7 @@ pub use run_mode::*;
 use crate::ecs::components::*;
 use crate::ecs::dispatcher::{get_new_dispatcher, UnifiedDispatcher};
 use crate::ecs::resources::*;
+use crate::queue::*;
 
 pub struct State {
   pub ecs: World,
@@ -34,6 +35,8 @@ impl State {
     trace_enter!();
     if self.run_mode.should_maintain_ecs() {
       self.dispatcher.run_now(&mut self.ecs);
+      self.ecs.maintain();
+      run_action_queue(&mut self.ecs);
       self.ecs.maintain();
       // collect_garbage(&mut self.ecs);
       self.ecs.maintain();

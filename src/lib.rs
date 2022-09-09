@@ -39,6 +39,8 @@ pub mod model;
 pub use model::*;
 pub mod parser;
 pub use parser::*;
+pub mod queue;
+pub use queue::*;
 pub mod state;
 pub use state::*;
 pub mod traits;

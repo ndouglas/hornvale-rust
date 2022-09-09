@@ -9,6 +9,7 @@ use crate::traits::Commandable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct MoveCompassDirectionAction {
+  pub entity: Entity,
   pub compass_direction: CompassDirection,
 }
 

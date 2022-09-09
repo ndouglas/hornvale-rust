@@ -8,13 +8,15 @@ use crate::traits::Actionable;
 use crate::traits::Commandable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
-pub struct LookCommand {}
+pub struct LookCommand {
+  pub entity: Entity,
+}
 
 impl Commandable for LookCommand {
   #[named]
   fn get_action(&self) -> Action {
     trace_enter!();
-    let result = Action::Look(LookAction {});
+    let result = Action::Look(LookAction { entity: self.entity });
     trace_exit!();
     result
   }
