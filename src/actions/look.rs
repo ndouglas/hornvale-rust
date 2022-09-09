@@ -6,6 +6,7 @@ use crate::ecs::components::*;
 use crate::model::CompassDirection;
 use crate::traits::Actionable;
 use crate::traits::Commandable;
+use crate::traits::WorldUsable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct LookAction {
@@ -16,13 +17,7 @@ impl Actionable for LookAction {
   #[named]
   fn perform(&self, ecs: &mut World) {
     trace_enter!();
-    let mut room_entity_opt = None;
-    {
-      let is_in_room_storage = ecs.read_storage::<IsInRoom>();
-      if let Some(is_in_room) = is_in_room_storage.get(self.entity) {
-        room_entity_opt = Some(is_in_room.entity);
-      }
-    }
+    let mut room_entity_opt = ecs.get_entity_room_entity(self.entity);
     match room_entity_opt {
       Some(room_entity) => {
         let has_name_storage = ecs.read_storage::<HasName>();
