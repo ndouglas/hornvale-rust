@@ -8,6 +8,4 @@ use crate::model::CompassDirection;
 use crate::model::RoomExit;
 
 #[derive(Component, Clone, Debug, PartialEq)]
-pub struct HasRoomExits {
-  pub room_exits: HashMap<CompassDirection, RoomExit>,
-}
+pub struct HasRoomExits(pub HashMap<CompassDirection, RoomExit>);

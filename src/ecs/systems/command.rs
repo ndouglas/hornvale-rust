@@ -22,9 +22,7 @@ impl<'a> System<'a> for CommandSystem {
         has_action_storage
           .insert(
             entity,
-            HasAction {
-              action: has_command.command.get_action(),
-            },
+            HasAction(has_command.0.get_action()),
           )
           .expect("Unable to insert action for entity!");
       }

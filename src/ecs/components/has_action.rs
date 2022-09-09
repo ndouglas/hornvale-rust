@@ -5,6 +5,4 @@ use specs_derive::Component;
 use crate::actions::Action;
 
 #[derive(Component, Debug, Hash, PartialEq)]
-pub struct HasAction {
-  pub action: Action,
-}
+pub struct HasAction(pub Action);

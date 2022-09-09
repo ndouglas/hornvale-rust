@@ -36,8 +36,8 @@ impl WorldUsable for World {
     trace_enter!();
     let is_in_room_storage = self.read_storage::<IsInRoom>();
     let mut result = None;
-    if let Some(is_in_room) = is_in_room_storage.get(entity) {
-      result = Some(is_in_room.entity);
+    if let Some(IsInRoom(room_entity)) = is_in_room_storage.get(entity) {
+      result = Some(room_entity.to_owned());
     }
     trace_exit!();
     result
@@ -48,8 +48,8 @@ impl WorldUsable for World {
     trace_enter!();
     let name_storage = self.read_storage::<HasName>();
     let mut result = None;
-    if let Some(name) = name_storage.get(entity) {
-      result = Some(name.name.to_owned());
+    if let Some(HasName(name)) = name_storage.get(entity) {
+      result = Some(name.to_owned());
     }
     trace_exit!();
     result
@@ -60,8 +60,8 @@ impl WorldUsable for World {
     trace_enter!();
     let description_storage = self.read_storage::<HasDescription>();
     let mut result = None;
-    if let Some(description) = description_storage.get(entity) {
-      result = Some(description.description.to_owned());
+    if let Some(HasDescription(description)) = description_storage.get(entity) {
+      result = Some(description.to_owned());
     }
     trace_exit!();
     result
@@ -72,8 +72,8 @@ impl WorldUsable for World {
     trace_enter!();
     let has_room_exits_storage = self.read_storage::<HasRoomExits>();
     let mut result = None;
-    if let Some(has_room_exits) = has_room_exits_storage.get(entity) {
-      result = Some(has_room_exits.room_exits.to_owned());
+    if let Some(HasRoomExits(room_exits)) = has_room_exits_storage.get(entity) {
+      result = Some(room_exits.to_owned());
     }
     trace_exit!();
     result
@@ -105,7 +105,7 @@ impl WorldUsable for World {
     trace_enter!();
     self
       .write_storage::<HasCommand>()
-      .insert(entity, HasCommand { command })
+      .insert(entity, HasCommand(command))
       .expect(format!("Could not insert command {:?} for entity {:?}", command, entity).as_str());
     trace_exit!();
   }

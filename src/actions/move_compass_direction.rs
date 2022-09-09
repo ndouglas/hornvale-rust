@@ -25,9 +25,7 @@ impl Actionable for MoveCompassDirectionAction {
         is_in_room_storage
           .insert(
             self.entity,
-            IsInRoom {
-              entity: new_room_entity,
-            },
+            IsInRoom(new_room_entity),
           )
           .expect("Unable to insert entity in new room!");
       }

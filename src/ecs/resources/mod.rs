@@ -17,10 +17,8 @@ pub fn create_room(ecs: &mut World, name: String) -> Entity {
   trace_enter!();
   let entity = ecs
     .create_entity()
-    .with(HasName { name })
-    .with(HasDescription {
-      description: "This is just a nondescript room.".into(),
-    })
+    .with(HasName(name))
+    .with(HasDescription("This is just a nondescript room.".into()))
     .with(IsARoom {})
     .build();
   trace_exit!();
@@ -43,17 +41,16 @@ pub fn insert_resources(ecs: &mut World) {
   let sw_room = create_room(ecs, "Southwest Room".into());
   let player = ecs
     .create_entity()
-    .with(HasName { name: "Player".into() })
+    .with(HasName("Player".into()))
     .with(IsAPlayer {})
-    .with(IsInRoom { entity: spawn_room })
+    .with(IsInRoom(spawn_room))
     .build();
   ecs.insert(Player(player));
   {
     let mut has_room_exit_storage = ecs.write_storage::<HasRoomExits>();
     has_room_exit_storage.insert(
       spawn_room,
-      HasRoomExits {
-        room_exits: HashMap::from([
+      HasRoomExits(HashMap::from([
           ( 
             CompassDirection::Northeast, 
             RoomExit {
@@ -61,13 +58,12 @@ pub fn insert_resources(ecs: &mut World) {
               room_entity: ne_room,
             }
           )
-        ]),
-      },
+        ])
+      )
     );
     has_room_exit_storage.insert(
       ne_room,
-      HasRoomExits {
-        room_exits: HashMap::from([
+      HasRoomExits(HashMap::from([
           ( 
             CompassDirection::Southwest, 
             RoomExit {
@@ -76,7 +72,7 @@ pub fn insert_resources(ecs: &mut World) {
             }
           )
         ]),
-      },
+      )
     );
   }
 
