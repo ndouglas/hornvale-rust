@@ -1,3 +1,7 @@
+#[macro_use]
+pub mod commands;
+pub use commands::*;
+
 #[macro_export]
 macro_rules! function_path {
   () => {

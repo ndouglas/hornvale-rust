@@ -1,5 +1,6 @@
 use specs::prelude::*;
 
+use crate::commands::*;
 use crate::ecs::components::*;
 
 pub struct Visibility {}
@@ -7,6 +8,7 @@ pub struct Visibility {}
 impl<'a> System<'a> for Visibility {
   type SystemData = (
     Entities<'a>,
+    WriteStorage<'a, HasCommand>,
     ReadStorage<'a, HasName>,
     ReadStorage<'a, HasDescription>,
     ReadStorage<'a, IsAPlayer>,
@@ -17,18 +19,39 @@ impl<'a> System<'a> for Visibility {
   #[named]
   fn run(&mut self, data: Self::SystemData) {
     trace_enter!();
-    let (entities, has_name_storage, has_description_storage, is_a_player_storage, is_a_room_storage, is_in_room_storage) = data;
-    let is_in_room_components = (&entities, &is_a_player_storage, &is_in_room_storage)
+    let (
+      entities, 
+      mut has_command_storage, 
+      has_name_storage, 
+      has_description_storage, 
+      is_a_player_storage, 
+      is_a_room_storage, 
+      is_in_room_storage
+    ) = data;
+    let mut entities_attempted_look: Vec<Entity> = Vec::new();
+    let is_in_room_components = (&entities, &mut has_command_storage, &is_a_player_storage, &is_in_room_storage)
       .join()
-      .map(|(_entity, _, is_in_room)| is_in_room)
-      .collect::<Vec<&IsInRoom>>();
-    let room = is_in_room_components.first().unwrap().entity;
-    let name = &has_name_storage.get(room).unwrap().name;
-    let description = &has_description_storage.get(room).unwrap().description;
-    print!("\n");
-    print!("{}\n", name);
-    print!("{}\n", description);
-    print!("\n");
+      .filter(|(_entity, has_command, _, _is_in_room_storage)| match has_command {
+        HasCommand { command: Command::Look(..) } => true,
+        _ => false,
+      })
+      .map(|(entity, _, _, is_in_room)| (entity, is_in_room))
+      .collect::<Vec<(Entity, &IsInRoom)>>();
+    for (entity, is_in_room) in is_in_room_components.iter() {
+      entities_attempted_look.push(*entity);  
+      let room = is_in_room.entity;
+      let name = &has_name_storage.get(room).unwrap().name;
+      let description = &has_description_storage.get(room).unwrap().description;
+      print!("\n");
+      print!("{}\n", name);
+      print!("{}\n", description);
+      print!("\n");  
+    }
+    {
+      for entity in entities_attempted_look.iter() {
+        has_command_storage.remove(*entity);
+      }
+    }
     trace_exit!();
   }
 }

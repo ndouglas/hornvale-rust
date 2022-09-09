@@ -6,8 +6,7 @@ use crate::model::CompassDirection;
 use crate::traits::Commandable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
-pub struct MoveCompassDirection {
-  pub compass_direction: CompassDirection,
+pub struct Look {
 }
 
-impl Commandable for MoveCompassDirection {}
+impl Commandable for Look {}
