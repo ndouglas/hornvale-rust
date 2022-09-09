@@ -49,7 +49,7 @@ More specific ideas:
 
 General Flow:
 
-- **Command**: Some entity wants to do something.  For the player, this can be in or out of character.  This is indicated by a `HasCommand` component.  A system will translate these into Actions.
+- **Command**: Some entity (generally the player) wants to do something.  For the player, this can be in or out of character.  This is indicated by a `HasCommand` component.  A system will act on these directly (OOC commands) or translate these into Actions (IC commands).
 - **Action**: Some entity attempts to do something.  This is always in-character.  This will fire a sequence of **Checks** and **Events**.
   - **Checks**: Checks whether the action should go through.
     - **ShouldPerformAction**: Checks whether the entity _should_ do something.  For instance, if an action was enqueued to attack a goblin, but the goblin is dead.  This is the entity having a chance to abort its own action.
