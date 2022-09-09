@@ -9,7 +9,7 @@ pub enum RunMode {
 
 impl RunMode {
   #[named]
-  pub fn tick(self, ecs: &mut World) -> Option<RunMode> {
+  pub fn tick(self, _ecs: &mut World) -> Option<RunMode> {
     trace_enter!();
     use RunMode::*;
     let result = match self {

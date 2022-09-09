@@ -60,7 +60,8 @@ pub fn insert_resources(ecs: &mut World) {
           )
         ])
       )
-    );
+    )
+    .expect("Unable to insert exit.");
     has_room_exit_storage.insert(
       ne_room,
       HasRoomExits(HashMap::from([
@@ -73,7 +74,8 @@ pub fn insert_resources(ecs: &mut World) {
           )
         ]),
       )
-    );
+    )
+    .expect("Unable to insert exit.");
   }
 
   trace_exit!();

@@ -109,4 +109,33 @@ impl WorldUsable for World {
       .expect(format!("Could not insert command {:?} for entity {:?}", command, entity).as_str());
     trace_exit!();
   }
+
+  #[named]
+  fn insert_exit(&mut self, from: Entity, to: Entity, direction: CompassDirection) {
+    trace_enter!();
+    let has_room_exits_storage = &mut self.write_storage::<HasRoomExits>();
+    if let Some(HasRoomExits(hashmap)) = &mut has_room_exits_storage.get_mut(from) {
+      hashmap.insert(direction, RoomExit {
+        room_entity: to,
+        compass_direction: direction,
+      });
+    }
+    else {
+      has_room_exits_storage.insert(
+        from,
+        HasRoomExits(HashMap::from([
+            ( 
+              direction, 
+              RoomExit {
+                compass_direction: direction,
+                room_entity: to,
+              }
+            )
+          ]),
+        )
+      )
+      .expect("Unable to insert exit.");
+    }
+    trace_exit!();
+  }
 }

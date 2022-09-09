@@ -33,4 +33,8 @@ pub trait WorldUsable {
 
   /// Insert a command component for the specified entity.
   fn insert_command(&mut self, entity: Entity, command: Command);
+
+  /// Insert an exit from one room entity to another.
+  fn insert_exit(&mut self, from: Entity, to: Entity, direction: CompassDirection);
+
 }
