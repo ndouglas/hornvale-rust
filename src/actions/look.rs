@@ -17,19 +17,13 @@ impl Actionable for LookAction {
   #[named]
   fn perform(&self, ecs: &mut World) {
     trace_enter!();
-    let mut room_entity_opt = ecs.get_entity_room_entity(self.entity);
-    match room_entity_opt {
-      Some(room_entity) => {
-        let has_name_storage = ecs.read_storage::<HasName>();
-        let has_description_storage = ecs.read_storage::<HasDescription>();
-        if let Some(name) = has_name_storage.get(room_entity) {
-          print!("{}\n", name.name);
-        }
-        if let Some(description) = has_description_storage.get(room_entity) {
-          print!("{}\n", description.description);
-        }
+    if let Some(room_entity) = ecs.get_entity_room_entity(self.entity) {
+      if let Some(name) = ecs.get_entity_name(room_entity) {
+        print!("{}\n", name);
       }
-      None => {}
+      if let Some(description) = ecs.get_entity_description(room_entity) {
+        print!("{}\n", description);
+      }
     }
     trace_exit!();
   }

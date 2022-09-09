@@ -13,6 +13,12 @@ pub trait WorldUsable {
   /// Get the room entity where an entity is currently.
   fn get_entity_room_entity(&self, entity: Entity) -> Option<Entity>;
 
+  /// Get entity name.
+  fn get_entity_name(&self, entity: Entity) -> Option<String>;
+
+  /// Get entity description.
+  fn get_entity_description(&self, entity: Entity) -> Option<String>;
+
   /// Get the tick resource.
   fn get_tick(&self) -> Tick;
 
