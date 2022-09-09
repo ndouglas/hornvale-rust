@@ -50,7 +50,7 @@ More specific ideas:
 General Flow:
 
 - **Command**: Some entity wants to do something.  For the player, this can be in or out of character.  This is indicated by a `HasCommand` component.  A system will translate these into Actions.
-- **Action**: Some entity attempts to do something.  This will fire a sequence of **Checks** and **Events**.
+- **Action**: Some entity attempts to do something.  This is always in-character.  This will fire a sequence of **Checks** and **Events**.
   - **Checks**: Checks whether the action should go through.
     - **ShouldPerformAction**: Checks whether the entity _should_ do something.  For instance, if an action was enqueued to attack a goblin, but the goblin is dead.  This is the entity having a chance to abort its own action.
     - **CanPerformAction**: Checks whether the entity _can_ do something.  Continuing the above example, an action was enqueued to attack a goblin, but the player has no arms.  This is the game enforcing rules preventing the expressed intent.
@@ -84,8 +84,3 @@ This is just a nondescript room.
 
 >
 ```
-
-## Next Steps
-
-- Separate actions from commands.  Currently WantsToMove translates directly into movement, but this should be translated into an action instead, which will have things like hooks, etc, and then have an effect.
-- Change the "Visibility" system to a look command.  Currently, there's an explicit look every tick, but soon that won't make sense.  Rather, we should add a look command, which will transition to a look action, which will trigger a look effect.
