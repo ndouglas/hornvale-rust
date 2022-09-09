@@ -4,6 +4,7 @@ use crate::actions::*;
 use crate::commands::Command;
 use crate::ecs::components::*;
 use crate::model::CompassDirection;
+use crate::queue::enqueue_action;
 use crate::traits::Actionable;
 use crate::traits::Commandable;
 
@@ -14,14 +15,16 @@ pub struct MoveCompassDirectionCommand {
 }
 
 impl Commandable for MoveCompassDirectionCommand {
+
   #[named]
-  fn get_action(&self) -> Action {
+  fn execute(&self, ecs: &mut World) {
     trace_enter!();
-    let result = Action::MoveCompassDirection(MoveCompassDirectionAction {
+    let action = Action::MoveCompassDirection(MoveCompassDirectionAction {
       entity: self.entity,
       compass_direction: self.compass_direction,
     });
+    enqueue_action(action);
     trace_exit!();
-    result
   }
+
 }

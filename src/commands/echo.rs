@@ -8,18 +8,18 @@ use crate::queue::enqueue_action;
 use crate::traits::Actionable;
 use crate::traits::Commandable;
 
-#[derive(Clone, Copy, Debug, Hash, PartialEq)]
-pub struct LookCommand {
+#[derive(Clone, Debug, Hash, PartialEq)]
+pub struct EchoCommand {
   pub entity: Entity,
+  pub string: String,
 }
 
-impl Commandable for LookCommand {
+impl Commandable for EchoCommand {
 
   #[named]
   fn execute(&self, ecs: &mut World) {
     trace_enter!();
-    let action = Action::Look(LookAction { entity: self.entity });
-    enqueue_action(action);
+    print!("{}\n", self.string);
     trace_exit!();
   }
 

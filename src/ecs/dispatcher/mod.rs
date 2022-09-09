@@ -27,7 +27,7 @@ impl fmt::Display for Box<dyn UnifiedDispatcher + 'static> {
   }
 }
 
-construct_dispatcher!((CommandSystem, "command", &[]), (ActionSystem, "action", &[]));
+construct_dispatcher!((CommandSystem, "command", &[]),(ActionSystem, "action", &[]));
 
 #[named]
 pub fn get_new_dispatcher() -> Box<dyn UnifiedDispatcher + 'static> {

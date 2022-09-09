@@ -1,5 +1,6 @@
-use crate::actions::Action;
+use specs::prelude::*;
 
 pub trait Commandable {
-  fn get_action(&self) -> Action;
+  /// Execute this command.
+  fn execute(&self, ecs: &mut World);
 }

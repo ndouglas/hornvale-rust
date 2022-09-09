@@ -14,3 +14,10 @@ macro_rules! cmd_look {
     Command::Look(LookCommand { entity: $entity })
   };
 }
+
+#[macro_export]
+macro_rules! cmd_echo {
+  ($entity: ident, $str: expr) => {
+    Command::Echo(EchoCommand { entity: $entity, string: $str })
+  };
+}

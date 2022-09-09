@@ -25,6 +25,7 @@ pub fn get_command(entity: Entity, string: String) -> Option<Command> {
     "se" | "southeast" => Some(cmd_move_to!(entity, Southeast)),
     "sw" | "southwest" => Some(cmd_move_to!(entity, Southwest)),
     "l" | "look" => Some(cmd_look!(entity)),
+    "echo" => Some(cmd_echo!(entity, words[1..].join(" "))),
     &_ => None,
   };
   trace_exit!();

@@ -36,6 +36,8 @@ impl State {
     if self.run_mode.should_maintain_ecs() {
       self.dispatcher.run_now(&mut self.ecs);
       self.ecs.maintain();
+      run_command_queue(&mut self.ecs);
+      self.ecs.maintain();
       run_action_queue(&mut self.ecs);
       self.ecs.maintain();
       // collect_garbage(&mut self.ecs);

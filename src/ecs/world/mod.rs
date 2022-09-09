@@ -105,7 +105,7 @@ impl WorldUsable for World {
     trace_enter!();
     self
       .write_storage::<HasCommand>()
-      .insert(entity, HasCommand(command))
+      .insert(entity, HasCommand(command.clone()))
       .expect(format!("Could not insert command {:?} for entity {:?}", command, entity).as_str());
     trace_exit!();
   }
