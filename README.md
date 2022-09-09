@@ -67,3 +67,8 @@ This is just a nondescript room.
 
 >
 ```
+
+## Next Steps
+
+- Separate actions from commands.  Currently WantsToMove translates directly into movement, but this should be translated into an action instead, which will have things like hooks, etc, and then have an effect.
+- Change the "Visibility" system to a look command.  Currently, there's an explicit look every tick, but soon that won't make sense.  Rather, we should add a look command, which will transition to a look action, which will trigger a look effect.

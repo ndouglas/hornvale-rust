@@ -39,6 +39,8 @@ pub mod parser;
 pub use parser::*;
 pub mod state;
 pub use state::*;
+pub mod traits;
+pub use traits::*;
 
 pub mod test {
   use super::*;
