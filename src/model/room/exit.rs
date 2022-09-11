@@ -7,4 +7,5 @@ use crate::model::Direction;
 pub struct RoomExit {
   pub direction: Direction,
   pub room_entity: Entity,
+  pub is_passable: bool,
 }

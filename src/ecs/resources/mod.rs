@@ -56,6 +56,7 @@ pub fn insert_resources(ecs: &mut World) {
           RoomExit {
             direction: Direction::Northeast,
             room_entity: ne_room,
+            is_passable: true,
           },
         )])),
       )
@@ -68,6 +69,7 @@ pub fn insert_resources(ecs: &mut World) {
           RoomExit {
             direction: Direction::Southwest,
             room_entity: spawn_room,
+            is_passable: true,
           },
         )])),
       )

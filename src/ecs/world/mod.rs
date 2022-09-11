@@ -120,6 +120,7 @@ impl WorldUsable for World {
         RoomExit {
           room_entity: to,
           direction,
+          is_passable: true,
         },
       );
     } else {
@@ -131,6 +132,7 @@ impl WorldUsable for World {
             RoomExit {
               direction,
               room_entity: to,
+              is_passable: true,
             },
           )])),
         )
