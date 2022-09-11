@@ -17,8 +17,8 @@ pub fn create_room(ecs: &mut World, name: String) -> Entity {
   trace_enter!();
   let entity = ecs
     .create_entity()
-    .with(HasName(name))
-    .with(HasDescription("This is just a nondescript room.".into()))
+    .has_name(name)
+    .has_description("This is just a nondescript room.".into())
     .with(IsARoom {})
     .build();
   trace_exit!();
@@ -41,7 +41,8 @@ pub fn insert_resources(ecs: &mut World) {
   let sw_room = create_room(ecs, "Southwest Room".into());
   let player = ecs
     .create_entity()
-    .with(HasName("Player".into()))
+    .has_name("Player".into())
+    .has_description("It's you, idiot.".into())
     .with(IsAPlayer {})
     .with(IsInRoom(spawn_room))
     .build();
