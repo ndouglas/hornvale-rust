@@ -54,7 +54,7 @@ pub fn insert_resources(ecs: &mut World) {
         HasRoomExits(HashMap::from([(
           Direction::Northeast,
           RoomExit {
-            compass_direction: Direction::Northeast,
+            direction: Direction::Northeast,
             room_entity: ne_room,
           },
         )])),
@@ -66,7 +66,7 @@ pub fn insert_resources(ecs: &mut World) {
         HasRoomExits(HashMap::from([(
           Direction::Southwest,
           RoomExit {
-            compass_direction: Direction::Southwest,
+            direction: Direction::Southwest,
             room_entity: spawn_room,
           },
         )])),

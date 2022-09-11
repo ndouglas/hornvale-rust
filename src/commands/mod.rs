@@ -7,8 +7,8 @@ pub mod echo;
 pub use echo::*;
 pub mod look;
 pub use look::*;
-pub mod move_compass_direction;
-pub use move_compass_direction::*;
+pub mod move_direction;
+pub use move_direction::*;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub enum Command {

@@ -4,8 +4,8 @@ use crate::traits::Actionable;
 
 pub mod look;
 pub use look::*;
-pub mod move_compass_direction;
-pub use move_compass_direction::*;
+pub mod move_direction;
+pub use move_direction::*;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub enum Action {

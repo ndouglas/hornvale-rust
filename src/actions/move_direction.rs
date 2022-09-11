@@ -16,7 +16,7 @@ use crate::traits::WorldUsable;
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct MoveDirectionAction {
   pub entity: Entity,
-  pub compass_direction: Direction,
+  pub direction: Direction,
 }
 
 impl Actionable for MoveDirectionAction {
@@ -24,7 +24,7 @@ impl Actionable for MoveDirectionAction {
   fn perform(&self, ecs: &mut World) {
     trace_enter!();
     if let Some(room_entity) = ecs.get_entity_room_entity(self.entity) {
-      if let Some(exit) = ecs.get_room_entity_exit(room_entity, self.compass_direction) {
+      if let Some(exit) = ecs.get_room_entity_exit(room_entity, self.direction) {
         let new_room_entity = exit.room_entity;
         enqueue_effect(Effect::MoveEntity(MoveEntityEffect {
           entity: self.entity,

@@ -119,7 +119,7 @@ impl WorldUsable for World {
         direction,
         RoomExit {
           room_entity: to,
-          compass_direction: direction,
+          direction,
         },
       );
     } else {
@@ -129,7 +129,7 @@ impl WorldUsable for World {
           HasRoomExits(HashMap::from([(
             direction,
             RoomExit {
-              compass_direction: direction,
+              direction,
               room_entity: to,
             },
           )])),

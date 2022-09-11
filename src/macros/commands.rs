@@ -3,7 +3,7 @@ macro_rules! cmd_move_to {
   ($entity: ident, $dir: ident) => {
     Command::MoveDirection(MoveDirectionCommand {
       entity: $entity,
-      compass_direction: Direction::$dir,
+      direction: Direction::$dir,
     })
   };
 }

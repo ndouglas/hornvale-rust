@@ -11,7 +11,7 @@ use crate::traits::Commandable;
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct MoveDirectionCommand {
   pub entity: Entity,
-  pub compass_direction: Direction,
+  pub direction: Direction,
 }
 
 impl Commandable for MoveDirectionCommand {
@@ -20,7 +20,7 @@ impl Commandable for MoveDirectionCommand {
     trace_enter!();
     let action = Action::MoveDirection(MoveDirectionAction {
       entity: self.entity,
-      compass_direction: self.compass_direction,
+      direction: self.direction,
     });
     enqueue_action(action);
     trace_exit!();
