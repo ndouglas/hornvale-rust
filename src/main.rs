@@ -39,31 +39,21 @@ fn main() {
   let _args = cli::Arguments::parse();
   let mut state = state::State::new(editor);
 
-  // TEMPORARY
-  thread::spawn(move || {
-    use rand::{thread_rng, Rng};
-    use std::time::Duration;
-    let mut rng = thread_rng();
-    let mut i = 0usize;
-    loop {
-      queue::enqueue_message(format!("External message #{}", i));
-      let wait_ms = rng.gen_range(10..200);
-      thread::sleep(Duration::from_millis(wait_ms));
-      i += 1;
-    }
-  });
-  // END TEMPORARY
+  queue::start_message_spammer();
 
   // Message-printing loop.
-  thread::spawn(move || loop {
-    let messages = queue::get_messages();
+  use queue::get_messages;
+  use thread::{sleep, spawn};
+  let duration = Duration::from_millis(50);
+  spawn(move || loop {
+    let messages = get_messages();
     if messages.len() > 0 {
       for message in messages.iter() {
         printer.print(format!("{}", message)).expect("External print failure");
       }
       printer.print(format!("{}", " ")).expect("External print failure");
     }
-    thread::sleep(Duration::from_millis(50));
+    sleep(duration);
   });
 
   // Main game loop.

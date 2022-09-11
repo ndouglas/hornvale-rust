@@ -18,6 +18,24 @@ pub fn get_command(state: &mut State, entity: Entity, string: String) -> Option<
   let second: String = words.get(1).unwrap_or(&"").to_string();
   trace_var!(second);
   let result = match first.as_str() {
+    "move" => match second.as_str() {
+      "n" | "north" => Some(cmd_move_to!(entity, North)),
+      "ne" | "northeast" => Some(cmd_move_to!(entity, Northeast)),
+      "nw" | "northwest" => Some(cmd_move_to!(entity, Northwest)),
+      "e" | "east" => Some(cmd_move_to!(entity, East)),
+      "w" | "west" => Some(cmd_move_to!(entity, West)),
+      "s" | "south" => Some(cmd_move_to!(entity, South)),
+      "se" | "southeast" => Some(cmd_move_to!(entity, Southeast)),
+      "sw" | "southwest" => Some(cmd_move_to!(entity, Southwest)),
+      "up" => Some(cmd_move_to!(entity, Up)),
+      "down" => Some(cmd_move_to!(entity, Down)),
+      "in" => Some(cmd_move_to!(entity, In)),
+      "out" => Some(cmd_move_to!(entity, Out)),
+      &_ => {
+        enqueue_message(format!("{}", "What?".bright_red()));
+        None
+      }
+    },
     "n" | "north" => Some(cmd_move_to!(entity, North)),
     "ne" | "northeast" => Some(cmd_move_to!(entity, Northeast)),
     "nw" | "northwest" => Some(cmd_move_to!(entity, Northwest)),
@@ -26,6 +44,10 @@ pub fn get_command(state: &mut State, entity: Entity, string: String) -> Option<
     "s" | "south" => Some(cmd_move_to!(entity, South)),
     "se" | "southeast" => Some(cmd_move_to!(entity, Southeast)),
     "sw" | "southwest" => Some(cmd_move_to!(entity, Southwest)),
+    "up" => Some(cmd_move_to!(entity, Up)),
+    "down" => Some(cmd_move_to!(entity, Down)),
+    "in" => Some(cmd_move_to!(entity, In)),
+    "out" => Some(cmd_move_to!(entity, Out)),
     "l" | "look" => Some(cmd_look!(entity)),
     "echo" => Some(cmd_echo!(entity, words[1..].join(" "))),
     "quit" => {

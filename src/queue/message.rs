@@ -22,3 +22,22 @@ pub fn get_messages() -> Vec<String> {
   trace_exit!();
   result
 }
+
+#[named]
+pub fn start_message_spammer() {
+  trace_enter!();
+  use rand::{thread_rng, Rng};
+  use std::thread::{sleep, spawn};
+  use std::time::Duration;
+  spawn(move || {
+    let mut rng = thread_rng();
+    let mut i = 0usize;
+    loop {
+      enqueue_message(format!("External message #{}", i));
+      let wait_ms = rng.gen_range(10..200);
+      sleep(Duration::from_millis(wait_ms));
+      i += 1;
+    }
+  });
+  trace_exit!();
+}
