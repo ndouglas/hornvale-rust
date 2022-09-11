@@ -3,7 +3,7 @@ use std::collections::HashMap;
 
 use crate::commands::Command;
 use crate::ecs::resources::Tick;
-use crate::model::CompassDirection;
+use crate::model::Direction;
 use crate::model::RoomExit;
 
 pub trait WorldUsable {
@@ -23,10 +23,10 @@ pub trait WorldUsable {
   fn get_entity_description(&self, entity: Entity) -> Option<String>;
 
   /// Get room entity exits.
-  fn get_room_entity_exits_hashmap(&self, entity: Entity) -> Option<HashMap<CompassDirection, RoomExit>>;
+  fn get_room_entity_exits_hashmap(&self, entity: Entity) -> Option<HashMap<Direction, RoomExit>>;
 
   /// Get room entity exit to a particular direction.
-  fn get_room_entity_exit(&self, entity: Entity, direction: CompassDirection) -> Option<RoomExit>;
+  fn get_room_entity_exit(&self, entity: Entity, direction: Direction) -> Option<RoomExit>;
 
   /// Get the tick resource.
   fn get_tick(&self) -> Tick;
@@ -35,5 +35,5 @@ pub trait WorldUsable {
   fn insert_command(&mut self, entity: Entity, command: Command);
 
   /// Insert an exit from one room entity to another.
-  fn insert_exit(&mut self, from: Entity, to: Entity, direction: CompassDirection);
+  fn insert_exit(&mut self, from: Entity, to: Entity, direction: Direction);
 }

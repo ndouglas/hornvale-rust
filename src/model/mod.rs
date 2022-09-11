@@ -1,4 +1,4 @@
-pub mod compass_direction;
-pub use compass_direction::*;
+pub mod direction;
+pub use direction::*;
 pub mod room;
 pub use room::*;

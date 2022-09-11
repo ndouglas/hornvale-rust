@@ -3,7 +3,7 @@ use specs::prelude::*;
 use crate::actions::Action;
 use crate::commands::Command as CommandEnum;
 use crate::ecs::components::*;
-use crate::model::CompassDirection;
+use crate::model::Direction;
 use crate::queue::enqueue_command;
 use crate::traits::commandable::Commandable;
 

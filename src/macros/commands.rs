@@ -1,9 +1,9 @@
 #[macro_export]
 macro_rules! cmd_move_to {
   ($entity: ident, $dir: ident) => {
-    Command::MoveCompassDirection(MoveCompassDirectionCommand {
+    Command::MoveDirection(MoveDirectionCommand {
       entity: $entity,
-      compass_direction: CompassDirection::$dir,
+      compass_direction: Direction::$dir,
     })
   };
 }

@@ -10,7 +10,7 @@ use crate::ecs::components::IsInRoom;
 use crate::ecs::resources::Player;
 use crate::ecs::resources::SpawnRoom;
 use crate::ecs::resources::Tick;
-use crate::model::CompassDirection;
+use crate::model::Direction;
 use crate::model::RoomExit;
 use crate::traits::WorldUsable;
 
@@ -68,7 +68,7 @@ impl WorldUsable for World {
   }
 
   #[named]
-  fn get_room_entity_exits_hashmap(&self, entity: Entity) -> Option<HashMap<CompassDirection, RoomExit>> {
+  fn get_room_entity_exits_hashmap(&self, entity: Entity) -> Option<HashMap<Direction, RoomExit>> {
     trace_enter!();
     let has_room_exits_storage = self.read_storage::<HasRoomExits>();
     let mut result = None;
@@ -80,7 +80,7 @@ impl WorldUsable for World {
   }
 
   #[named]
-  fn get_room_entity_exit(&self, entity: Entity, direction: CompassDirection) -> Option<RoomExit> {
+  fn get_room_entity_exit(&self, entity: Entity, direction: Direction) -> Option<RoomExit> {
     trace_enter!();
     let mut result = None;
     if let Some(hashmap) = self.get_room_entity_exits_hashmap(entity) {
@@ -111,7 +111,7 @@ impl WorldUsable for World {
   }
 
   #[named]
-  fn insert_exit(&mut self, from: Entity, to: Entity, direction: CompassDirection) {
+  fn insert_exit(&mut self, from: Entity, to: Entity, direction: Direction) {
     trace_enter!();
     let has_room_exits_storage = &mut self.write_storage::<HasRoomExits>();
     if let Some(HasRoomExits(hashmap)) = &mut has_room_exits_storage.get_mut(from) {

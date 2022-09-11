@@ -9,7 +9,7 @@ pub mod tick;
 pub use tick::*;
 
 use crate::ecs::components::*;
-use crate::model::CompassDirection;
+use crate::model::Direction;
 use crate::model::RoomExit;
 
 #[named]
@@ -52,9 +52,9 @@ pub fn insert_resources(ecs: &mut World) {
       .insert(
         spawn_room,
         HasRoomExits(HashMap::from([(
-          CompassDirection::Northeast,
+          Direction::Northeast,
           RoomExit {
-            compass_direction: CompassDirection::Northeast,
+            compass_direction: Direction::Northeast,
             room_entity: ne_room,
           },
         )])),
@@ -64,9 +64,9 @@ pub fn insert_resources(ecs: &mut World) {
       .insert(
         ne_room,
         HasRoomExits(HashMap::from([(
-          CompassDirection::Southwest,
+          Direction::Southwest,
           RoomExit {
-            compass_direction: CompassDirection::Southwest,
+            compass_direction: Direction::Southwest,
             room_entity: spawn_room,
           },
         )])),

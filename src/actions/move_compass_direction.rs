@@ -6,7 +6,7 @@ use crate::commands::Command;
 use crate::ecs::components::*;
 use crate::effects::Effect;
 use crate::effects::MoveEntityEffect;
-use crate::model::CompassDirection;
+use crate::model::Direction;
 use crate::queue::enqueue_effect;
 use crate::queue::enqueue_message;
 use crate::traits::Actionable;
@@ -14,12 +14,12 @@ use crate::traits::Commandable;
 use crate::traits::WorldUsable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
-pub struct MoveCompassDirectionAction {
+pub struct MoveDirectionAction {
   pub entity: Entity,
-  pub compass_direction: CompassDirection,
+  pub compass_direction: Direction,
 }
 
-impl Actionable for MoveCompassDirectionAction {
+impl Actionable for MoveDirectionAction {
   #[named]
   fn perform(&self, ecs: &mut World) {
     trace_enter!();

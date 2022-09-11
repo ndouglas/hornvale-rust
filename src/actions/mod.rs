@@ -10,7 +10,7 @@ pub use move_compass_direction::*;
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub enum Action {
   Look(LookAction),
-  MoveCompassDirection(MoveCompassDirectionAction),
+  MoveDirection(MoveDirectionAction),
 }
 
 impl Actionable for Action {
@@ -20,7 +20,7 @@ impl Actionable for Action {
     use Action::*;
     let result = match self {
       Look(action) => action.should_perform(ecs),
-      MoveCompassDirection(action) => action.should_perform(ecs),
+      MoveDirection(action) => action.should_perform(ecs),
     };
     trace_exit!();
     result
@@ -32,7 +32,7 @@ impl Actionable for Action {
     use Action::*;
     let result = match self {
       Look(action) => action.can_perform(ecs),
-      MoveCompassDirection(action) => action.can_perform(ecs),
+      MoveDirection(action) => action.can_perform(ecs),
     };
     trace_exit!();
     result
@@ -44,7 +44,7 @@ impl Actionable for Action {
     use Action::*;
     match self {
       Look(action) => action.perform(ecs),
-      MoveCompassDirection(action) => action.perform(ecs),
+      MoveDirection(action) => action.perform(ecs),
     }
     trace_exit!();
   }

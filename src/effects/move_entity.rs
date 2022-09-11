@@ -5,7 +5,7 @@ use crate::commands::Command;
 use crate::ecs::components::*;
 use crate::effects::Effect;
 use crate::effects::LookEffect;
-use crate::model::CompassDirection;
+use crate::model::Direction;
 use crate::queue::enqueue_effect;
 use crate::traits::Commandable;
 use crate::traits::Effectable;

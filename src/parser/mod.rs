@@ -4,7 +4,7 @@ use specs::prelude::*;
 use crate::commands::*;
 use crate::ecs::components::*;
 use crate::ecs::resources::Player;
-use crate::model::CompassDirection;
+use crate::model::Direction;
 use crate::queue::enqueue_message;
 use crate::state::State;
 use crate::traits::WorldUsable;
