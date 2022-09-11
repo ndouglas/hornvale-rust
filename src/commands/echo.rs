@@ -17,7 +17,7 @@ pub struct EchoCommand {
 
 impl Commandable for EchoCommand {
   #[named]
-  fn execute(&self, ecs: &mut World) {
+  fn execute(&self, _ecs: &mut World) {
     trace_enter!();
     enqueue_message(format!("{}", self.string));
     trace_exit!();

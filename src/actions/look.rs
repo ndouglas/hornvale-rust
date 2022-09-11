@@ -17,7 +17,7 @@ pub struct LookAction {
 
 impl Actionable for LookAction {
   #[named]
-  fn perform(&self, ecs: &mut World) {
+  fn perform(&self, _ecs: &mut World) {
     trace_enter!();
     enqueue_effect(Effect::Look(LookEffect { entity: self.entity }));
     trace_exit!();

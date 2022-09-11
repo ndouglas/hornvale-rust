@@ -7,15 +7,11 @@ use specs_derive::Component;
 pub struct IsARoom;
 
 pub trait IsARoomBuilder {
-
   fn is_a_room(self) -> Self;
-
 }
 
 impl IsARoomBuilder for EntityBuilder<'_> {
-
   fn is_a_room(self) -> Self {
     self.with(IsARoom)
   }
-
 }

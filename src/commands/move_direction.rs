@@ -16,7 +16,7 @@ pub struct MoveDirectionCommand {
 
 impl Commandable for MoveDirectionCommand {
   #[named]
-  fn execute(&self, ecs: &mut World) {
+  fn execute(&self, _ecs: &mut World) {
     trace_enter!();
     let action = Action::MoveDirection(MoveDirectionAction {
       entity: self.entity,

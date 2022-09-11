@@ -4,8 +4,8 @@ use std::collections::HashMap;
 use crate::commands::Command;
 use crate::ecs::components::HasCommand;
 use crate::ecs::components::HasDescription;
-use crate::ecs::components::HasName;
 use crate::ecs::components::HasExits;
+use crate::ecs::components::HasName;
 use crate::ecs::components::IsInRoom;
 use crate::ecs::resources::Player;
 use crate::ecs::resources::SpawnRoom;
@@ -110,5 +110,4 @@ impl WorldUsable for World {
       .expect(format!("Could not insert command {:?} for entity {:?}", command, entity).as_str());
     trace_exit!();
   }
-
 }

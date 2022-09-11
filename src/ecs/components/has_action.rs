@@ -8,15 +8,11 @@ use crate::actions::Action;
 pub struct HasAction(pub Action);
 
 pub trait HasActionBuilder {
-
   fn has_action(self, action: Action) -> Self;
-
 }
 
 impl HasActionBuilder for EntityBuilder<'_> {
-
   fn has_action(self, action: Action) -> Self {
     self.with(HasAction(action))
   }
-
 }

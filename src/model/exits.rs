@@ -21,7 +21,6 @@ pub struct Exits {
 }
 
 impl Exits {
-
   #[named]
   pub fn get_exit(&self, direction: &Direction) -> Option<Exit> {
     trace_enter!();
@@ -61,15 +60,59 @@ impl Exits {
       Down => self.down = exit,
       In => self.r#in = exit,
       Out => self.out = exit,
-    };
+    }
     trace_exit!();
   }
 
+  #[named]
+  pub fn get_property_values(&self) -> Vec<Option<Exit>> {
+    trace_enter!();
+    let result = vec![
+      self.north,
+      self.northeast,
+      self.east,
+      self.southeast,
+      self.south,
+      self.southwest,
+      self.west,
+      self.northwest,
+      self.up,
+      self.down,
+      self.r#in,
+      self.out,
+    ];
+    trace_exit!();
+    result
+  }
+
+  #[named]
+  pub fn get_exits(&self) -> Vec<Exit> {
+    trace_enter!();
+    let mut result = Vec::new();
+    for exit_option in self.get_property_values() {
+      if let Some(exit) = exit_option {
+        result.push(exit);
+      }
+    }
+    trace_exit!();
+    result
+  }
+
+  #[named]
+  pub fn get_directions(&self) -> Vec<Direction> {
+    trace_enter!();
+    let result = self
+      .get_exits()
+      .iter()
+      .map(|exit| exit.direction)
+      .collect::<Vec<Direction>>();
+    trace_exit!();
+    result
+  }
 }
 
 impl Default for Exits {
-
-  fn default() -> Self { 
+  fn default() -> Self {
     Exits {
       north: None,
       northeast: None,
@@ -85,5 +128,33 @@ impl Default for Exits {
       out: None,
     }
   }
+}
 
+impl fmt::Display for Exits {
+  #[named]
+  fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+    trace_enter!();
+    let mut directions = self.get_directions();
+    let string = match directions.len() {
+      0 => "There are no visible exits.".into(),
+      1 => format!("There is a visible exit to the {}.", directions.pop().unwrap()),
+      2 => format!(
+        "There are visible exits to the {} and {}.",
+        directions.pop().unwrap(),
+        directions.pop().unwrap()
+      ),
+      _ => {
+        let last = directions.pop().unwrap();
+        let others = directions
+          .iter()
+          .map(|d| d.get_lowercase())
+          .collect::<Vec<String>>()
+          .join(", ");
+        format!("There are visible exits to the {}, and {}.", others, last)
+      }
+    };
+    let result = write!(formatter, "{}", string);
+    trace_exit!();
+    result
+  }
 }

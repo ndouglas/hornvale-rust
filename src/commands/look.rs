@@ -15,7 +15,7 @@ pub struct LookCommand {
 
 impl Commandable for LookCommand {
   #[named]
-  fn execute(&self, ecs: &mut World) {
+  fn execute(&self, _ecs: &mut World) {
     trace_enter!();
     let action = Action::Look(LookAction { entity: self.entity });
     enqueue_action(action);

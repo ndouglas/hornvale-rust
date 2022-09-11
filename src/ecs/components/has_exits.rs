@@ -15,13 +15,10 @@ pub struct HasExits {
 }
 
 pub trait HasExitsBuilder {
-
   fn has_exits(self) -> Self;
-
 }
 
 impl HasExitsBuilder for EntityBuilder<'_> {
-
   #[named]
   fn has_exits(self) -> Self {
     trace_enter!();
@@ -29,29 +26,30 @@ impl HasExitsBuilder for EntityBuilder<'_> {
     trace_exit!();
     result
   }
-
 }
 
-pub trait HasExitsWorld  {
-
+pub trait HasExitsWorld {
   fn create_exit(&mut self, from: Entity, to: Entity, direction: &Direction, bidirectional: bool);
-
 }
 
 impl HasExitsWorld for World {
-
   #[named]
   fn create_exit(&mut self, from: Entity, to: Entity, direction: &Direction, bidirectional: bool) {
     trace_enter!();
     {
       let mut has_exits_storage = self.write_storage::<HasExits>();
       if let Some(HasExits { mut exits }) = has_exits_storage.get(from) {
-        exits.set_exit(direction, Some(Exit {
-          direction: direction.to_owned(),
-          room_entity: to,
-          is_passable: true,
-        }));
-        has_exits_storage.insert(from, HasExits { exits });
+        exits.set_exit(
+          direction,
+          Some(Exit {
+            direction: direction.to_owned(),
+            room_entity: to,
+            is_passable: true,
+          }),
+        );
+        has_exits_storage
+          .insert(from, HasExits { exits })
+          .expect("Unable to replace HasExits object.");
       }
     }
     if bidirectional {
@@ -59,6 +57,4 @@ impl HasExitsWorld for World {
     }
     trace_exit!();
   }
-
-
 }

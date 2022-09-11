@@ -16,7 +16,7 @@ use crate::model::Exits;
 #[named]
 pub fn create_room(ecs: &mut World, name: String) -> Entity {
   trace_enter!();
-  let entityBuilder = ecs
+  let result = ecs
     .create_entity()
     .has_name(name)
     .has_description("This is just a nondescript room.".into())
@@ -24,7 +24,7 @@ pub fn create_room(ecs: &mut World, name: String) -> Entity {
     .has_exits()
     .build();
   trace_exit!();
-  entityBuilder
+  result
 }
 
 #[named]
