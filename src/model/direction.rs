@@ -65,11 +65,19 @@ impl Direction {
   #[named]
   pub fn get_lowercase(&self) -> String {
     trace_enter!();
-    use Direction::*;
     let result = self.get_name().to_lowercase();
     trace_exit!();
     result
   }
+
+  #[named]
+  pub fn get_uppercase(&self) -> String {
+    trace_enter!();
+    let result = self.get_name().to_uppercase();
+    trace_exit!();
+    result
+  }
+
 }
 
 impl fmt::Display for Direction {
