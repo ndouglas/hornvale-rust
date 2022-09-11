@@ -14,7 +14,6 @@ pub struct LookCommand {
 }
 
 impl Commandable for LookCommand {
-
   #[named]
   fn execute(&self, ecs: &mut World) {
     trace_enter!();
@@ -22,5 +21,4 @@ impl Commandable for LookCommand {
     enqueue_action(action);
     trace_exit!();
   }
-
 }

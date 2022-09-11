@@ -86,7 +86,7 @@ impl WorldUsable for World {
     if let Some(hashmap) = self.get_room_entity_exits_hashmap(entity) {
       if let Some(room_exit) = hashmap.get(&direction) {
         result = Some(room_exit.to_owned());
-      }  
+      }
     }
     trace_exit!();
     result
@@ -115,26 +115,26 @@ impl WorldUsable for World {
     trace_enter!();
     let has_room_exits_storage = &mut self.write_storage::<HasRoomExits>();
     if let Some(HasRoomExits(hashmap)) = &mut has_room_exits_storage.get_mut(from) {
-      hashmap.insert(direction, RoomExit {
-        room_entity: to,
-        compass_direction: direction,
-      });
-    }
-    else {
-      has_room_exits_storage.insert(
-        from,
-        HasRoomExits(HashMap::from([
-            ( 
-              direction, 
-              RoomExit {
-                compass_direction: direction,
-                room_entity: to,
-              }
-            )
-          ]),
+      hashmap.insert(
+        direction,
+        RoomExit {
+          room_entity: to,
+          compass_direction: direction,
+        },
+      );
+    } else {
+      has_room_exits_storage
+        .insert(
+          from,
+          HasRoomExits(HashMap::from([(
+            direction,
+            RoomExit {
+              compass_direction: direction,
+              room_entity: to,
+            },
+          )])),
         )
-      )
-      .expect("Unable to insert exit.");
+        .expect("Unable to insert exit.");
     }
     trace_exit!();
   }

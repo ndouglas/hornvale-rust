@@ -6,8 +6,8 @@ use crate::commands::Command;
 use crate::ecs::components::*;
 use crate::model::CompassDirection;
 use crate::queue::enqueue_message;
-use crate::traits::Effectable;
 use crate::traits::Commandable;
+use crate::traits::Effectable;
 use crate::traits::WorldUsable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]

@@ -36,5 +36,4 @@ pub trait WorldUsable {
 
   /// Insert an exit from one room entity to another.
   fn insert_exit(&mut self, from: Entity, to: Entity, direction: CompassDirection);
-
 }

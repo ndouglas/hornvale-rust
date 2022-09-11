@@ -41,8 +41,8 @@ fn main() {
 
   // TEMPORARY
   thread::spawn(move || {
-    use std::time::Duration;
     use rand::{thread_rng, Rng};
+    use std::time::Duration;
     let mut rng = thread_rng();
     let mut i = 0usize;
     loop {
@@ -53,23 +53,17 @@ fn main() {
     }
   });
   // END TEMPORARY
-  
+
   // Message-printing loop.
-  thread::spawn(move || {
-    loop {
-      let messages = queue::get_messages();
-      if messages.len() > 0 {
-        for message in messages.iter() {
-          printer
-            .print(format!("{}", message))
-            .expect("External print failure");
-        }  
-        printer
-          .print(format!("{}", " "))
-          .expect("External print failure");
+  thread::spawn(move || loop {
+    let messages = queue::get_messages();
+    if messages.len() > 0 {
+      for message in messages.iter() {
+        printer.print(format!("{}", message)).expect("External print failure");
       }
-      thread::sleep(Duration::from_millis(50));
+      printer.print(format!("{}", " ")).expect("External print failure");
     }
+    thread::sleep(Duration::from_millis(50));
   });
 
   // Main game loop.

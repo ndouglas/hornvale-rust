@@ -6,9 +6,9 @@ use crate::commands::Command;
 use crate::ecs::components::*;
 use crate::effects::Effect;
 use crate::effects::MoveEntityEffect;
+use crate::model::CompassDirection;
 use crate::queue::enqueue_effect;
 use crate::queue::enqueue_message;
-use crate::model::CompassDirection;
 use crate::traits::Actionable;
 use crate::traits::Commandable;
 use crate::traits::WorldUsable;
@@ -31,8 +31,7 @@ impl Actionable for MoveCompassDirectionAction {
           from: room_entity,
           to: new_room_entity,
         }));
-      }
-      else {
+      } else {
         enqueue_message(format!("{}", "You are unable to move in that direction!".red()));
       }
     } else {

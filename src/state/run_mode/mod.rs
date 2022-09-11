@@ -47,5 +47,4 @@ impl RunMode {
     trace_exit!();
     result
   }
-
 }

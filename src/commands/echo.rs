@@ -15,12 +15,10 @@ pub struct EchoCommand {
 }
 
 impl Commandable for EchoCommand {
-
   #[named]
   fn execute(&self, ecs: &mut World) {
     trace_enter!();
     print!("{}\n", self.string);
     trace_exit!();
   }
-
 }

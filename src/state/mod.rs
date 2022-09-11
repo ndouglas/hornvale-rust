@@ -89,9 +89,8 @@ impl State {
     trace_enter!();
     match self.editor.readline(format!("{} ", ">".blue()).as_str()) {
       Ok(line) => parse(line, self),
-      Err(_) => {},
+      Err(_) => {}
     }
     trace_exit!();
   }
-
 }

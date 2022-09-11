@@ -14,7 +14,6 @@ pub enum CompassDirection {
 }
 
 impl CompassDirection {
-
   #[named]
   pub fn get_delta_xy(&self) -> (i32, i32) {
     trace_enter!();
@@ -50,7 +49,6 @@ impl CompassDirection {
     trace_exit!();
     result
   }
-
 }
 
 impl fmt::Display for CompassDirection {

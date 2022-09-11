@@ -48,34 +48,30 @@ pub fn insert_resources(ecs: &mut World) {
   ecs.insert(Player(player));
   {
     let mut has_room_exit_storage = ecs.write_storage::<HasRoomExits>();
-    has_room_exit_storage.insert(
-      spawn_room,
-      HasRoomExits(HashMap::from([
-          ( 
-            CompassDirection::Northeast, 
-            RoomExit {
-              compass_direction: CompassDirection::Northeast,
-              room_entity: ne_room,
-            }
-          )
-        ])
+    has_room_exit_storage
+      .insert(
+        spawn_room,
+        HasRoomExits(HashMap::from([(
+          CompassDirection::Northeast,
+          RoomExit {
+            compass_direction: CompassDirection::Northeast,
+            room_entity: ne_room,
+          },
+        )])),
       )
-    )
-    .expect("Unable to insert exit.");
-    has_room_exit_storage.insert(
-      ne_room,
-      HasRoomExits(HashMap::from([
-          ( 
-            CompassDirection::Southwest, 
-            RoomExit {
-              compass_direction: CompassDirection::Southwest,
-              room_entity: spawn_room,
-            }
-          )
-        ]),
+      .expect("Unable to insert exit.");
+    has_room_exit_storage
+      .insert(
+        ne_room,
+        HasRoomExits(HashMap::from([(
+          CompassDirection::Southwest,
+          RoomExit {
+            compass_direction: CompassDirection::Southwest,
+            room_entity: spawn_room,
+          },
+        )])),
       )
-    )
-    .expect("Unable to insert exit.");
+      .expect("Unable to insert exit.");
   }
 
   trace_exit!();

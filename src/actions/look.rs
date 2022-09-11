@@ -2,8 +2,8 @@ use specs::prelude::*;
 
 use crate::actions::*;
 use crate::commands::Command;
-use crate::effects::*;
 use crate::ecs::components::*;
+use crate::effects::*;
 use crate::model::CompassDirection;
 use crate::queue::enqueue_effect;
 use crate::traits::Actionable;
@@ -19,7 +19,7 @@ impl Actionable for LookAction {
   #[named]
   fn perform(&self, ecs: &mut World) {
     trace_enter!();
-    enqueue_effect(Effect::Look(LookEffect{ entity: self.entity }));
+    enqueue_effect(Effect::Look(LookEffect { entity: self.entity }));
     trace_exit!();
   }
 }

@@ -15,7 +15,6 @@ pub struct MoveCompassDirectionCommand {
 }
 
 impl Commandable for MoveCompassDirectionCommand {
-
   #[named]
   fn execute(&self, ecs: &mut World) {
     trace_enter!();
@@ -26,5 +25,4 @@ impl Commandable for MoveCompassDirectionCommand {
     enqueue_action(action);
     trace_exit!();
   }
-
 }

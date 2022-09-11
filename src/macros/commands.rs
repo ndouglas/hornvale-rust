@@ -18,6 +18,9 @@ macro_rules! cmd_look {
 #[macro_export]
 macro_rules! cmd_echo {
   ($entity: ident, $str: expr) => {
-    Command::Echo(EchoCommand { entity: $entity, string: $str })
+    Command::Echo(EchoCommand {
+      entity: $entity,
+      string: $str,
+    })
   };
 }

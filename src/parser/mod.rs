@@ -36,7 +36,7 @@ pub fn get_command(state: &mut State, entity: Entity, string: String) -> Option<
     &_ => {
       enqueue_message(format!("{}", "What?".bright_red()));
       None
-    },
+    }
   };
   trace_exit!();
   result
