@@ -10,19 +10,21 @@ pub use tick::*;
 
 use crate::ecs::components::*;
 use crate::model::Direction;
-use crate::model::RoomExit;
+use crate::model::Exit;
+use crate::model::Exits;
 
 #[named]
 pub fn create_room(ecs: &mut World, name: String) -> Entity {
   trace_enter!();
-  let entity = ecs
+  let entityBuilder = ecs
     .create_entity()
     .has_name(name)
     .has_description("This is just a nondescript room.".into())
-    .with(IsARoom {})
+    .is_a_room()
+    .has_exits()
     .build();
   trace_exit!();
-  entity
+  entityBuilder
 }
 
 #[named]
@@ -32,50 +34,28 @@ pub fn insert_resources(ecs: &mut World) {
   let spawn_room = create_room(ecs, "Spawn Room".into());
   ecs.insert(SpawnRoom(spawn_room));
   let ne_room = create_room(ecs, "Northeast Room".into());
+  ecs.create_exit(spawn_room, ne_room, &Direction::Northeast, true);
   let n_room = create_room(ecs, "North Room".into());
+  ecs.create_exit(spawn_room, n_room, &Direction::North, true);
   let nw_room = create_room(ecs, "Northwest Room".into());
+  ecs.create_exit(spawn_room, nw_room, &Direction::Northwest, true);
   let e_room = create_room(ecs, "East Room".into());
+  ecs.create_exit(spawn_room, e_room, &Direction::East, true);
   let w_room = create_room(ecs, "West Room".into());
+  ecs.create_exit(spawn_room, w_room, &Direction::West, true);
   let se_room = create_room(ecs, "Southeast Room".into());
+  ecs.create_exit(spawn_room, se_room, &Direction::Southeast, true);
   let s_room = create_room(ecs, "South Room".into());
+  ecs.create_exit(spawn_room, s_room, &Direction::South, true);
   let sw_room = create_room(ecs, "Southwest Room".into());
+  ecs.create_exit(spawn_room, sw_room, &Direction::Southwest, true);
   let player = ecs
     .create_entity()
     .has_name("Player".into())
     .has_description("It's you, idiot.".into())
-    .with(IsAPlayer {})
+    .is_a_player()
     .with(IsInRoom(spawn_room))
     .build();
   ecs.insert(Player(player));
-  {
-    let mut has_room_exit_storage = ecs.write_storage::<HasRoomExits>();
-    has_room_exit_storage
-      .insert(
-        spawn_room,
-        HasRoomExits(HashMap::from([(
-          Direction::Northeast,
-          RoomExit {
-            direction: Direction::Northeast,
-            room_entity: ne_room,
-            is_passable: true,
-          },
-        )])),
-      )
-      .expect("Unable to insert exit.");
-    has_room_exit_storage
-      .insert(
-        ne_room,
-        HasRoomExits(HashMap::from([(
-          Direction::Southwest,
-          RoomExit {
-            direction: Direction::Southwest,
-            room_entity: spawn_room,
-            is_passable: true,
-          },
-        )])),
-      )
-      .expect("Unable to insert exit.");
-  }
-
   trace_exit!();
 }

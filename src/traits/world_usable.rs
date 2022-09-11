@@ -4,7 +4,8 @@ use std::collections::HashMap;
 use crate::commands::Command;
 use crate::ecs::resources::Tick;
 use crate::model::Direction;
-use crate::model::RoomExit;
+use crate::model::Exit;
+use crate::model::Exits;
 
 pub trait WorldUsable {
   /// Get the player entity.
@@ -23,10 +24,10 @@ pub trait WorldUsable {
   fn get_entity_description(&self, entity: Entity) -> Option<String>;
 
   /// Get room entity exits.
-  fn get_room_entity_exits_hashmap(&self, entity: Entity) -> Option<HashMap<Direction, RoomExit>>;
+  fn get_room_entity_exits(&self, entity: Entity) -> Option<Exits>;
 
   /// Get room entity exit to a particular direction.
-  fn get_room_entity_exit(&self, entity: Entity, direction: Direction) -> Option<RoomExit>;
+  fn get_room_entity_exit(&self, entity: Entity, direction: Direction) -> Option<Exit>;
 
   /// Get the tick resource.
   fn get_tick(&self) -> Tick;
@@ -34,6 +35,4 @@ pub trait WorldUsable {
   /// Insert a command component for the specified entity.
   fn insert_command(&mut self, entity: Entity, command: Command);
 
-  /// Insert an exit from one room entity to another.
-  fn insert_exit(&mut self, from: Entity, to: Entity, direction: Direction);
 }

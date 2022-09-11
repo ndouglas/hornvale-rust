@@ -5,13 +5,14 @@ use crate::commands::Command;
 use crate::ecs::components::HasCommand;
 use crate::ecs::components::HasDescription;
 use crate::ecs::components::HasName;
-use crate::ecs::components::HasRoomExits;
+use crate::ecs::components::HasExits;
 use crate::ecs::components::IsInRoom;
 use crate::ecs::resources::Player;
 use crate::ecs::resources::SpawnRoom;
 use crate::ecs::resources::Tick;
 use crate::model::Direction;
-use crate::model::RoomExit;
+use crate::model::Exit;
+use crate::model::Exits;
 use crate::traits::WorldUsable;
 
 impl WorldUsable for World {
@@ -68,24 +69,24 @@ impl WorldUsable for World {
   }
 
   #[named]
-  fn get_room_entity_exits_hashmap(&self, entity: Entity) -> Option<HashMap<Direction, RoomExit>> {
+  fn get_room_entity_exits(&self, entity: Entity) -> Option<Exits> {
     trace_enter!();
-    let has_room_exits_storage = self.read_storage::<HasRoomExits>();
+    let has_exits_storage = self.read_storage::<HasExits>();
     let mut result = None;
-    if let Some(HasRoomExits(room_exits)) = has_room_exits_storage.get(entity) {
-      result = Some(room_exits.to_owned());
+    if let Some(HasExits { exits }) = has_exits_storage.get(entity) {
+      result = Some(exits.to_owned());
     }
     trace_exit!();
     result
   }
 
   #[named]
-  fn get_room_entity_exit(&self, entity: Entity, direction: Direction) -> Option<RoomExit> {
+  fn get_room_entity_exit(&self, entity: Entity, direction: Direction) -> Option<Exit> {
     trace_enter!();
     let mut result = None;
-    if let Some(hashmap) = self.get_room_entity_exits_hashmap(entity) {
-      if let Some(room_exit) = hashmap.get(&direction) {
-        result = Some(room_exit.to_owned());
+    if let Some(exits) = self.get_room_entity_exits(entity) {
+      if let Some(exit) = exits.get_exit(&direction) {
+        result = Some(exit.to_owned());
       }
     }
     trace_exit!();
@@ -110,34 +111,4 @@ impl WorldUsable for World {
     trace_exit!();
   }
 
-  #[named]
-  fn insert_exit(&mut self, from: Entity, to: Entity, direction: Direction) {
-    trace_enter!();
-    let has_room_exits_storage = &mut self.write_storage::<HasRoomExits>();
-    if let Some(HasRoomExits(hashmap)) = &mut has_room_exits_storage.get_mut(from) {
-      hashmap.insert(
-        direction,
-        RoomExit {
-          room_entity: to,
-          direction,
-          is_passable: true,
-        },
-      );
-    } else {
-      has_room_exits_storage
-        .insert(
-          from,
-          HasRoomExits(HashMap::from([(
-            direction,
-            RoomExit {
-              direction,
-              room_entity: to,
-              is_passable: true,
-            },
-          )])),
-        )
-        .expect("Unable to insert exit.");
-    }
-    trace_exit!();
-  }
 }
