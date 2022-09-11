@@ -1,3 +1,4 @@
+use colored::*;
 use specs::prelude::*;
 
 use crate::actions::*;
@@ -6,6 +7,7 @@ use crate::ecs::components::*;
 use crate::effects::Effect;
 use crate::effects::MoveEntityEffect;
 use crate::queue::enqueue_effect;
+use crate::queue::enqueue_message;
 use crate::model::CompassDirection;
 use crate::traits::Actionable;
 use crate::traits::Commandable;
@@ -31,10 +33,10 @@ impl Actionable for MoveCompassDirectionAction {
         }));
       }
       else {
-        print!("Somebody is unable to move in that direction!\n");
+        enqueue_message(format!("{}", "You are unable to move in that direction!".red()));
       }
     } else {
-      print!("Somebody is unable to move in that direction...\n");
+      enqueue_message(format!("{}", "You are unable to move in that direction...".red()));
     }
     trace_exit!();
   }

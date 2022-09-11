@@ -29,6 +29,7 @@ pub fn get_command(state: &mut State, entity: Entity, string: String) -> Option<
     "l" | "look" => Some(cmd_look!(entity)),
     "echo" => Some(cmd_echo!(entity, words[1..].join(" "))),
     "quit" => {
+      enqueue_message(format!("{}", "Quitting...".bright_blue()));
       state.quit();
       None
     }

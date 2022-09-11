@@ -24,14 +24,9 @@ extern crate uuid;
 pub use hornvale::*;
 
 use clap::Parser;
-
-// TEMPORARY
-
 use rustyline::{Editor, ExternalPrinter, Result};
 use std::thread;
 use std::time::Duration;
-
-// END TEMPORARY
 
 #[named]
 fn main() {
@@ -43,7 +38,23 @@ fn main() {
 
   let _args = cli::Arguments::parse();
   let mut state = state::State::new(editor);
+
+  // TEMPORARY
+  thread::spawn(move || {
+    use std::time::Duration;
+    use rand::{thread_rng, Rng};
+    let mut rng = thread_rng();
+    let mut i = 0usize;
+    loop {
+      queue::enqueue_message(format!("External message #{}", i));
+      let wait_ms = rng.gen_range(10..200);
+      thread::sleep(Duration::from_millis(wait_ms));
+      i += 1;
+    }
+  });
+  // END TEMPORARY
   
+  // Message-printing loop.
   thread::spawn(move || {
     loop {
       let messages = queue::get_messages();
@@ -61,6 +72,7 @@ fn main() {
     }
   });
 
+  // Main game loop.
   loop {
     state.tick();
     state.read_input();
