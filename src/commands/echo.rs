@@ -5,6 +5,7 @@ use crate::commands::Command;
 use crate::ecs::components::*;
 use crate::model::CompassDirection;
 use crate::queue::enqueue_action;
+use crate::queue::enqueue_message;
 use crate::traits::Actionable;
 use crate::traits::Commandable;
 
@@ -18,7 +19,7 @@ impl Commandable for EchoCommand {
   #[named]
   fn execute(&self, ecs: &mut World) {
     trace_enter!();
-    print!("{}\n", self.string);
+    enqueue_message(format!("{}", self.string));
     trace_exit!();
   }
 }
