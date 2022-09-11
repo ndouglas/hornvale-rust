@@ -1,4 +1,8 @@
+use colored::*;
+use rustyline::{Editor, ExternalPrinter, Result};
 use specs::prelude::*;
+use std::thread;
+use std::time::Duration;
 
 pub mod run_mode;
 pub use run_mode::*;
@@ -6,28 +10,46 @@ pub use run_mode::*;
 use crate::ecs::components::*;
 use crate::ecs::dispatcher::{get_new_dispatcher, UnifiedDispatcher};
 use crate::ecs::resources::*;
+use crate::parser::parse;
 use crate::queue::*;
 
 pub struct State {
   pub ecs: World,
   pub dispatcher: Box<dyn UnifiedDispatcher + 'static>,
   pub run_mode: RunMode,
+  pub editor: Editor<()>,
 }
 
 impl State {
   #[named]
-  pub fn new() -> Self {
+  pub fn new(editor: Editor<()>) -> Self {
     trace_enter!();
     let mut ecs = World::new();
     register_components(&mut ecs);
     insert_resources(&mut ecs);
     let result = State {
       ecs,
+      editor,
       dispatcher: get_new_dispatcher(),
       run_mode: RunMode::Initial,
     };
     trace_exit!();
     result
+  }
+
+  #[named]
+  pub fn should_continue(&self) -> bool {
+    trace_enter!();
+    let result = self.run_mode.should_continue();
+    trace_exit!();
+    result
+  }
+
+  #[named]
+  pub fn quit(&mut self) {
+    trace_enter!();
+    self.run_mode = RunMode::Quit;
+    trace_exit!();
   }
 
   #[named]
@@ -61,4 +83,15 @@ impl State {
     self.run_systems();
     trace_exit!();
   }
+
+  #[named]
+  pub fn read_input(&mut self) {
+    trace_enter!();
+    match self.editor.readline(format!("{} ", ">".blue()).as_str()) {
+      Ok(line) => parse(line, self),
+      Err(_) => {},
+    }
+    trace_exit!();
+  }
+
 }

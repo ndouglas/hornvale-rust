@@ -5,6 +5,7 @@ use specs::prelude::*;
 pub enum RunMode {
   Initial,
   MainGame,
+  Quit,
 }
 
 impl RunMode {
@@ -15,6 +16,20 @@ impl RunMode {
     let result = match self {
       Initial => Some(MainGame),
       MainGame => Some(MainGame),
+      Quit => Some(Quit),
+    };
+    trace_exit!();
+    result
+  }
+
+  #[named]
+  pub fn should_continue(self) -> bool {
+    trace_enter!();
+    use RunMode::*;
+    let result = match self {
+      Initial => true,
+      MainGame => true,
+      Quit => false,
     };
     trace_exit!();
     result
@@ -27,8 +42,10 @@ impl RunMode {
     let result = match self {
       Initial => false,
       MainGame => true,
+      Quit => false,
     };
     trace_exit!();
     result
   }
+
 }

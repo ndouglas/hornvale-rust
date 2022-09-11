@@ -1,6 +1,7 @@
 #![allow(unused_macros)]
 #![allow(unused_imports)]
 
+extern crate colored;
 #[macro_use]
 extern crate derivative;
 #[macro_use]
@@ -29,7 +30,6 @@ pub mod commands;
 pub mod ecs;
 pub mod effects;
 pub mod events;
-pub mod io;
 pub mod model;
 pub mod parser;
 pub mod queue;
