@@ -63,10 +63,6 @@ impl State {
       run_action_queue(&mut self.ecs);
       self.ecs.maintain();
       run_effect_queue(&mut self.ecs);
-      // collect_garbage(&mut self.ecs);
-      self.ecs.maintain();
-      // run_effects_queue(&mut self.ecs);
-      self.ecs.maintain();
       let mut tick = self.ecs.write_resource::<Tick>();
       tick.0 += 1;
     }
