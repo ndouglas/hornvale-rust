@@ -18,7 +18,7 @@ pub fn enqueue_message(message: String) {
 #[named]
 pub fn get_messages() -> Vec<String> {
   trace_enter!();
-  let result = MESSAGE_QUEUE.lock().unwrap().drain(0..).collect::<Vec<String>>();
+  let result = MESSAGE_QUEUE.lock().unwrap().drain(..).collect::<Vec<String>>();
   trace_exit!();
   result
 }
