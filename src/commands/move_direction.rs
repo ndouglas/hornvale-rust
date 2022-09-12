@@ -18,11 +18,7 @@ impl Commandable for MoveDirectionCommand {
   #[named]
   fn execute(&self, _ecs: &mut World) {
     trace_enter!();
-    let action = Action::MoveDirection(MoveDirectionAction {
-      entity: self.entity,
-      direction: self.direction.clone(),
-    });
-    enqueue_action(action);
+    enq_action!(act_move_direction!(self.entity, self.direction.clone()));
     trace_exit!();
   }
 }

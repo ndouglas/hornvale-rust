@@ -1,26 +1,26 @@
 #[macro_export]
-macro_rules! cmd_move_to {
-  ($entity: ident, $dir: ident) => {
-    Command::MoveDirection(MoveDirectionCommand {
+macro_rules! cmd_echo {
+  ($entity: expr, $str: expr) => {
+    Command::Echo(EchoCommand {
       entity: $entity,
-      direction: Direction::$dir,
+      string: $str,
     })
   };
 }
 
 #[macro_export]
 macro_rules! cmd_look {
-  ($entity: ident) => {
+  ($entity: expr) => {
     Command::Look(LookCommand { entity: $entity })
   };
 }
 
 #[macro_export]
-macro_rules! cmd_echo {
-  ($entity: ident, $str: expr) => {
-    Command::Echo(EchoCommand {
+macro_rules! cmd_move_to {
+  ($entity: expr, $dir: expr) => {
+    Command::MoveDirection(MoveDirectionCommand {
       entity: $entity,
-      string: $str,
+      direction: $dir,
     })
   };
 }

@@ -18,8 +18,7 @@ impl<'a> System<'a> for ActionSystem {
     {
       for (entity, has_action) in (&entities, &mut has_action_storage).join() {
         entities_actioned.push(entity);
-        let action = has_action.0.clone();
-        enqueue_action(action);
+        enq_action!(has_action.0.clone());
       }
     }
     {

@@ -26,16 +26,12 @@ impl Actionable for MoveDirectionAction {
     if let Some(room_entity) = ecs.get_entity_room_entity(self.entity) {
       if let Some(exit) = ecs.get_room_entity_exit(room_entity, &self.direction) {
         let new_room_entity = exit.room_entity;
-        enqueue_effect(Effect::MoveEntity(MoveEntityEffect {
-          entity: self.entity,
-          from: room_entity,
-          to: new_room_entity,
-        }));
+        enq_effect!(eff_move_entity!(self.entity, room_entity, new_room_entity));
       } else {
-        enqueue_message(format!("{}", "You are unable to move in that direction!".red()));
+        enq_message!(format!("{}", "You are unable to move in that direction!".red()));
       }
     } else {
-      enqueue_message(format!("{}", "You are unable to move in that direction...".red()));
+      enq_message!(format!("{}", "You are unable to move in that direction...".red()));
     }
     trace_exit!();
   }

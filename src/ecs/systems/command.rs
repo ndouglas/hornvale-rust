@@ -20,7 +20,7 @@ impl<'a> System<'a> for CommandSystem {
     {
       for (entity, has_command) in (&entities, &mut has_command_storage).join() {
         entities_commanded.push(entity);
-        enqueue_command(has_command.0.clone());
+        enq_command!(has_command.0.clone());
       }
     }
     {

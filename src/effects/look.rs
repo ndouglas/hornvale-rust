@@ -21,13 +21,13 @@ impl Effectable for LookEffect {
     trace_enter!();
     if let Some(room_entity) = ecs.get_entity_room_entity(self.entity) {
       if let Some(name) = ecs.get_entity_name(room_entity) {
-        enqueue_message(format!("{}", name.magenta()));
+        enq_message!(format!("{}", name.magenta()));
       }
       if let Some(description) = ecs.get_entity_description(room_entity) {
-        enqueue_message(format!("{}", description.bright_green()));
+        enq_message!(format!("{}", description.bright_green()));
       }
       if let Some(exits) = ecs.get_room_entity_exits(room_entity) {
-        enqueue_message(format!("{}", exits));
+        enq_message!(format!("{}", exits));
       }
     }
     trace_exit!();

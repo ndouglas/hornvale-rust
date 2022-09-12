@@ -33,7 +33,7 @@ pub fn start_message_spammer() {
     let mut rng = thread_rng();
     let mut i = 0usize;
     loop {
-      enqueue_message(format!("External message #{}", i));
+      enq_message!(format!("External message #{}", i));
       let wait_ms = rng.gen_range(1000..20000);
       sleep(Duration::from_millis(wait_ms));
       i += 1;
