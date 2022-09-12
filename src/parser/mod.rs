@@ -67,7 +67,7 @@ pub fn get_command(state: &mut State, entity: Entity, string: String) -> Option<
 #[named]
 pub fn parse(string: String, state: &mut State) {
   trace_enter!();
-  let player_entity = state.ecs.get_player_entity();
+  let player_entity = get_player!(state.ecs);
   if let Some(command) = get_command(state, player_entity, string) {
     state.ecs.insert_command(player_entity, command);
   }

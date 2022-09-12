@@ -23,10 +23,9 @@ impl Actionable for MoveDirectionAction {
   #[named]
   fn perform(&self, ecs: &mut World) {
     trace_enter!();
-    if let Some(room_entity) = ecs.get_entity_room_entity(self.entity) {
-      if let Some(exit) = ecs.get_room_entity_exit(room_entity, &self.direction) {
-        let new_room_entity = exit.room_entity;
-        enq_effect!(eff_move_entity!(self.entity, room_entity, new_room_entity));
+    if let Some(room_entity) = get_current_room!(ecs, self.entity) {
+      if let Some(exit) = get_exit_to!(ecs, room_entity, &self.direction) {
+        enq_effect!(eff_move_entity!(self.entity, room_entity, exit.room_entity));
       } else {
         enq_message!(format!("{}", "You are unable to move in that direction!".red()));
       }

@@ -37,13 +37,6 @@ pub fn insert_resources(ecs: &mut World) {
   ecs.create_exit(spawn_room, s_room, &Direction::South, true);
   let sw_room = create_room!(ecs, "Southwest Room", "This is the Southwestern Room.");
   ecs.create_exit(spawn_room, sw_room, &Direction::Southwest, true);
-  let player = ecs
-    .create_entity()
-    .has_name("Player".into())
-    .has_description("It's you, idiot.".into())
-    .is_a_player()
-    .is_in_room(spawn_room)
-    .build();
-  ecs.insert(Player(player));
+  let _player = create_player!(ecs, "Player", "It's you, you idiot.", spawn_room);
   trace_exit!();
 }
