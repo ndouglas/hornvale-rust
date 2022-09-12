@@ -125,7 +125,6 @@ impl Direction {
     trace_exit!();
     result
   }
-
 }
 
 impl fmt::Display for Direction {
