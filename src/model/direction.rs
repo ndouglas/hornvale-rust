@@ -68,6 +68,29 @@ impl Direction {
   }
 
   #[named]
+  pub fn get_short_name(&self) -> String {
+    trace_enter!();
+    use Direction::*;
+    let result = match self {
+      Northwest => "nw".to_owned(),
+      North => "n".to_owned(),
+      Northeast => "ne".to_owned(),
+      East => "e".to_owned(),
+      West => "w".to_owned(),
+      Southeast => "se".to_owned(),
+      South => "s".to_owned(),
+      Southwest => "sw".to_owned(),
+      Up => "up".to_owned(),
+      Down => "down".to_owned(),
+      In => "in".to_owned(),
+      Out => "out".to_owned(),
+      Other(other) => other.name.to_owned(),
+    };
+    trace_exit!();
+    result
+  }
+
+  #[named]
   pub fn get_lowercase(&self) -> String {
     trace_enter!();
     use Direction::*;

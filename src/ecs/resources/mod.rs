@@ -37,8 +37,10 @@ pub fn insert_resources(ecs: &mut World) {
   ecs.create_exit(spawn_room, ne_room, &Direction::Northeast, true);
   let n_room = create_room(ecs, "North Room".into());
   ecs.create_exit(spawn_room, n_room, &Direction::North, true);
+  ecs.create_exit(n_room, ne_room, &Direction::East, true);
   let nw_room = create_room(ecs, "Northwest Room".into());
   ecs.create_exit(spawn_room, nw_room, &Direction::Northwest, true);
+  ecs.create_exit(n_room, nw_room, &Direction::West, true);
   let e_room = create_room(ecs, "East Room".into());
   ecs.create_exit(spawn_room, e_room, &Direction::East, true);
   let w_room = create_room(ecs, "West Room".into());
@@ -54,7 +56,7 @@ pub fn insert_resources(ecs: &mut World) {
     .has_name("Player".into())
     .has_description("It's you, idiot.".into())
     .is_a_player()
-    .with(IsInRoom(spawn_room))
+    .is_in_room(spawn_room)
     .build();
   ecs.insert(Player(player));
   trace_exit!();
