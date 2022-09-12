@@ -38,8 +38,9 @@ impl HasExitsWorld for World {
     trace_enter!();
     {
       let mut has_exits_storage = self.write_storage::<HasExits>();
-      if let Some(HasExits { mut exits }) = has_exits_storage.get(from) {
-        exits.set_exit(
+      if let Some(HasExits { exits }) = has_exits_storage.get(from) {
+        let mut new_exits = exits.clone();
+        new_exits.set_exit(
           direction,
           Some(Exit {
             direction: direction.to_owned(),
@@ -48,12 +49,14 @@ impl HasExitsWorld for World {
           }),
         );
         has_exits_storage
-          .insert(from, HasExits { exits })
+          .insert(from, HasExits { exits: new_exits })
           .expect("Unable to replace HasExits object.");
       }
     }
     if bidirectional {
-      self.create_exit(to, from, &direction.get_inverse(), false);
+      if let Some(inverse) = &direction.get_inverse() {
+        self.create_exit(to, from, inverse, false);
+      }
     }
     trace_exit!();
   }

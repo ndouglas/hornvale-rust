@@ -8,7 +8,7 @@ use crate::queue::enqueue_action;
 use crate::traits::Actionable;
 use crate::traits::Commandable;
 
-#[derive(Clone, Copy, Debug, Hash, PartialEq)]
+#[derive(Clone, Debug, Hash, PartialEq)]
 pub struct MoveDirectionCommand {
   pub entity: Entity,
   pub direction: Direction,
@@ -20,7 +20,7 @@ impl Commandable for MoveDirectionCommand {
     trace_enter!();
     let action = Action::MoveDirection(MoveDirectionAction {
       entity: self.entity,
-      direction: self.direction,
+      direction: self.direction.clone(),
     });
     enqueue_action(action);
     trace_exit!();

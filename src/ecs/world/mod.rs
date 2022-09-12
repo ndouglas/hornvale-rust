@@ -81,11 +81,11 @@ impl WorldUsable for World {
   }
 
   #[named]
-  fn get_room_entity_exit(&self, entity: Entity, direction: Direction) -> Option<Exit> {
+  fn get_room_entity_exit(&self, entity: Entity, direction: &Direction) -> Option<Exit> {
     trace_enter!();
     let mut result = None;
     if let Some(exits) = self.get_room_entity_exits(entity) {
-      if let Some(exit) = exits.get_exit(&direction) {
+      if let Some(exit) = exits.get_exit(direction) {
         result = Some(exit.to_owned());
       }
     }

@@ -4,7 +4,7 @@ use std::fmt;
 use crate::model::Direction;
 use crate::model::Exit;
 
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Exits {
   pub north: Option<Exit>,
   pub northeast: Option<Exit>,
@@ -18,6 +18,7 @@ pub struct Exits {
   pub down: Option<Exit>,
   pub r#in: Option<Exit>,
   pub out: Option<Exit>,
+  pub other: Option<Exit>,
 }
 
 impl Exits {
@@ -26,18 +27,19 @@ impl Exits {
     trace_enter!();
     use Direction::*;
     let result = match direction {
-      Northwest => self.northwest,
-      North => self.north,
-      Northeast => self.northeast,
-      East => self.east,
-      Southeast => self.southeast,
-      South => self.south,
-      Southwest => self.southwest,
-      West => self.west,
-      Up => self.up,
-      Down => self.down,
-      In => self.r#in,
-      Out => self.out,
+      Northwest => self.northwest.clone(),
+      North => self.north.clone(),
+      Northeast => self.northeast.clone(),
+      East => self.east.clone(),
+      Southeast => self.southeast.clone(),
+      South => self.south.clone(),
+      Southwest => self.southwest.clone(),
+      West => self.west.clone(),
+      Up => self.up.clone(),
+      Down => self.down.clone(),
+      In => self.r#in.clone(),
+      Out => self.out.clone(),
+      Other(_) => self.other.clone(),
     };
     trace_exit!();
     result
@@ -60,6 +62,7 @@ impl Exits {
       Down => self.down = exit,
       In => self.r#in = exit,
       Out => self.out = exit,
+      Other(_) => self.other = exit,
     }
     trace_exit!();
   }
@@ -68,18 +71,19 @@ impl Exits {
   pub fn get_property_values(&self) -> Vec<Option<Exit>> {
     trace_enter!();
     let result = vec![
-      self.north,
-      self.northeast,
-      self.east,
-      self.southeast,
-      self.south,
-      self.southwest,
-      self.west,
-      self.northwest,
-      self.up,
-      self.down,
-      self.r#in,
-      self.out,
+      self.north.clone(),
+      self.northeast.clone(),
+      self.east.clone(),
+      self.southeast.clone(),
+      self.south.clone(),
+      self.southwest.clone(),
+      self.west.clone(),
+      self.northwest.clone(),
+      self.up.clone(),
+      self.down.clone(),
+      self.r#in.clone(),
+      self.out.clone(),
+      self.other.clone(),
     ];
     trace_exit!();
     result
@@ -104,7 +108,7 @@ impl Exits {
     let result = self
       .get_exits()
       .iter()
-      .map(|exit| exit.direction)
+      .map(|exit| exit.direction.clone())
       .collect::<Vec<Direction>>();
     trace_exit!();
     result
@@ -126,6 +130,7 @@ impl Default for Exits {
       down: None,
       r#in: None,
       out: None,
+      other: None,
     }
   }
 }

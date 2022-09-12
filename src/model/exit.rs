@@ -3,7 +3,7 @@ use std::fmt;
 
 use crate::model::Direction;
 
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Exit {
   pub direction: Direction,
   pub room_entity: Entity,

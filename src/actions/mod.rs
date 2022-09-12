@@ -7,7 +7,7 @@ pub use look::*;
 pub mod move_direction;
 pub use move_direction::*;
 
-#[derive(Clone, Copy, Debug, Hash, PartialEq)]
+#[derive(Clone, Debug, Hash, PartialEq)]
 pub enum Action {
   Look(LookAction),
   MoveDirection(MoveDirectionAction),

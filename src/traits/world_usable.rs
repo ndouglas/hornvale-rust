@@ -27,7 +27,7 @@ pub trait WorldUsable {
   fn get_room_entity_exits(&self, entity: Entity) -> Option<Exits>;
 
   /// Get room entity exit to a particular direction.
-  fn get_room_entity_exit(&self, entity: Entity, direction: Direction) -> Option<Exit>;
+  fn get_room_entity_exit(&self, entity: Entity, direction: &Direction) -> Option<Exit>;
 
   /// Get the tick resource.
   fn get_tick(&self) -> Tick;
