@@ -1,18 +1,21 @@
 #[macro_use]
-pub mod actions;
-pub use actions::*;
+pub mod action;
+pub use action::*;
 #[macro_use]
-pub mod commands;
-pub use commands::*;
+pub mod command;
+pub use command::*;
 #[macro_use]
 pub mod debug;
 pub use debug::*;
 #[macro_use]
-pub mod effects;
-pub use effects::*;
+pub mod entity;
+pub use entity::*;
 #[macro_use]
-pub mod messages;
-pub use messages::*;
+pub mod effect;
+pub use effect::*;
 #[macro_use]
-pub mod queues;
-pub use queues::*;
+pub mod message;
+pub use message::*;
+#[macro_use]
+pub mod queue;
+pub use queue::*;
