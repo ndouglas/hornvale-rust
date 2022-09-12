@@ -10,6 +10,7 @@ pub trait HasNameBuilder {
 }
 
 impl HasNameBuilder for EntityBuilder<'_> {
+  #[named]
   fn has_name(self, name: String) -> Self {
     self.with(HasName(name))
   }

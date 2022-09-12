@@ -11,14 +11,11 @@ lazy_static! {
 
 #[named]
 pub fn enqueue_command(command: Command) {
-  trace_enter!();
   COMMAND_QUEUE.lock().unwrap().push_back(command);
-  trace_exit!();
 }
 
 #[named]
 pub fn run_command_queue(ecs: &mut World) {
-  trace_enter!();
   loop {
     let command_option: Option<Command> = COMMAND_QUEUE.lock().unwrap().pop_front();
     if let Some(command) = command_option {
@@ -27,5 +24,4 @@ pub fn run_command_queue(ecs: &mut World) {
       break;
     }
   }
-  trace_exit!();
 }

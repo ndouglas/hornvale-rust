@@ -11,6 +11,7 @@ pub trait IsARoomBuilder {
 }
 
 impl IsARoomBuilder for EntityBuilder<'_> {
+  #[named]
   fn is_a_room(self) -> Self {
     self.with(IsARoom)
   }

@@ -16,8 +16,6 @@ pub struct LookCommand {
 impl Commandable for LookCommand {
   #[named]
   fn execute(&self, _ecs: &mut World) {
-    trace_enter!();
     enq_action!(act_look!(self.entity));
-    trace_exit!();
   }
 }

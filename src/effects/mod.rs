@@ -16,12 +16,10 @@ pub enum Effect {
 impl Effectable for Effect {
   #[named]
   fn execute(&self, ecs: &mut World) {
-    trace_enter!();
     use Effect::*;
     match self {
       Look(effect) => effect.execute(ecs),
       MoveEntity(effect) => effect.execute(ecs),
     }
-    trace_exit!();
   }
 }

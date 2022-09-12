@@ -24,9 +24,8 @@ pub struct Exits {
 impl Exits {
   #[named]
   pub fn get_exit(&self, direction: &Direction) -> Option<Exit> {
-    trace_enter!();
     use Direction::*;
-    let result = match direction {
+    match direction {
       Northwest => self.northwest.clone(),
       North => self.north.clone(),
       Northeast => self.northeast.clone(),
@@ -40,14 +39,11 @@ impl Exits {
       In => self.r#in.clone(),
       Out => self.out.clone(),
       Other(_) => self.other.clone(),
-    };
-    trace_exit!();
-    result
+    }
   }
 
   #[named]
   pub fn set_exit(&mut self, direction: &Direction, exit: Option<Exit>) {
-    trace_enter!();
     use Direction::*;
     match direction {
       Northwest => self.northwest = exit,
@@ -64,13 +60,11 @@ impl Exits {
       Out => self.out = exit,
       Other(_) => self.other = exit,
     }
-    trace_exit!();
   }
 
   #[named]
   pub fn get_property_values(&self) -> Vec<Option<Exit>> {
-    trace_enter!();
-    let result = vec![
+    vec![
       self.north.clone(),
       self.northeast.clone(),
       self.east.clone(),
@@ -84,34 +78,27 @@ impl Exits {
       self.r#in.clone(),
       self.out.clone(),
       self.other.clone(),
-    ];
-    trace_exit!();
-    result
+    ]
   }
 
   #[named]
   pub fn get_exits(&self) -> Vec<Exit> {
-    trace_enter!();
     let mut result = Vec::new();
     for exit_option in self.get_property_values() {
       if let Some(exit) = exit_option {
         result.push(exit);
       }
     }
-    trace_exit!();
     result
   }
 
   #[named]
   pub fn get_directions(&self) -> Vec<Direction> {
-    trace_enter!();
-    let result = self
+    self
       .get_exits()
       .iter()
       .map(|exit| exit.direction.clone())
-      .collect::<Vec<Direction>>();
-    trace_exit!();
-    result
+      .collect::<Vec<Direction>>()
   }
 }
 
@@ -138,7 +125,6 @@ impl Default for Exits {
 impl fmt::Display for Exits {
   #[named]
   fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-    trace_enter!();
     let mut directions = self.get_directions();
     let string = match directions.len() {
       0 => "There are no visible exits.".into(),
@@ -158,8 +144,6 @@ impl fmt::Display for Exits {
         format!("There are visible exits to the {}, and {}.", others, last)
       }
     };
-    let result = write!(formatter, "{}", string);
-    trace_exit!();
-    result
+    write!(formatter, "{}", string)
   }
 }

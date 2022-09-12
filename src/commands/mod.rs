@@ -20,13 +20,11 @@ pub enum Command {
 impl Commandable for Command {
   #[named]
   fn execute(&self, ecs: &mut World) {
-    trace_enter!();
     use Command::*;
     match self {
       Echo(command) => command.execute(ecs),
       Look(command) => command.execute(ecs),
       MoveDirection(command) => command.execute(ecs),
     }
-    trace_exit!();
   }
 }

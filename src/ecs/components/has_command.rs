@@ -13,6 +13,7 @@ pub trait HasCommandBuilder {
 }
 
 impl HasCommandBuilder for EntityBuilder<'_> {
+  #[named]
   fn has_command(self, command: Command) -> Self {
     self.with(HasCommand(command))
   }

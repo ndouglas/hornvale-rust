@@ -12,6 +12,7 @@ pub trait HasActionBuilder {
 }
 
 impl HasActionBuilder for EntityBuilder<'_> {
+  #[named]
   fn has_action(self, action: Action) -> Self {
     self.with(HasAction(action))
   }

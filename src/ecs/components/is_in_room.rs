@@ -11,6 +11,7 @@ pub trait IsInRoomBuilder {
 }
 
 impl IsInRoomBuilder for EntityBuilder<'_> {
+  #[named]
   fn is_in_room(self, room: Entity) -> Self {
     self.with(IsInRoom(room))
   }

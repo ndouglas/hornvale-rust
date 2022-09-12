@@ -11,6 +11,7 @@ pub trait IsAPlayerBuilder {
 }
 
 impl IsAPlayerBuilder for EntityBuilder<'_> {
+  #[named]
   fn is_a_player(self) -> Self {
     self.with(IsAPlayer)
   }

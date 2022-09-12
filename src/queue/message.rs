@@ -10,22 +10,16 @@ lazy_static! {
 
 #[named]
 pub fn enqueue_message(message: String) {
-  trace_enter!();
   MESSAGE_QUEUE.lock().unwrap().push_back(message);
-  trace_exit!();
 }
 
 #[named]
 pub fn get_messages() -> Vec<String> {
-  trace_enter!();
-  let result = MESSAGE_QUEUE.lock().unwrap().drain(..).collect::<Vec<String>>();
-  trace_exit!();
-  result
+  MESSAGE_QUEUE.lock().unwrap().drain(..).collect::<Vec<String>>()
 }
 
 #[named]
 pub fn start_message_spammer() {
-  trace_enter!();
   use rand::{thread_rng, Rng};
   use std::thread::{sleep, spawn};
   use std::time::Duration;
@@ -39,5 +33,4 @@ pub fn start_message_spammer() {
       i += 1;
     }
   });
-  trace_exit!();
 }

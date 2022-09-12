@@ -18,10 +18,8 @@ pub struct LookEffect {
 impl Effectable for LookEffect {
   #[named]
   fn execute(&self, ecs: &mut World) {
-    trace_enter!();
     if let Some(room) = get_current_room!(ecs, self.entity) {
       enq_message!(format_room!(ecs, room));
     }
-    trace_exit!();
   }
 }

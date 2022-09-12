@@ -18,8 +18,6 @@ pub struct LookAction {
 impl Actionable for LookAction {
   #[named]
   fn perform(&self, _ecs: &mut World) {
-    trace_enter!();
     enq_effect!(eff_look!(self.entity));
-    trace_exit!();
   }
 }

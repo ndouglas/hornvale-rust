@@ -18,8 +18,6 @@ pub struct EchoCommand {
 impl Commandable for EchoCommand {
   #[named]
   fn execute(&self, _ecs: &mut World) {
-    trace_enter!();
     enq_message!(format!("{}", self.string));
-    trace_exit!();
   }
 }

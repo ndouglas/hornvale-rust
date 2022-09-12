@@ -23,9 +23,8 @@ pub enum Direction {
 impl Direction {
   #[named]
   pub fn get_inverse(&self) -> Option<Direction> {
-    trace_enter!();
     use Direction::*;
-    let result = match self {
+    match self {
       Northwest => Some(Southeast),
       North => Some(South),
       Northeast => Some(Southwest),
@@ -39,16 +38,13 @@ impl Direction {
       In => Some(Out),
       Out => Some(In),
       Other(_) => None,
-    };
-    trace_exit!();
-    result
+    }
   }
 
   #[named]
   pub fn get_name(&self) -> String {
-    trace_enter!();
     use Direction::*;
-    let result = match self {
+    match self {
       Northwest => "Northwest".to_owned(),
       North => "North".to_owned(),
       Northeast => "Northeast".to_owned(),
@@ -62,16 +58,13 @@ impl Direction {
       In => "In".to_owned(),
       Out => "Out".to_owned(),
       Other(other) => other.name.to_owned(),
-    };
-    trace_exit!();
-    result
+    }
   }
 
   #[named]
   pub fn get_short_name(&self) -> String {
-    trace_enter!();
     use Direction::*;
-    let result = match self {
+    match self {
       Northwest => "nw".to_owned(),
       North => "n".to_owned(),
       Northeast => "ne".to_owned(),
@@ -85,45 +78,34 @@ impl Direction {
       In => "in".to_owned(),
       Out => "out".to_owned(),
       Other(other) => other.name.to_owned(),
-    };
-    trace_exit!();
-    result
+    }
   }
 
   #[named]
   pub fn get_lowercase(&self) -> String {
-    trace_enter!();
     use Direction::*;
-    let result = match self {
+    match self {
       Other(other) => other.lowercase_name.to_owned(),
       _ => self.get_name().to_lowercase(),
-    };
-    trace_exit!();
-    result
+    }
   }
 
   #[named]
   pub fn get_uppercase(&self) -> String {
-    trace_enter!();
     use Direction::*;
-    let result = match self {
+    match self {
       Other(other) => other.uppercase_name.to_owned(),
       _ => self.get_name().to_uppercase(),
-    };
-    trace_exit!();
-    result
+    }
   }
 
   #[named]
   pub fn is_compass_direction(&self) -> bool {
-    trace_enter!();
     use Direction::*;
-    let result = match self {
+    match self {
       Up | Down | In | Out | Other(_) => false,
       _ => true,
-    };
-    trace_exit!();
-    result
+    }
   }
 }
 

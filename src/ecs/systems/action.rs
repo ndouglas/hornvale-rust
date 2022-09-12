@@ -12,7 +12,6 @@ impl<'a> System<'a> for ActionSystem {
 
   #[named]
   fn run(&mut self, data: Self::SystemData) {
-    trace_enter!();
     let (entities, mut has_action_storage) = data;
     let mut entities_actioned: Vec<Entity> = Vec::new();
     {
@@ -26,6 +25,5 @@ impl<'a> System<'a> for ActionSystem {
         has_action_storage.remove(*entity);
       }
     }
-    trace_exit!();
   }
 }

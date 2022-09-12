@@ -11,14 +11,11 @@ lazy_static! {
 
 #[named]
 pub fn enqueue_effect(effect: Effect) {
-  trace_enter!();
   EFFECT_QUEUE.lock().unwrap().push_back(effect);
-  trace_exit!();
 }
 
 #[named]
 pub fn run_effect_queue(ecs: &mut World) {
-  trace_enter!();
   loop {
     let effect_option: Option<Effect> = EFFECT_QUEUE.lock().unwrap().pop_front();
     if let Some(effect) = effect_option {
@@ -27,5 +24,4 @@ pub fn run_effect_queue(ecs: &mut World) {
       break;
     }
   }
-  trace_exit!();
 }

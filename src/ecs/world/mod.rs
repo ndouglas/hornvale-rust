@@ -19,11 +19,9 @@ impl WorldUsable for World {
 
   #[named]
   fn insert_command(&mut self, entity: Entity, command: Command) {
-    trace_enter!();
     self
       .write_storage::<HasCommand>()
       .insert(entity, HasCommand(command.clone()))
       .expect(format!("Could not insert command {:?} for entity {:?}", command, entity).as_str());
-    trace_exit!();
   }
 }

@@ -10,6 +10,7 @@ pub trait HasDescriptionBuilder {
 }
 
 impl HasDescriptionBuilder for EntityBuilder<'_> {
+  #[named]
   fn has_description(self, description: String) -> Self {
     self.with(HasDescription(description))
   }

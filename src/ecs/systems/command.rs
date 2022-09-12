@@ -14,7 +14,6 @@ impl<'a> System<'a> for CommandSystem {
 
   #[named]
   fn run(&mut self, data: Self::SystemData) {
-    trace_enter!();
     let (entities, mut has_command_storage) = data;
     let mut entities_commanded: Vec<Entity> = Vec::new();
     {
@@ -28,6 +27,5 @@ impl<'a> System<'a> for CommandSystem {
         has_command_storage.remove(*entity);
       }
     }
-    trace_exit!();
   }
 }

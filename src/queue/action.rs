@@ -11,14 +11,11 @@ lazy_static! {
 
 #[named]
 pub fn enqueue_action(action: Action) {
-  trace_enter!();
   ACTION_QUEUE.lock().unwrap().push_back(action);
-  trace_exit!();
 }
 
 #[named]
 pub fn run_action_queue(ecs: &mut World) {
-  trace_enter!();
   loop {
     let action_option: Option<Action> = ACTION_QUEUE.lock().unwrap().pop_front();
     if let Some(action) = action_option {
@@ -31,5 +28,4 @@ pub fn run_action_queue(ecs: &mut World) {
       break;
     }
   }
-  trace_exit!();
 }

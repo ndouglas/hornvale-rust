@@ -11,13 +11,10 @@ use crate::traits::WorldUsable;
 
 #[named]
 pub fn get_command(state: &mut State, entity: Entity, string: String) -> Option<Command> {
-  trace_enter!();
   let words: Vec<&str> = string.split_whitespace().collect();
   let first: String = words.get(0).unwrap_or(&"").to_string();
-  trace_var!(first);
   let second: String = words.get(1).unwrap_or(&"").to_string();
-  trace_var!(second);
-  let result = match first.as_str() {
+  match first.as_str() {
     "move" => match second.as_str() {
       "n" | "north" => Some(cmd_move_to!(entity, Direction::North)),
       "ne" | "northeast" => Some(cmd_move_to!(entity, Direction::Northeast)),
@@ -59,17 +56,13 @@ pub fn get_command(state: &mut State, entity: Entity, string: String) -> Option<
       enq_message!(format!("{}", "What?".bright_red()));
       None
     }
-  };
-  trace_exit!();
-  result
+  }
 }
 
 #[named]
 pub fn parse(string: String, state: &mut State) {
-  trace_enter!();
   let player_entity = get_player!(state.ecs);
   if let Some(command) = get_command(state, player_entity, string) {
     state.ecs.insert_command(player_entity, command);
   }
-  trace_exit!();
 }

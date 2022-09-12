@@ -21,10 +21,7 @@ pub trait HasExitsBuilder {
 impl HasExitsBuilder for EntityBuilder<'_> {
   #[named]
   fn has_exits(self) -> Self {
-    trace_enter!();
-    let result = self.with(HasExits::default());
-    trace_exit!();
-    result
+    self.with(HasExits::default())
   }
 }
 
@@ -35,7 +32,6 @@ pub trait HasExitsWorld {
 impl HasExitsWorld for World {
   #[named]
   fn create_exit(&mut self, from: Entity, to: Entity, direction: &Direction, bidirectional: bool) {
-    trace_enter!();
     {
       let mut has_exits_storage = self.write_storage::<HasExits>();
       if let Some(HasExits { exits }) = has_exits_storage.get(from) {
@@ -58,6 +54,5 @@ impl HasExitsWorld for World {
         self.create_exit(to, from, inverse, false);
       }
     }
-    trace_exit!();
   }
 }

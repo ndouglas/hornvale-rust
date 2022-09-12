@@ -15,7 +15,6 @@ use crate::model::Exits;
 
 #[named]
 pub fn insert_resources(ecs: &mut World) {
-  trace_enter!();
   ecs.insert(Tick(0));
   let spawn_room = create_room!(ecs, "Spawn Room", "This is the Spawn Room");
   ecs.insert(SpawnRoom(spawn_room));
@@ -38,5 +37,4 @@ pub fn insert_resources(ecs: &mut World) {
   let sw_room = create_room!(ecs, "Southwest Room", "This is the Southwestern Room.");
   ecs.create_exit(spawn_room, sw_room, &Direction::Southwest, true);
   let _player = create_player!(ecs, "Player", "It's you, you idiot.", spawn_room);
-  trace_exit!();
 }

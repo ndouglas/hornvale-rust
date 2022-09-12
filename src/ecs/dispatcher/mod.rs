@@ -31,8 +31,5 @@ construct_dispatcher!((CommandSystem, "command", &[]), (ActionSystem, "action", 
 
 #[named]
 pub fn get_new_dispatcher() -> Box<dyn UnifiedDispatcher + 'static> {
-  trace_enter!();
-  let result = new_dispatch();
-  trace_exit!();
-  result
+  new_dispatch()
 }

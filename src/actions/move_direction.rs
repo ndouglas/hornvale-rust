@@ -22,7 +22,6 @@ pub struct MoveDirectionAction {
 impl Actionable for MoveDirectionAction {
   #[named]
   fn perform(&self, ecs: &mut World) {
-    trace_enter!();
     if let Some(room_entity) = get_current_room!(ecs, self.entity) {
       if let Some(exit) = get_exit_to!(ecs, room_entity, &self.direction) {
         enq_effect!(eff_move_entity!(self.entity, room_entity, exit.room_entity));
@@ -32,6 +31,5 @@ impl Actionable for MoveDirectionAction {
     } else {
       enq_message!(format!("{}", "You are unable to move in that direction...".red()));
     }
-    trace_exit!();
   }
 }
