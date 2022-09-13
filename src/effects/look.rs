@@ -14,7 +14,7 @@ impl Effectable for LookEffect {
   #[named]
   fn execute(&self, ecs: &mut World) {
     if let Some(room) = get_current_room!(ecs, self.entity) {
-      enq_event!(Event::PrintMessage(PrintMessageEvent::RoomDescription(room)));
+      print_room!(room);
     }
   }
 }
