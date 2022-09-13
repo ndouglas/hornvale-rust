@@ -8,11 +8,11 @@ pub use command::*;
 pub mod debug;
 pub use debug::*;
 #[macro_use]
-pub mod entity;
-pub use entity::*;
-#[macro_use]
 pub mod effect;
 pub use effect::*;
+#[macro_use]
+pub mod entity;
+pub use entity::*;
 #[macro_use]
 pub mod event;
 pub use event::*;
