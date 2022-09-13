@@ -14,8 +14,8 @@ pub use entity::*;
 pub mod effect;
 pub use effect::*;
 #[macro_use]
-pub mod message;
-pub use message::*;
+pub mod event;
+pub use event::*;
 #[macro_use]
 pub mod queue;
 pub use queue::*;

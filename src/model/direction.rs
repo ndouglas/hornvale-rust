@@ -1,8 +1,6 @@
 use std::fmt;
 use std::str::FromStr;
 
-
-
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum Direction {
   Northwest,

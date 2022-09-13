@@ -1,10 +1,7 @@
 use specs::prelude::*;
 
-
 use crate::effects::Effect;
 use crate::effects::LookEffect;
-
-
 
 use crate::traits::Effectable;
 

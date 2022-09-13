@@ -1,6 +1,6 @@
 #[macro_export]
 macro_rules! create_room {
-  ($ecs: expr, $name: expr, $description: expr) => {
+  ($ecs: expr, $name: expr, $description: expr) => {{
     $ecs
       .create_entity()
       .has_name(format!("{}", $name))
@@ -8,7 +8,7 @@ macro_rules! create_room {
       .is_a_room()
       .has_exits()
       .build()
-  };
+  }};
 }
 
 #[macro_export]
