@@ -7,7 +7,6 @@ use crate::ecs::components::*;
 use crate::ecs::dispatcher::{get_new_dispatcher, UnifiedDispatcher};
 use crate::ecs::resources::*;
 use crate::queue::*;
-use crate::traits::world_usable::WorldUsable;
 
 pub struct State {
   pub ecs: World,
@@ -59,7 +58,7 @@ impl State {
       Ok(line) => {
         let player_entity = get_player!(self.ecs);
         match Command::from_str(&line, player_entity) {
-          Ok(command) => self.ecs.insert_command(player_entity, command),
+          Ok(command) => add_command!(self.ecs, player_entity, command),
           Err(_) => enq_message!(format!("{}", "What?".bright_red())),
         }
       },

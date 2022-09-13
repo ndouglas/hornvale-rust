@@ -6,5 +6,3 @@ pub mod resources;
 pub use resources::*;
 pub mod systems;
 pub use systems::*;
-pub mod world;
-pub use world::*;
