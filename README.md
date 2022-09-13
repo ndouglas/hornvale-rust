@@ -45,8 +45,6 @@ More specific ideas:
 - Idling.  You should be able to just sit and watch interactions between NPCs.
 - Persistence.  I'd like NPCs, the player, etc, to have measureable, visible effects on their environment.  If goblins deforest an area, that should mean something within the world of the game.
 - Extensibility.  I want this to be data-oriented, very well-factored, and easy to extend.
-- Move World::insert_command() to a macro.
-- zap World module and Worldable trait.
 - Make macro for print_room_description.
 - Make macro for move_entity effect.
 - Make macros for action events.
