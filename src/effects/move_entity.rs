@@ -18,10 +18,7 @@ pub struct MoveEntityEffect {
 impl Effectable for MoveEntityEffect {
   #[named]
   fn execute(&self, ecs: &mut World) {
-    let mut is_in_room_storage = ecs.write_storage::<IsInRoom>();
-    is_in_room_storage
-      .insert(self.entity, IsInRoom(self.to))
-      .expect("Unable to insert entity in new room!");
-    enqueue_effect(Effect::Look(LookEffect { entity: self.entity }));
+    move_entity_room!(ecs, self.entity, self.to);
+    enq_effect!(Effect::Look(LookEffect { entity: self.entity }));
   }
 }

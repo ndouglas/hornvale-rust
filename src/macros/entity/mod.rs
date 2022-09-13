@@ -11,5 +11,8 @@ pub use format::*;
 pub mod get;
 pub use get::*;
 #[macro_use]
+pub mod r#move;
+pub use r#move::*;
+#[macro_use]
 pub mod print;
 pub use print::*;
