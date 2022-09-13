@@ -51,7 +51,6 @@ More specific ideas:
 - Figure out what to do with message formats.
 - Make message macros for general errors, etc.
 - I think text effects are out, but it'd be nice to demo some good formatting.
-- Possibly check out whether this Direction::Other thing is doable or if it needs to be implemented in a completely different way.
 - Add a mob!  We need something else animate so we can start working with event reactions, etc.
 - Change the spammer to be a little more interesting, maybe.  It might be time to start writing weather systems or whatever.
 - Start poaching ideas from TADS, Inform, etc.
