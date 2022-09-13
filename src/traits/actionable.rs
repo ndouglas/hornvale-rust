@@ -12,5 +12,7 @@ pub trait Actionable {
   }
 
   /// Actually perform the action.
-  fn perform(&self, _ecs: &mut World) {}
+  fn perform(&self, _ecs: &mut World) { 
+    todo!();
+  }
 }

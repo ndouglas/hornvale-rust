@@ -46,6 +46,21 @@ More specific ideas:
 - Idling.  You should be able to just sit and watch interactions between NPCs.
 - Persistence.  I'd like NPCs, the player, etc, to have measureable, visible effects on their environment.  If goblins deforest an area, that should mean something within the world of the game.
 - Extensibility.  I want this to be data-oriented, very well-factored, and easy to extend.
+- Move World::insert_command() to a macro.
+- zap World module and Worldable trait.
+- Make macro for print_room_description.
+- Make macro for move_entity effect.
+- Make macros for action events.
+- Add event subscriber struct.
+- Add event handler struct??? IDK.
+- Figure out what to do with message formats.
+- Make message macros for general errors, etc.
+- I think text effects are out, but it'd be nice to demo some good formatting.
+- Possibly check out whether this Direction::Other thing is doable or if it needs to be implemented in a completely different way.
+- Add a mob!  We need something else animate so we can start working with event reactions, etc.
+- Change the spammer to be a little more interesting, maybe.  It might be time to start writing weather systems or whatever.
+- Start poaching ideas from TADS, Inform, etc.
+- Start dealing with idea of energy/metabolism/speed/etc.
 
 General Flow:
 
