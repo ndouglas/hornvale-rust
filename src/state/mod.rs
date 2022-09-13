@@ -31,13 +31,9 @@ impl State {
 
   #[named]
   pub fn run_systems(&mut self) {
-    self.ecs.maintain();
     run_command_queue(&mut self.ecs);
-    self.ecs.maintain();
     run_action_queue(&mut self.ecs);
-    self.ecs.maintain();
     run_effect_queue(&mut self.ecs);
-    self.ecs.maintain();
     run_event_queue(&mut self.ecs);
     let mut tick = self.ecs.write_resource::<Tick>();
     tick.0 += 1;
