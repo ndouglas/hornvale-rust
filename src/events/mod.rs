@@ -4,12 +4,8 @@ use crate::traits::Eventable;
 
 pub mod action;
 pub use action::*;
-pub mod message_formats;
-pub use message_formats::*;
 pub mod print_message;
 pub use print_message::*;
-pub mod visibility;
-pub use visibility::*;
 
 pub enum Event {
   /// An event (could|will|did) (happen|not happen).

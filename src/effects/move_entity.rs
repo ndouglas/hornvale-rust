@@ -1,8 +1,6 @@
 use specs::prelude::*;
 
 use crate::effects::Effect;
-use crate::effects::LookEffect;
-
 use crate::traits::Effectable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
@@ -16,6 +14,6 @@ impl Effectable for MoveEntityEffect {
   #[named]
   fn execute(&self, ecs: &mut World) {
     move_entity_room!(ecs, self.entity, self.to);
-    enq_effect!(eff_look!(self.entity));
+    enq_effect!(eff_print_room!(self.to));
   }
 }

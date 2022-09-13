@@ -2,15 +2,18 @@ use specs::prelude::*;
 
 use crate::traits::Effectable;
 
-pub mod look;
-pub use look::*;
 pub mod move_entity;
 pub use move_entity::*;
+pub mod print_error;
+pub use print_error::*;
+pub mod print_room;
+pub use print_room::*;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub enum Effect {
-  Look(LookEffect),
   MoveEntity(MoveEntityEffect),
+  PrintError(PrintErrorEffect),
+  PrintRoom(PrintRoomEffect),
 }
 
 impl Effectable for Effect {
@@ -18,8 +21,9 @@ impl Effectable for Effect {
   fn execute(&self, ecs: &mut World) {
     use Effect::*;
     match self {
-      Look(effect) => effect.execute(ecs),
       MoveEntity(effect) => effect.execute(ecs),
+      PrintError(effect) => effect.execute(ecs),
+      PrintRoom(effect) => effect.execute(ecs),
     }
   }
 }

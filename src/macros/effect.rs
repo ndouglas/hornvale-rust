@@ -1,7 +1,9 @@
 #[macro_export]
-macro_rules! eff_look {
+macro_rules! eff_print_room{
   ($entity: expr) => {{
-    Effect::Look(LookEffect { entity: $entity })
+    use crate::effects::Effect;
+    use crate::effects::print_room::PrintRoomEffect;
+    Effect::PrintRoom(PrintRoomEffect { room: $entity })
   }};
 }
 
@@ -12,6 +14,15 @@ macro_rules! eff_move_entity {
       entity: $entity,
       from: $from,
       to: $to,
+    })
+  }};
+}
+
+#[macro_export]
+macro_rules! eff_print_error {
+  ($message: expr) => {{
+    Effect::PrintError(PrintErrorEffect {
+      message: $message,
     })
   }};
 }

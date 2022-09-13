@@ -19,11 +19,7 @@ pub fn run_action_queue(ecs: &mut World) {
   loop {
     let action_option: Option<Action> = ACTION_QUEUE.lock().unwrap().pop_front();
     if let Some(action) = action_option {
-      if action.should_perform(ecs) {
-        if action.can_perform(ecs) {
-          action.perform(ecs);
-        }
-      }
+      action.attempt(ecs);
     } else {
       break;
     }

@@ -15,31 +15,11 @@ pub enum Action {
 
 impl Actionable for Action {
   #[named]
-  fn should_perform(&self, ecs: &mut World) -> bool {
-    use Action::*;
-    let result = match self {
-      Look(action) => action.should_perform(ecs),
-      MoveDirection(action) => action.should_perform(ecs),
-    };
-    result
-  }
-
-  #[named]
-  fn can_perform(&self, ecs: &mut World) -> bool {
-    use Action::*;
-    let result = match self {
-      Look(action) => action.can_perform(ecs),
-      MoveDirection(action) => action.can_perform(ecs),
-    };
-    result
-  }
-
-  #[named]
-  fn perform(&self, ecs: &mut World) {
+  fn attempt(&self, ecs: &mut World) {
     use Action::*;
     match self {
-      Look(action) => action.perform(ecs),
-      MoveDirection(action) => action.perform(ecs),
+      Look(action) => action.attempt(ecs),
+      MoveDirection(action) => action.attempt(ecs),
     }
   }
 }
