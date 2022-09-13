@@ -4,11 +4,12 @@ use specs::prelude::*;
 use std::thread;
 use std::time::Duration;
 
+use crate::commands::Command;
 use crate::ecs::components::*;
 use crate::ecs::dispatcher::{get_new_dispatcher, UnifiedDispatcher};
 use crate::ecs::resources::*;
-use crate::parser::parse;
 use crate::queue::*;
+use crate::traits::world_usable::WorldUsable;
 
 pub struct State {
   pub ecs: World,
@@ -57,7 +58,13 @@ impl State {
   #[named]
   pub fn read_input(&mut self) {
     match self.editor.readline(format!("{} ", ">".blue()).as_str()) {
-      Ok(line) => parse(line, self),
+      Ok(line) => {
+        let player_entity = get_player!(self.ecs);
+        match Command::from_str(&line, player_entity) {
+          Ok(command) => self.ecs.insert_command(player_entity, command),
+          Err(_) => enq_message!(format!("{}", "What?".bright_red())),
+        }
+      },
       Err(_) => {},
     }
   }

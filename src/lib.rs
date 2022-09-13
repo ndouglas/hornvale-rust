@@ -31,7 +31,6 @@ pub mod ecs;
 pub mod effects;
 pub mod events;
 pub mod model;
-pub mod parser;
 pub mod queue;
 pub mod state;
 pub mod traits;
