@@ -1,7 +1,7 @@
 use std::fmt;
 use std::str::FromStr;
 
-use crate::model::OtherDirection;
+
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum Direction {

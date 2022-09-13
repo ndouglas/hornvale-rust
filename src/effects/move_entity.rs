@@ -1,10 +1,10 @@
 use specs::prelude::*;
 
-use crate::ecs::components::*;
+
 use crate::effects::Effect;
 use crate::effects::LookEffect;
 
-use crate::queue::enqueue_effect;
+
 
 use crate::traits::Effectable;
 
@@ -19,6 +19,6 @@ impl Effectable for MoveEntityEffect {
   #[named]
   fn execute(&self, ecs: &mut World) {
     move_entity_room!(ecs, self.entity, self.to);
-    enq_effect!(Effect::Look(LookEffect { entity: self.entity }));
+    enq_effect!(eff_look!(self.entity));
   }
 }

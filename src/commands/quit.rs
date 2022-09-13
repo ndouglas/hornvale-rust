@@ -12,7 +12,6 @@ pub struct QuitCommand {
 impl Commandable for QuitCommand {
   #[named]
   fn execute(&self, ecs: &mut World) {
-    let mut run_mode = ecs.write_resource::<RunMode>();
-    *run_mode = RunMode::Quit;
+    *ecs.write_resource::<RunMode>() = RunMode::Quit;
   }
 }

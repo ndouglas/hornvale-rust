@@ -57,6 +57,7 @@ More specific ideas:
 - Start poaching ideas from TADS, Inform, etc.
 - Start dealing with idea of energy/metabolism/speed/etc.
 - Pass through command parsing to player object, room, items in room, etc for commands that only make sense with a specific contextual element.
+- Try to simplify systems.
 
 General Flow:
 
