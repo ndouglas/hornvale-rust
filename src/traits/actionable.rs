@@ -13,19 +13,4 @@ pub trait Actionable {
 
   /// Actually perform the action.
   fn perform(&self, _ecs: &mut World) {}
-
-  // Emits an event when the entity cannot (by game rules) perform the action.
-  // pub fn could_not_perform(&self, ecs: &mut World);
-
-  // Emits an event when the entity will perform the action.
-  // pub fn will_perform(&self, ecs: &mut World);
-
-  // Emits an event when the entity will fail to successfully perform the action.
-  // pub fn will_fail_to_perform(&self, ecs: &mut World);
-
-  // Emits an event when the entity successfully performed the action.
-  // pub fn did_perform(&self, ecs: &mut World);
-
-  // Emits an event when the entity failed to successfully perform the action.
-  // pub fn did_fail_to_perform(&self, ecs: &mut World);
 }

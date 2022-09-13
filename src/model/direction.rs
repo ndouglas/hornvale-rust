@@ -1,5 +1,6 @@
 use serde::*;
 use std::fmt;
+use std::str::FromStr;
 
 use crate::model::OtherDirection;
 
@@ -18,6 +19,29 @@ pub enum Direction {
   In,
   Out,
   Other(OtherDirection),
+}
+
+impl FromStr for Direction {
+  type Err = ();
+
+  fn from_str(string: &str) -> Result<Self, ()> {
+    use Direction::*;
+    match string {
+      "nw" | "northwest" => Ok(Northwest),
+      "n" | "north" => Ok(North),
+      "ne" | "northeast" => Ok(Northeast),
+      "e" | "east" => Ok(East),
+      "se" | "southeast" => Ok(Southeast),
+      "s" | "south" => Ok(South),
+      "sw" | "southwest" => Ok(Southwest),
+      "w" | "west" => Ok(West),
+      "up" => Ok(Up),
+      "down" => Ok(Down),
+      "in" => Ok(In),
+      "out" => Ok(Out),
+      _ => Err(()),
+    }
+  }
 }
 
 impl Direction {

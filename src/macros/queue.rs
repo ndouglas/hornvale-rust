@@ -20,6 +20,13 @@ macro_rules! enq_effect {
 }
 
 #[macro_export]
+macro_rules! enq_event {
+  ($event: expr) => {
+    crate::queue::enqueue_event($event);
+  };
+}
+
+#[macro_export]
 macro_rules! enq_message {
   ($message: expr) => {
     crate::queue::enqueue_message(format!("{}", $message));

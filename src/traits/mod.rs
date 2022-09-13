@@ -4,5 +4,7 @@ pub mod commandable;
 pub use commandable::*;
 pub mod effectable;
 pub use effectable::*;
+pub mod eventable;
+pub use eventable::*;
 pub mod world_usable;
 pub use world_usable::*;

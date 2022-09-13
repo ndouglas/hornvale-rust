@@ -21,15 +21,18 @@ pub struct MoveDirectionAction {
 
 impl Actionable for MoveDirectionAction {
   #[named]
+  fn can_perform(&self, ecs: &mut World) -> bool {
+    let room_entity = get_current_room!(ecs, self.entity).unwrap();
+    None != get_exit_to!(ecs, room_entity, &self.direction)
+  }
+
+  #[named]
   fn perform(&self, ecs: &mut World) {
-    if let Some(room_entity) = get_current_room!(ecs, self.entity) {
-      if let Some(exit) = get_exit_to!(ecs, room_entity, &self.direction) {
-        enq_effect!(eff_move_entity!(self.entity, room_entity, exit.room_entity));
-      } else {
-        enq_message!(format!("{}", "You are unable to move in that direction!".red()));
-      }
+    let room_entity = get_current_room!(ecs, self.entity).unwrap();
+    if let Some(exit) = get_exit_to!(ecs, room_entity, &self.direction) {
+      enq_effect!(eff_move_entity!(self.entity, room_entity, exit.room_entity));
     } else {
-      enq_message!(format!("{}", "You are unable to move in that direction...".red()));
+      enq_message!(format!("{}", "You are unable to move in that direction!".red()));
     }
   }
 }

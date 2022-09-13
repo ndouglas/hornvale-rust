@@ -4,6 +4,8 @@ use specs::prelude::*;
 use crate::actions::*;
 use crate::commands::Command;
 use crate::ecs::components::*;
+use crate::events::Event;
+use crate::events::PrintMessageEvent;
 use crate::model::Direction;
 use crate::queue::enqueue_message;
 use crate::traits::Commandable;
@@ -19,7 +21,7 @@ impl Effectable for LookEffect {
   #[named]
   fn execute(&self, ecs: &mut World) {
     if let Some(room) = get_current_room!(ecs, self.entity) {
-      enq_message!(format_room!(ecs, room));
+      enq_event!(Event::PrintMessage(PrintMessageEvent::RoomDescription(room)));
     }
   }
 }
