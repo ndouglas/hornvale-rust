@@ -58,7 +58,7 @@ impl State {
       Ok(line) => {
         let player_entity = get_player!(self.ecs);
         match Command::from_str(&line, player_entity) {
-          Ok(command) => add_command!(self.ecs, player_entity, command),
+          Ok(command) => enq_command!(command),
           Err(_) => enq_message!(format!("{}", "What?".bright_red())),
         }
       },
