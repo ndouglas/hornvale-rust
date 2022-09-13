@@ -1,8 +1,6 @@
 use colored::*;
-use rustyline::{Editor, ExternalPrinter, Result};
+use rustyline::Editor;
 use specs::prelude::*;
-use std::thread;
-use std::time::Duration;
 
 use crate::commands::Command;
 use crate::ecs::components::*;

@@ -1,5 +1,5 @@
 #![allow(unused_macros)]
-#![allow(unused_imports)]
+//#![allow(unused_imports)]
 
 #[macro_use]
 extern crate clap;
@@ -24,7 +24,7 @@ extern crate uuid;
 pub use hornvale::*;
 
 use clap::Parser;
-use rustyline::{Editor, ExternalPrinter, Result};
+use rustyline::{Editor, ExternalPrinter};
 use std::thread;
 use std::time::Duration;
 

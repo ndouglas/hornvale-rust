@@ -1,16 +1,9 @@
-use colored::*;
 use specs::prelude::*;
 
-use crate::actions::*;
-use crate::commands::Command;
-use crate::ecs::components::*;
 use crate::events::Event;
 use crate::events::PrintMessageEvent;
-use crate::model::Direction;
-use crate::queue::enqueue_message;
-use crate::traits::Commandable;
+
 use crate::traits::Effectable;
-use crate::traits::WorldUsable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct LookEffect {

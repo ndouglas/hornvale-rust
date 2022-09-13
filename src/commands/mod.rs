@@ -4,7 +4,6 @@ use std::error::Error as ErrorTrait;
 use std::fmt;
 use std::str::FromStr;
 
-use crate::actions::Action;
 use crate::model::Direction;
 use crate::traits::Commandable;
 

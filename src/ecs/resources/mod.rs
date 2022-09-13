@@ -1,5 +1,4 @@
 use specs::prelude::*;
-use std::collections::HashMap;
 
 pub mod player;
 pub use player::*;
@@ -12,8 +11,6 @@ pub use tick::*;
 
 use crate::ecs::components::*;
 use crate::model::Direction;
-use crate::model::Exit;
-use crate::model::Exits;
 
 #[named]
 pub fn insert_resources(ecs: &mut World) {

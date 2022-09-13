@@ -1,4 +1,3 @@
-use serde::*;
 use specs::prelude::*;
 use specs_derive::Component;
 

@@ -1,13 +1,10 @@
-use serde::*;
 use specs::prelude::*;
-use specs::prelude::*;
+
 use specs_derive::Component;
-use std::collections::HashMap;
 
 use crate::model::Direction;
 use crate::model::Exit;
 use crate::model::Exits;
-use crate::traits::WorldUsable;
 
 #[derive(Component, Clone, Debug, Default, PartialEq)]
 pub struct HasExits {

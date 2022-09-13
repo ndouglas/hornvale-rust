@@ -1,17 +1,11 @@
 use colored::*;
 use specs::prelude::*;
 
-use crate::actions::*;
-use crate::commands::Command;
-use crate::ecs::components::*;
 use crate::effects::Effect;
 use crate::effects::MoveEntityEffect;
 use crate::model::Direction;
-use crate::queue::enqueue_effect;
-use crate::queue::enqueue_message;
+
 use crate::traits::Actionable;
-use crate::traits::Commandable;
-use crate::traits::WorldUsable;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub struct MoveDirectionAction {
