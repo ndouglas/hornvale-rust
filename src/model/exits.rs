@@ -18,7 +18,6 @@ pub struct Exits {
   pub down: Option<Exit>,
   pub r#in: Option<Exit>,
   pub out: Option<Exit>,
-  pub other: Option<Exit>,
 }
 
 impl Exits {
@@ -38,7 +37,6 @@ impl Exits {
       Down => self.down.clone(),
       In => self.r#in.clone(),
       Out => self.out.clone(),
-      Other(_) => self.other.clone(),
     }
   }
 
@@ -58,7 +56,6 @@ impl Exits {
       Down => self.down = exit,
       In => self.r#in = exit,
       Out => self.out = exit,
-      Other(_) => self.other = exit,
     }
   }
 
@@ -77,7 +74,6 @@ impl Exits {
       self.down.clone(),
       self.r#in.clone(),
       self.out.clone(),
-      self.other.clone(),
     ]
   }
 
@@ -117,7 +113,6 @@ impl Default for Exits {
       down: None,
       r#in: None,
       out: None,
-      other: None,
     }
   }
 }

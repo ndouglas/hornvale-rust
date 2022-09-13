@@ -47,9 +47,7 @@ impl HasExitsWorld for World {
       }
     }
     if bidirectional {
-      if let Some(inverse) = &direction.get_inverse() {
-        self.create_exit(to, from, inverse, false);
-      }
+      self.create_exit(to, from, &direction.get_inverse(), false);
     }
   }
 }
