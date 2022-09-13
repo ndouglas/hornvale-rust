@@ -4,13 +4,11 @@ use specs::prelude::*;
 
 use crate::commands::Command;
 use crate::ecs::components::*;
-use crate::ecs::dispatcher::{get_new_dispatcher, UnifiedDispatcher};
 use crate::ecs::resources::*;
 use crate::queue::*;
 
 pub struct State {
   pub ecs: World,
-  pub dispatcher: Box<dyn UnifiedDispatcher + 'static>,
   pub editor: Editor<()>,
 }
 
@@ -23,7 +21,6 @@ impl State {
     State {
       ecs,
       editor,
-      dispatcher: get_new_dispatcher(),
     }
   }
 
@@ -34,7 +31,6 @@ impl State {
 
   #[named]
   pub fn run_systems(&mut self) {
-    self.dispatcher.run_now(&mut self.ecs);
     self.ecs.maintain();
     run_command_queue(&mut self.ecs);
     self.ecs.maintain();
