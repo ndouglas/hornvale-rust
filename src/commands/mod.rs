@@ -14,12 +14,15 @@ pub mod look;
 pub use look::*;
 pub mod move_direction;
 pub use move_direction::*;
+pub mod quit;
+pub use quit::*;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub enum Command {
   Echo(EchoCommand),
   Look(LookCommand),
   MoveDirection(MoveDirectionCommand),
+  Quit(QuitCommand),
 }
 
 #[derive(Debug)]
@@ -46,7 +49,7 @@ impl Command {
     let second: String = words.get(1).unwrap_or(&"").to_string();
     match first.as_str() {
       "echo" => Ok(cmd_echo!(entity, words[1..].join(" "))),
-      "quit" => Ok(/*cmd_quit!(entity)*/ cmd_look!(entity)),
+      "quit" => Ok(cmd_quit!(entity)),
       "look" | "l" => Ok(cmd_look!(entity)),
       "move" | "go" => match Direction::from_str(&second) {
         Ok(direction) => Ok(cmd_move_to!(entity, direction)),
@@ -61,59 +64,7 @@ impl Command {
     }
   }
 }
-/*
-"move" => match second.as_str() {
-  "n" | "north" => Some(cmd_move_to!(entity, Direction::North)),
-  "ne" | "northeast" => Some(cmd_move_to!(entity, Direction::Northeast)),
-  "nw" | "northwest" => Some(cmd_move_to!(entity, Direction::Northwest)),
-  "e" | "east" => Some(cmd_move_to!(entity, Direction::East)),
-  "w" | "west" => Some(cmd_move_to!(entity, Direction::West)),
-  "s" | "south" => Some(cmd_move_to!(entity, Direction::South)),
-  "se" | "southeast" => Some(cmd_move_to!(entity, Direction::Southeast)),
-  "sw" | "southwest" => Some(cmd_move_to!(entity, Direction::Southwest)),
-  "up" => Some(cmd_move_to!(entity, Direction::Up)),
-  "down" => Some(cmd_move_to!(entity, Direction::Down)),
-  "in" => Some(cmd_move_to!(entity, Direction::In)),
-  "out" => Some(cmd_move_to!(entity, Direction::Out)),
-  &_ => {
-    enq_message!(format!("{}", "What?".bright_red()));
-    None
-  }
-},
-"n" | "north" => Some(cmd_move_to!(entity, Direction::North)),
-"ne" | "northeast" => Some(cmd_move_to!(entity, Direction::Northeast)),
-"nw" | "northwest" => Some(cmd_move_to!(entity, Direction::Northwest)),
-"e" | "east" => Some(cmd_move_to!(entity, Direction::East)),
-"w" | "west" => Some(cmd_move_to!(entity, Direction::West)),
-"s" | "south" => Some(cmd_move_to!(entity, Direction::South)),
-"se" | "southeast" => Some(cmd_move_to!(entity, Direction::Southeast)),
-"sw" | "southwest" => Some(cmd_move_to!(entity, Direction::Southwest)),
-"up" => Some(cmd_move_to!(entity, Direction::Up)),
-"down" => Some(cmd_move_to!(entity, Direction::Down)),
-"in" => Some(cmd_move_to!(entity, Direction::In)),
-"out" => Some(cmd_move_to!(entity, Direction::Out)),
-"l" | "look" => Some(cmd_look!(entity)),
-"echo" => Some(cmd_echo!(entity, words[1..].join(" "))),
-"quit" => {
-  enq_message!(format!("{}", "Quitting...".bright_blue()));
-  state.quit();
-  None
-}
-&_ => {
-  enq_message!(format!("{}", "What?".bright_red()));
-  None
-}
 
-fn from_str(input: &str) -> Result<Foo, Self::Err> {
-  match input {
-      "Bar"  => Ok(Foo::Bar),
-      "Baz"  => Ok(Foo::Baz),
-      "Bat"  => Ok(Foo::Bat),
-      "Quux" => Ok(Foo::Quux),
-      _      => Err(()),
-  }
-}
-*/
 impl Commandable for Command {
   #[named]
   fn execute(&self, ecs: &mut World) {
@@ -122,6 +73,7 @@ impl Commandable for Command {
       Echo(command) => command.execute(ecs),
       Look(command) => command.execute(ecs),
       MoveDirection(command) => command.execute(ecs),
+      Quit(command) => command.execute(ecs),
     }
   }
 }

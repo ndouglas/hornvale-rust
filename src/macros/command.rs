@@ -24,3 +24,10 @@ macro_rules! cmd_move_to {
     })
   };
 }
+
+#[macro_export]
+macro_rules! cmd_quit {
+  ($entity: expr) => {
+    Command::Quit(QuitCommand { entity: $entity })
+  };
+}

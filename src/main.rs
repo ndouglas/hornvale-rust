@@ -59,9 +59,11 @@ fn main() {
   // Main game loop.
   loop {
     state.tick();
-    state.read_input();
     if !state.should_continue() {
       break;
+    }
+    else {
+      state.read_input();
     }
   }
 }
