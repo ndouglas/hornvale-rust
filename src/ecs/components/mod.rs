@@ -1,7 +1,5 @@
 use specs::prelude::*;
 
-pub mod has_action;
-pub use has_action::*;
 pub mod has_description;
 pub use has_description::*;
 pub mod has_name;
@@ -18,7 +16,6 @@ pub use is_in_room::*;
 #[named]
 pub fn register_components(ecs: &mut World) {
   trace_enter!();
-  ecs.register::<HasAction>();
   ecs.register::<HasDescription>();
   ecs.register::<HasName>();
   ecs.register::<HasExits>();
