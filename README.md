@@ -38,7 +38,6 @@ Elements this would keep/not keep from each genre (traditionally speaking):
 
 More specific ideas:
 
-- TA/MUD-like movement (`enter`/`exit`/<Compass Directions (`north`, `ne`)>/<Contextual (`board ship`, `jump off cliff`)>)
 - Multiple levels of movement (macroscopic [traveling across the plains] and microscopic [moving between rooms in a house or dungeon]), moved between via `enter`/`exit` (the town/the castle/whatever)
 - Heavy focus on procedural generation.  If it can't be procedurally generated, it shouldn't be in the game.
 - Weather systems/celestial phenomenae/etc.  See _Minecraft_, etc.
@@ -61,6 +60,7 @@ More specific ideas:
 - Change the spammer to be a little more interesting, maybe.  It might be time to start writing weather systems or whatever.
 - Start poaching ideas from TADS, Inform, etc.
 - Start dealing with idea of energy/metabolism/speed/etc.
+- Pass through command parsing to player object, room, items in room, etc for commands that only make sense with a specific contextual element.
 
 General Flow:
 
