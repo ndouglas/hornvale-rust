@@ -1,7 +1,6 @@
 use colored::*;
 use specs::prelude::*;
 
-use crate::effects::Effect;
 use crate::traits::Effectable;
 
 #[derive(Clone, Debug, Hash, PartialEq)]

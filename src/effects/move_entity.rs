@@ -1,6 +1,5 @@
 use specs::prelude::*;
 
-use crate::effects::Effect;
 use crate::traits::Effectable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]

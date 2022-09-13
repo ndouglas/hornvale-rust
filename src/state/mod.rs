@@ -18,10 +18,7 @@ impl State {
     let mut ecs = World::new();
     register_components(&mut ecs);
     insert_resources(&mut ecs);
-    State {
-      ecs,
-      editor,
-    }
+    State { ecs, editor }
   }
 
   #[named]

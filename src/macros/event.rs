@@ -63,6 +63,8 @@ macro_rules! evt_will_attempt_to_perform_action {
   ($action: expr) => {{
     use crate::events::action_event::ActionEvent;
     use crate::events::action_event::WillAttemptToPerformActionEvent;
-    evt_action!(ActionEvent::WillAttemptToPerform(WillAttemptToPerformActionEvent($action)))
+    evt_action!(ActionEvent::WillAttemptToPerform(WillAttemptToPerformActionEvent(
+      $action
+    )))
   }};
 }

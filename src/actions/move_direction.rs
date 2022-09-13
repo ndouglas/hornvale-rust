@@ -1,4 +1,3 @@
-use colored::*;
 use specs::prelude::*;
 
 use crate::effects::Effect;
