@@ -7,7 +7,6 @@ pub enum RunMode {
 }
 
 impl RunMode {
-
   #[named]
   pub fn should_continue(self) -> bool {
     use RunMode::*;
@@ -16,5 +15,4 @@ impl RunMode {
       _ => true,
     }
   }
-
 }

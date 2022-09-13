@@ -41,7 +41,6 @@ impl fmt::Display for Error {
 }
 
 impl Command {
-
   #[named]
   pub fn from_str(string: &str, entity: Entity) -> Result<Self, ()> {
     let words: Vec<&str> = string.split_whitespace().collect();
@@ -55,11 +54,9 @@ impl Command {
         Ok(direction) => Ok(cmd_move_to!(entity, direction)),
         Err(_) => Err(()),
       },
-      other => {
-        match Direction::from_str(other) {
-          Ok(direction) => Ok(cmd_move_to!(entity, direction)),
-          Err(_) => Err(()),
-        }
+      other => match Direction::from_str(other) {
+        Ok(direction) => Ok(cmd_move_to!(entity, direction)),
+        Err(_) => Err(()),
       },
     }
   }

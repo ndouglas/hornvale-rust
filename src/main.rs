@@ -61,8 +61,7 @@ fn main() {
     state.tick();
     if !state.should_continue() {
       break;
-    }
-    else {
+    } else {
       state.read_input();
     }
   }
