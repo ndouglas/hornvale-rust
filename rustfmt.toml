@@ -3,3 +3,4 @@ reorder_imports = true
 reorder_modules = true
 tab_spaces = 2
 use_field_init_shorthand = true
+match_block_trailing_comma = true

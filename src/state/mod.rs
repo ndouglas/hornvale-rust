@@ -58,7 +58,7 @@ impl State {
   pub fn read_input(&mut self) {
     match self.editor.readline(format!("{} ", ">".blue()).as_str()) {
       Ok(line) => parse(line, self),
-      Err(_) => {}
+      Err(_) => {},
     }
   }
 }

@@ -142,7 +142,7 @@ impl fmt::Display for Exits {
           .collect::<Vec<String>>()
           .join(", ");
         format!("There are visible exits to the {}, and {}.", others, last)
-      }
+      },
     };
     write!(formatter, "{}", string)
   }

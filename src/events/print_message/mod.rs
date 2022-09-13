@@ -13,7 +13,7 @@ impl Eventable for PrintMessageEvent {
     match self {
       RoomDescription(room) => {
         enq_message!(format_room!(ecs, *room));
-      }
+      },
     }
   }
 }
