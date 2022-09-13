@@ -1,5 +1,5 @@
 #![allow(unused_macros)]
-// #![allow(unused_imports)]
+#![allow(unused_imports)]
 
 #[macro_use]
 extern crate clap;

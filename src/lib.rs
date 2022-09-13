@@ -1,5 +1,5 @@
 #![allow(unused_macros)]
-// #![allow(unused_imports)]
+#![allow(unused_imports)]
 
 extern crate colored;
 #[macro_use]
