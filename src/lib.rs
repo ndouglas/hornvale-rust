@@ -29,7 +29,7 @@ pub mod cli;
 pub mod command;
 pub mod component;
 pub mod effect;
-pub mod events;
+pub mod event;
 pub mod io;
 pub mod model;
 pub mod player;

@@ -22,7 +22,7 @@ macro_rules! enq_effect {
 #[macro_export]
 macro_rules! enq_event {
   ($event: expr) => {{
-    crate::events::enqueue_event($event)
+    crate::event::enqueue_event($event)
   }};
 }
 
