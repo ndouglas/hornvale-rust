@@ -1,5 +1,5 @@
 use super::Eventable;
-use crate::actions::Action;
+use crate::action::Action;
 
 pub enum ActionEvent {
   /// When the entity cannot (by game rules) perform the action.

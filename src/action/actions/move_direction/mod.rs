@@ -6,7 +6,7 @@ use crate::effects::PrintErrorEffect;
 use crate::model::Direction;
 use crate::state::STATE;
 
-use super::Actionable;
+use super::super::Actionable;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub struct MoveDirectionAction {

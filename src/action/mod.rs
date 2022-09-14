@@ -2,10 +2,8 @@ use specs::prelude::*;
 use std::collections::VecDeque;
 use std::sync::Mutex;
 
-pub mod look;
-pub use look::*;
-pub mod move_direction;
-pub use move_direction::*;
+pub mod actions;
+pub use actions::*;
 
 pub trait Actionable {
   fn attempt(&self);

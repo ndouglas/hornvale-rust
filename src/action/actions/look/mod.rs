@@ -1,6 +1,6 @@
 use specs::prelude::*;
 
-use super::Actionable;
+use super::super::Actionable;
 use crate::state::STATE;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
