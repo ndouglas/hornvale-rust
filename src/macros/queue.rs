@@ -15,7 +15,7 @@ macro_rules! enq_command {
 #[macro_export]
 macro_rules! enq_effect {
   ($effect: expr) => {{
-    crate::effects::enqueue_effect($effect)
+    crate::effect::enqueue_effect($effect)
   }};
 }
 

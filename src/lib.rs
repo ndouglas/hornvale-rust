@@ -28,7 +28,7 @@ pub mod action;
 pub mod cli;
 pub mod command;
 pub mod component;
-pub mod effects;
+pub mod effect;
 pub mod events;
 pub mod io;
 pub mod model;

@@ -1,8 +1,8 @@
 use specs::prelude::*;
 
-use crate::effects::Effect;
-use crate::effects::MoveEntityEffect;
-use crate::effects::PrintErrorEffect;
+use crate::effect::Effect;
+use crate::effect::MoveEntityEffect;
+use crate::effect::PrintErrorEffect;
 use crate::model::Direction;
 use crate::state::STATE;
 
