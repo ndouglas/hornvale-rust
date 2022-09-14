@@ -3,16 +3,15 @@
 
 #[macro_use]
 extern crate function_name;
-pub use ::function_name::named;
-
-pub use hornvale::*;
 
 use clap::Parser;
-use rustyline::{Editor, ExternalPrinter};
+use pretty_env_logger::init as pretty_env_logger_init;
+
+use hornvale::*;
 
 #[named]
 fn main() {
-  pretty_env_logger::init();
+  pretty_env_logger_init();
   state::State::new();
   io::start_output();
   let _args = cli::Arguments::parse();
