@@ -6,8 +6,8 @@ use std::thread::{sleep, spawn};
 use std::time::Duration;
 
 use crate::commands::Command;
-use crate::ecs::components::*;
-use crate::ecs::resources::*;
+
+
 use crate::queue::get_messages;
 use crate::state::STATE;
 

@@ -1,6 +1,6 @@
 use specs::prelude::*;
 
-use crate::actions::*;
+
 use crate::model::Direction;
 
 use super::Commandable;
