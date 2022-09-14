@@ -1,17 +1,14 @@
 use specs::prelude::*;
 
-pub mod player;
-pub use player::*;
-pub mod spawn_room;
-pub use spawn_room::*;
-
 use crate::ecs::components::*;
 use crate::model::Direction;
+use crate::player::PLAYER;
 
 #[named]
 pub fn insert_resources(ecs: &mut World) {
   let spawn_room = create_room!(ecs, "Spawn Room", "This is the Spawn Room");
-  ecs.insert(SpawnRoom(spawn_room));
+  let player = create_player!(ecs, "Player", "It's you, you idiot.", spawn_room);
+  PLAYER.lock().unwrap().0 = Some(player);
   let ne_room = create_room!(ecs, "Northeast Room", "This is the Northeastern Room.");
   let n_room = create_room!(ecs, "North Room", "This is the Northern Room.");
   let nw_room = create_room!(ecs, "Northwest Room", "This is the Northwestern Room.");
@@ -20,7 +17,6 @@ pub fn insert_resources(ecs: &mut World) {
   let se_room = create_room!(ecs, "Southeast Room", "This is the Southeastern Room.");
   let s_room = create_room!(ecs, "South Room", "This is the Southern Room.");
   let sw_room = create_room!(ecs, "Southwest Room", "This is the Southwestern Room.");
-  let _player = create_player!(ecs, "Player", "It's you, you idiot.", spawn_room);
   ecs.create_exit(spawn_room, ne_room, &Direction::Northeast, true);
   ecs.create_exit(spawn_room, n_room, &Direction::North, true);
   ecs.create_exit(n_room, ne_room, &Direction::East, true);

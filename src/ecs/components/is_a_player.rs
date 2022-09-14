@@ -6,12 +6,12 @@ use specs_derive::Component;
 pub struct IsAPlayer;
 
 pub trait IsAPlayerBuilder {
-  fn is_a_player(self) -> Self;
+  fn make_a_player(self) -> Self;
 }
 
 impl IsAPlayerBuilder for EntityBuilder<'_> {
   #[named]
-  fn is_a_player(self) -> Self {
+  fn make_a_player(self) -> Self {
     self.with(IsAPlayer)
   }
 }

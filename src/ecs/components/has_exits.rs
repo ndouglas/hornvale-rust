@@ -12,12 +12,12 @@ pub struct HasExits {
 }
 
 pub trait HasExitsBuilder {
-  fn has_exits(self) -> Self;
+  fn give_exits(self) -> Self;
 }
 
 impl HasExitsBuilder for EntityBuilder<'_> {
   #[named]
-  fn has_exits(self) -> Self {
+  fn give_exits(self) -> Self {
     self.with(HasExits::default())
   }
 }

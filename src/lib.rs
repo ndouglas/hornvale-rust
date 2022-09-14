@@ -32,6 +32,7 @@ pub mod effects;
 pub mod events;
 pub mod io;
 pub mod model;
+pub mod player;
 pub mod queue;
 pub mod run_mode;
 pub mod state;

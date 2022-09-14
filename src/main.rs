@@ -30,6 +30,7 @@ use rustyline::{Editor, ExternalPrinter};
 fn main() {
   pretty_env_logger::init();
   trace_enter!();
+  state::State::new();
   io::start_output();
   let _args = cli::Arguments::parse();
   queue::start_message_spammer();

@@ -1,16 +1,8 @@
 #[macro_export]
 macro_rules! get_player {
-  ($ecs: expr) => {{
-    use crate::ecs::resources::Player;
-    $ecs.fetch::<Player>().0
-  }};
-}
-
-#[macro_export]
-macro_rules! get_spawn_room {
-  ($ecs: expr) => {{
-    use crate::ecs::resources::SpawnRoom;
-    $ecs.fetch::<SpawnRoom>().0
+  () => {{
+    use crate::player::PLAYER;
+    PLAYER.lock().unwrap().0.unwrap()
   }};
 }
 

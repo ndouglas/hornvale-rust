@@ -6,12 +6,12 @@ use specs_derive::Component;
 pub struct IsInRoom(pub Entity);
 
 pub trait IsInRoomBuilder {
-  fn is_in_room(self, room: Entity) -> Self;
+  fn put_in_room(self, room: Entity) -> Self;
 }
 
 impl IsInRoomBuilder for EntityBuilder<'_> {
   #[named]
-  fn is_in_room(self, room: Entity) -> Self {
+  fn put_in_room(self, room: Entity) -> Self {
     self.with(IsInRoom(room))
   }
 }

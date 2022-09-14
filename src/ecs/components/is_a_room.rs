@@ -6,12 +6,12 @@ use specs_derive::Component;
 pub struct IsARoom;
 
 pub trait IsARoomBuilder {
-  fn is_a_room(self) -> Self;
+  fn make_a_room(self) -> Self;
 }
 
 impl IsARoomBuilder for EntityBuilder<'_> {
   #[named]
-  fn is_a_room(self) -> Self {
+  fn make_a_room(self) -> Self {
     self.with(IsARoom)
   }
 }

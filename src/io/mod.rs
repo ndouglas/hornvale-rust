@@ -41,8 +41,7 @@ pub fn read_input() {
   let input = { INPUT.lock().unwrap().readline(format!("{} ", ">".blue()).as_str()) };
   let result = match input {
     Ok(line) => {
-      let ecs = &STATE.lock().unwrap().ecs;
-      let player_entity = get_player!(ecs);
+      let player_entity = get_player!();
       match Command::from_str(&line, player_entity) {
         Ok(command) => enq_command!(command),
         Err(_) => enq_message!(format!("{}", "What?".bright_red())),
