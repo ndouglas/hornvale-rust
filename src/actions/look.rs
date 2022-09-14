@@ -1,7 +1,7 @@
 use specs::prelude::*;
 
-use crate::state::STATE;
 use super::Actionable;
+use crate::state::STATE;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct LookAction {

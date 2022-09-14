@@ -1,6 +1,8 @@
 use specs::prelude::*;
 
-use crate::traits::Eventable;
+use super::Eventable;
+
+use crate::state::STATE;
 
 pub enum PrintMessageEvent {
   RoomDescription(Entity),
@@ -8,11 +10,11 @@ pub enum PrintMessageEvent {
 
 impl Eventable for PrintMessageEvent {
   /// Dispatch this event.
-  fn dispatch(&self, ecs: &mut World) {
+  fn dispatch(&self) {
     use PrintMessageEvent::*;
     match self {
       RoomDescription(room) => {
-        enq_message!(format_room!(ecs, *room));
+        enq_message!(format_room!(&STATE.lock().unwrap().ecs, *room));
       },
     }
   }

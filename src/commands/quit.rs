@@ -1,6 +1,6 @@
 use specs::prelude::*;
 
-use crate::run_mode::{ RUN_MODE, RunMode };
+use crate::run_mode::{RunMode, RUN_MODE};
 
 use super::Commandable;
 

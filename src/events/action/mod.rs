@@ -1,7 +1,7 @@
 use specs::prelude::*;
 
+use super::Eventable;
 use crate::actions::Action;
-use crate::traits::Eventable;
 
 pub enum ActionEvent {
   /// When the entity cannot (by game rules) perform the action.
@@ -18,7 +18,7 @@ pub enum ActionEvent {
 
 impl Eventable for ActionEvent {
   /// Dispatch this event.
-  fn dispatch(&self, _ecs: &mut World) {
+  fn dispatch(&self) {
     use ActionEvent::*;
     match self {
       CouldNotPerformAction { .. } => {},

@@ -32,16 +32,13 @@ fn main() {
   trace_enter!();
   io::start_output();
   let _args = cli::Arguments::parse();
-  let mut state = state::STATE.lock().unwrap();
   queue::start_message_spammer();
   tick::start_tick();
   // Main game loop.
   loop {
-    state.tick();
-    if !state.should_continue() {
+    io::read_input();
+    if !run_mode::RUN_MODE.lock().unwrap().should_continue() {
       break;
-    } else {
-      state.read_input();
     }
   }
 }
