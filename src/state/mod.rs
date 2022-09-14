@@ -4,7 +4,7 @@ use specs::prelude::*;
 use std::sync::Mutex;
 
 use crate::actions::run_action_queue;
-use crate::commands::Command;
+use crate::commands::{ Command, enqueue_command, run_command_queue };
 use crate::ecs::components::*;
 use crate::ecs::resources::*;
 use crate::io::INPUT;

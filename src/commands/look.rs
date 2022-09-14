@@ -2,7 +2,7 @@ use specs::prelude::*;
 
 use crate::actions::*;
 
-use crate::traits::Commandable;
+use super::Commandable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct LookCommand {

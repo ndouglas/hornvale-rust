@@ -1,6 +1,6 @@
 use specs::prelude::*;
 
-use crate::traits::Commandable;
+use super::Commandable;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub struct EchoCommand {

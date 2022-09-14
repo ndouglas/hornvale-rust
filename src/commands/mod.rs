@@ -1,11 +1,12 @@
 use colored::*;
 use specs::prelude::*;
+use std::collections::VecDeque;
 use std::error::Error as ErrorTrait;
 use std::fmt;
 use std::str::FromStr;
+use std::sync::Mutex;
 
 use crate::model::Direction;
-use crate::traits::Commandable;
 
 pub mod echo;
 pub use echo::*;
@@ -36,6 +37,13 @@ impl fmt::Display for Error {
     match self {
       Error::WTFError => write!(f, "{}", "What?".bright_red()),
     }
+  }
+}
+
+pub trait Commandable {
+  /// Execute this command.
+  fn execute(&self) {
+    todo!();
   }
 }
 
@@ -70,6 +78,27 @@ impl Commandable for Command {
       Look(command) => command.execute(),
       MoveDirection(command) => command.execute(),
       Quit(command) => command.execute(),
+    }
+  }
+}
+
+lazy_static! {
+  pub static ref COMMAND_QUEUE: Mutex<VecDeque<Command>> = Mutex::new(VecDeque::new());
+}
+
+#[named]
+pub fn enqueue_command(command: Command) {
+  COMMAND_QUEUE.lock().unwrap().push_back(command);
+}
+
+#[named]
+pub fn run_command_queue() {
+  loop {
+    let command_option: Option<Command> = COMMAND_QUEUE.lock().unwrap().pop_front();
+    if let Some(command) = command_option {
+      command.execute();
+    } else {
+      break;
     }
   }
 }
