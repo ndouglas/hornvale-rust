@@ -1,10 +1,11 @@
 #[macro_export]
 macro_rules! move_entity_room {
-  ($ecs: expr, $entity: expr, $room: expr) => {{
+  ($entity: expr, $room: expr) => {{
     use crate::component::IsInRoom;
-    $ecs
-      .write_storage::<IsInRoom>()
-      .insert($entity, IsInRoom($room))
-      .expect(&format!("Unable to move entity {:?} to room {:?}!", $entity, $room));
+    use crate::entity::ENTITIES;
+    let mut entities = ENTITIES.lock().unwrap();
+    if let Some(is_in_room) = entities.is_in_room.get_opt_mut($entity) {
+      is_in_room.0 = $room;
+    }
   }};
 }

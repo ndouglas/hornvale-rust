@@ -1,11 +1,9 @@
-use specs::prelude::*;
+use crate::room::Room;
 
 use super::Eventable;
 
-use crate::state::STATE;
-
 pub enum PrintMessageEvent {
-  RoomDescription(Entity),
+  RoomDescription(Room),
 }
 
 impl Eventable for PrintMessageEvent {
@@ -14,7 +12,7 @@ impl Eventable for PrintMessageEvent {
     use PrintMessageEvent::*;
     match self {
       RoomDescription(room) => {
-        enq_message!(format_room!(&STATE.lock().unwrap().ecs, *room));
+        enq_message!(format_room!(*room));
       },
     }
   }

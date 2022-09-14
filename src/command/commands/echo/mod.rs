@@ -1,4 +1,4 @@
-use specs::prelude::*;
+use crate::entity::Entity;
 
 use super::super::Commandable;
 

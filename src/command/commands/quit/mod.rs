@@ -1,5 +1,4 @@
-use specs::prelude::*;
-
+use crate::entity::Entity;
 use crate::run_mode::{RunMode, RUN_MODE};
 
 use super::super::Commandable;

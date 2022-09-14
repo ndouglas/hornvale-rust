@@ -1,4 +1,3 @@
-use specs::prelude::*;
 use std::fmt;
 
 use crate::model::Direction;

@@ -1,9 +1,9 @@
 #[macro_export]
 macro_rules! cmd_echo {
-  ($entity: expr, $str: expr) => {{
+  ($entity: expr, $string: expr) => {{
     Command::Echo(EchoCommand {
       entity: $entity,
-      string: $str,
+      string: $string,
     })
   }};
 }
@@ -17,10 +17,10 @@ macro_rules! cmd_look {
 
 #[macro_export]
 macro_rules! cmd_move_to {
-  ($entity: expr, $dir: expr) => {{
+  ($entity: expr, $direction: expr) => {{
     Command::MoveDirection(MoveDirectionCommand {
       entity: $entity,
-      direction: $dir,
+      direction: $direction,
     })
   }};
 }

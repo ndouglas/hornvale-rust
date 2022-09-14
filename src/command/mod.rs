@@ -1,11 +1,11 @@
 use colored::*;
-use specs::prelude::*;
 use std::collections::VecDeque;
 use std::error::Error as ErrorTrait;
 use std::fmt;
 use std::str::FromStr;
 use std::sync::Mutex;
 
+use crate::entity::Entity;
 use crate::model::Direction;
 
 pub mod commands;

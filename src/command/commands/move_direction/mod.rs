@@ -1,5 +1,4 @@
-use specs::prelude::*;
-
+use crate::entity::Entity;
 use crate::model::Direction;
 
 use super::super::Commandable;

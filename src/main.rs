@@ -9,7 +9,7 @@ use pretty_env_logger::init as pretty_env_logger_init;
 
 use io::start_output;
 use message::start_message_spammer;
-use state::State;
+use room::generate_map;
 use tick::start_tick;
 
 use hornvale::*;
@@ -17,7 +17,7 @@ use hornvale::*;
 #[named]
 fn main() {
   pretty_env_logger_init();
-  State::new();
+  generate_map();
   start_output();
   let _args = cli::Arguments::parse();
   start_message_spammer();

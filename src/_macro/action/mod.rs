@@ -9,12 +9,12 @@ macro_rules! act_look {
 
 #[macro_export]
 macro_rules! act_move_direction {
-  ($entity: expr, $dir: expr) => {{
+  ($entity: expr, $direction: expr) => {{
     use crate::action::move_direction::MoveDirectionAction;
     use crate::action::Action;
     Action::MoveDirection(MoveDirectionAction {
       entity: $entity,
-      direction: $dir,
+      direction: $direction,
     })
   }};
 }

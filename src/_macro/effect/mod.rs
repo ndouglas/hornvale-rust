@@ -1,9 +1,9 @@
 #[macro_export]
 macro_rules! eff_print_room {
-  ($entity: expr) => {{
+  ($room: expr) => {{
     use crate::effect::print_room::PrintRoomEffect;
     use crate::effect::Effect;
-    Effect::PrintRoom(PrintRoomEffect { room: $entity })
+    Effect::PrintRoom(PrintRoomEffect { room: $room })
   }};
 }
 

@@ -8,22 +8,26 @@ macro_rules! get_player {
 
 #[macro_export]
 macro_rules! get_current_room {
-  ($ecs: expr, $entity: expr) => {{
+  ($entity: expr) => {{
     use crate::component::IsInRoom;
+    use crate::entity::ENTITIES;
     let mut result = None;
-    if let Some(IsInRoom(room_entity)) = $ecs.read_storage::<IsInRoom>().get($entity) {
-      result = Some(room_entity.to_owned());
+    let entities = ENTITIES.lock().unwrap();
+    if let Some(IsInRoom(room)) = entities.is_in_room.get_opt($entity) {
+      result = Some(room.to_owned());
     }
     result
   }};
 }
 
 #[macro_export]
-macro_rules! get_name {
-  ($ecs: expr, $entity: expr) => {{
+macro_rules! get_room_name {
+  ($room: expr) => {{
     use crate::component::HasName;
+    use crate::room::ROOMS;
     let mut result = None;
-    if let Some(HasName(name)) = $ecs.read_storage::<HasName>().get($entity) {
+    let rooms = ROOMS.lock().unwrap();
+    if let Some(HasName(name)) = rooms.has_name.get_opt($room) {
       result = Some(name.to_owned());
     }
     result
@@ -31,11 +35,13 @@ macro_rules! get_name {
 }
 
 #[macro_export]
-macro_rules! get_description {
-  ($ecs: expr, $entity: expr) => {{
+macro_rules! get_room_description {
+  ($room: expr) => {{
     use crate::component::HasDescription;
+    use crate::room::ROOMS;
     let mut result = None;
-    if let Some(HasDescription(description)) = $ecs.read_storage::<HasDescription>().get($entity) {
+    let rooms = ROOMS.lock().unwrap();
+    if let Some(HasDescription(description)) = rooms.has_description.get_opt($room) {
       result = Some(description.to_owned());
     }
     result
@@ -44,10 +50,12 @@ macro_rules! get_description {
 
 #[macro_export]
 macro_rules! get_exits {
-  ($ecs: expr, $entity: expr) => {{
+  ($room: expr) => {{
     use crate::component::HasExits;
+    use crate::room::ROOMS;
     let mut result = None;
-    if let Some(HasExits { exits }) = $ecs.read_storage::<HasExits>().get($entity) {
+    let rooms = ROOMS.lock().unwrap();
+    if let Some(HasExits { exits }) = rooms.has_exits.get_opt($room) {
       result = Some(exits.to_owned());
     }
     result
@@ -56,9 +64,9 @@ macro_rules! get_exits {
 
 #[macro_export]
 macro_rules! get_exit_to {
-  ($ecs: expr, $entity: expr, $direction: expr) => {{
+  ($room: expr, $direction: expr) => {{
     let mut result = None;
-    if let Some(exits) = get_exits!($ecs, $entity) {
+    if let Some(exits) = get_exits!($room) {
       if let Some(exit) = exits.get_exit($direction) {
         result = Some(exit.to_owned());
       }

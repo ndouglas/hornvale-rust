@@ -1,6 +1,5 @@
 use colored::*;
 use rustyline::{Editor, ExternalPrinter};
-use specs::prelude::*;
 use std::sync::Mutex;
 use std::thread::{sleep, spawn};
 use std::time::Duration;
@@ -8,12 +7,6 @@ use std::time::Duration;
 use crate::command::Command;
 
 use crate::message::get_messages;
-use crate::state::STATE;
-
-pub struct State {
-  pub ecs: World,
-  pub editor: Editor<()>,
-}
 
 lazy_static! {
   pub static ref INPUT: Mutex<Editor::<()>> = Mutex::new(Editor::<()>::new().unwrap());
