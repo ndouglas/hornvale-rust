@@ -14,7 +14,6 @@ lazy_static! {
   pub static ref STATE: Mutex<State> = Mutex::new(State::new());
 }
 
-
 #[named]
 pub fn register_components(ecs: &mut World) {
   trace_enter!();

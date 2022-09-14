@@ -2,8 +2,6 @@ use specs::prelude::*;
 use std::collections::VecDeque;
 use std::sync::Mutex;
 
-
-
 pub mod look;
 pub use look::*;
 pub mod move_direction;

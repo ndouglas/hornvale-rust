@@ -4,9 +4,9 @@ use std::thread::{sleep, spawn};
 use std::time::Duration;
 
 use crate::actions::run_action_queue;
-use crate::commands::{run_command_queue};
-use crate::effects::{run_effect_queue};
-use crate::events::{run_event_queue};
+use crate::commands::run_command_queue;
+use crate::effects::run_effect_queue;
+use crate::events::run_event_queue;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct Tick(pub u64);

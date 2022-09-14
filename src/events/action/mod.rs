@@ -1,5 +1,3 @@
-
-
 use super::Eventable;
 use crate::actions::Action;
 

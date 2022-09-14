@@ -1,6 +1,5 @@
 use colored::*;
 
-
 use super::Effectable;
 
 #[derive(Clone, Debug, Hash, PartialEq)]

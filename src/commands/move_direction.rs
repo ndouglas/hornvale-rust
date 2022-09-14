@@ -1,6 +1,5 @@
 use specs::prelude::*;
 
-
 use crate::model::Direction;
 
 use super::Commandable;
