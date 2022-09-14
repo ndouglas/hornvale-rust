@@ -30,6 +30,7 @@ pub mod commands;
 pub mod ecs;
 pub mod effects;
 pub mod events;
+pub mod io;
 pub mod model;
 pub mod queue;
 pub mod state;

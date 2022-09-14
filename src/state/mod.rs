@@ -1,24 +1,29 @@
 use colored::*;
 use rustyline::Editor;
 use specs::prelude::*;
+use std::sync::Mutex;
 
 use crate::commands::Command;
 use crate::ecs::components::*;
 use crate::ecs::resources::*;
+use crate::io::INPUT;
 use crate::queue::*;
 
 pub struct State {
   pub ecs: World,
-  pub editor: Editor<()>,
+}
+
+lazy_static! {
+  pub static ref GAME_STATE: Mutex<State> = Mutex::new(State::new());
 }
 
 impl State {
   #[named]
-  pub fn new(editor: Editor<()>) -> Self {
+  pub fn new() -> Self {
     let mut ecs = World::new();
     register_components(&mut ecs);
     insert_resources(&mut ecs);
-    State { ecs, editor }
+    State { ecs }
   }
 
   #[named]
@@ -43,7 +48,7 @@ impl State {
 
   #[named]
   pub fn read_input(&mut self) {
-    match self.editor.readline(format!("{} ", ">".blue()).as_str()) {
+    match INPUT.lock().unwrap().readline(format!("{} ", ">".blue()).as_str()) {
       Ok(line) => {
         let player_entity = get_player!(self.ecs);
         match Command::from_str(&line, player_entity) {

@@ -25,37 +25,15 @@ pub use hornvale::*;
 
 use clap::Parser;
 use rustyline::{Editor, ExternalPrinter};
-use std::thread;
-use std::time::Duration;
 
 #[named]
 fn main() {
   pretty_env_logger::init();
   trace_enter!();
-
-  let mut editor = Editor::<()>::new().unwrap();
-  let mut printer = editor.create_external_printer().unwrap();
-
+  io::start_output();
   let _args = cli::Arguments::parse();
-  let mut state = state::State::new(editor);
-
+  let mut state = state::GAME_STATE.lock().unwrap();
   queue::start_message_spammer();
-
-  // Message-printing loop.
-  use queue::get_messages;
-  use thread::{sleep, spawn};
-  let duration = Duration::from_millis(50);
-  spawn(move || loop {
-    let messages = get_messages();
-    if messages.len() > 0 {
-      for message in messages.iter() {
-        printer.print(format!("{}", message)).expect("External print failure");
-      }
-      printer.print(format!("{}", " ")).expect("External print failure");
-    }
-    sleep(duration);
-  });
-
   // Main game loop.
   loop {
     state.tick();
