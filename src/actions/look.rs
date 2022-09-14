@@ -1,6 +1,7 @@
 use specs::prelude::*;
 
-use crate::traits::Actionable;
+use crate::state::STATE;
+use super::Actionable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct LookAction {
@@ -9,7 +10,8 @@ pub struct LookAction {
 
 impl Actionable for LookAction {
   #[named]
-  fn attempt(&self, ecs: &mut World) {
+  fn attempt(&self) {
+    let ecs = &STATE.lock().unwrap().ecs;
     if let Some(room) = get_current_room!(ecs, self.entity) {
       enq_effect!(eff_print_room!(room));
     }

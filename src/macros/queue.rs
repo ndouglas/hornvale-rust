@@ -1,8 +1,8 @@
 #[macro_export]
 macro_rules! enq_action {
-  ($action: expr) => {
-    crate::queue::enqueue_action($action)
-  };
+  ($action: expr) => {{
+    crate::actions::enqueue_action($action)
+  }};
 }
 
 #[macro_export]

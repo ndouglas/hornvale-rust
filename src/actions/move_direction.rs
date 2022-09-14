@@ -4,7 +4,9 @@ use crate::effects::Effect;
 use crate::effects::MoveEntityEffect;
 use crate::effects::PrintErrorEffect;
 use crate::model::Direction;
-use crate::traits::Actionable;
+use crate::state::STATE;
+
+use super::Actionable;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub struct MoveDirectionAction {
@@ -14,7 +16,8 @@ pub struct MoveDirectionAction {
 
 impl Actionable for MoveDirectionAction {
   #[named]
-  fn attempt(&self, ecs: &mut World) {
+  fn attempt(&self) {
+    let ecs = &STATE.lock().unwrap().ecs;
     let room_entity = get_current_room!(ecs, self.entity).unwrap();
     match get_exit_to!(ecs, room_entity, &self.direction) {
       Some(exit) => enq_effect!(eff_move_entity!(self.entity, room_entity, exit.room_entity)),

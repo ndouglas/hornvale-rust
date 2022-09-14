@@ -4,15 +4,12 @@ pub mod player;
 pub use player::*;
 pub mod spawn_room;
 pub use spawn_room::*;
-pub mod tick;
-pub use tick::*;
 
 use crate::ecs::components::*;
 use crate::model::Direction;
 
 #[named]
 pub fn insert_resources(ecs: &mut World) {
-  ecs.insert(Tick(0));
   let spawn_room = create_room!(ecs, "Spawn Room", "This is the Spawn Room");
   ecs.insert(SpawnRoom(spawn_room));
   let ne_room = create_room!(ecs, "Northeast Room", "This is the Northeastern Room.");

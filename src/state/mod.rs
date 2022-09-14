@@ -3,6 +3,7 @@ use rustyline::Editor;
 use specs::prelude::*;
 use std::sync::Mutex;
 
+use crate::actions::run_action_queue;
 use crate::commands::Command;
 use crate::ecs::components::*;
 use crate::ecs::resources::*;
@@ -31,7 +32,7 @@ impl State {
   #[named]
   pub fn tick(&mut self) {
     run_command_queue();
-    run_action_queue(&mut self.ecs);
+    run_action_queue();
     run_effect_queue(&mut self.ecs);
     run_event_queue(&mut self.ecs);
   }
