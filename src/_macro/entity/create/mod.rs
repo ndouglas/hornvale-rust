@@ -15,7 +15,7 @@ macro_rules! create_room {
 #[macro_export]
 macro_rules! create_exit_inner {
   ($from: expr, $to: expr, $direction: expr) => {{
-    use crate::component::{ HasDescription, HasName, HasExits };
+    
     use crate::model::{ Direction, Exit };
     use crate::room::ROOMS;
     let mut rooms = ROOMS.lock().unwrap();
@@ -47,7 +47,7 @@ macro_rules! create_exit {
 macro_rules! create_player {
   ($name: expr, $description: expr, $in_room: expr) => {{
     use crate::component::{ HasDescription, HasName, IsInRoom };
-    use crate::entity::{ Entity, ENTITIES };
+    use crate::entity::{ ENTITIES };
     use crate::player::PLAYER;
     let player_id = {
       let mut entities = ENTITIES.lock().unwrap();

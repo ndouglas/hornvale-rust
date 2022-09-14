@@ -1,5 +1,4 @@
 #![allow(unused_macros)]
-#![allow(unused_imports)]
 
 #[macro_use]
 extern crate function_name;
