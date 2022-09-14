@@ -1,6 +1,6 @@
 use specs::prelude::*;
 
-use crate::traits::Effectable;
+use super::Effectable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct PrintRoomEffect {
@@ -9,7 +9,7 @@ pub struct PrintRoomEffect {
 
 impl Effectable for PrintRoomEffect {
   #[named]
-  fn execute(&self, _ecs: &mut World) {
+  fn execute(&self) {
     print_room!(self.room);
   }
 }

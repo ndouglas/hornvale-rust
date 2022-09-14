@@ -1,7 +1,7 @@
 use colored::*;
 use specs::prelude::*;
 
-use crate::traits::Effectable;
+use super::Effectable;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub struct PrintErrorEffect {
@@ -10,7 +10,7 @@ pub struct PrintErrorEffect {
 
 impl Effectable for PrintErrorEffect {
   #[named]
-  fn execute(&self, _ecs: &mut World) {
+  fn execute(&self) {
     enq_message!(format!("{}", self.message.red()))
   }
 }

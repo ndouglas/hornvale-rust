@@ -5,6 +5,7 @@ use std::sync::Mutex;
 
 use crate::actions::run_action_queue;
 use crate::commands::{ Command, enqueue_command, run_command_queue };
+use crate::effects::{ Effect, enqueue_effect, run_effect_queue };
 use crate::ecs::components::*;
 use crate::ecs::resources::*;
 use crate::io::INPUT;
@@ -33,7 +34,7 @@ impl State {
   pub fn tick(&mut self) {
     run_command_queue();
     run_action_queue();
-    run_effect_queue(&mut self.ecs);
+    run_effect_queue();
     run_event_queue(&mut self.ecs);
   }
 

@@ -1,6 +1,6 @@
 use specs::prelude::*;
-
-use crate::traits::Effectable;
+use std::collections::VecDeque;
+use std::sync::Mutex;
 
 pub mod move_entity;
 pub use move_entity::*;
@@ -8,6 +8,13 @@ pub mod print_error;
 pub use print_error::*;
 pub mod print_room;
 pub use print_room::*;
+
+pub trait Effectable {
+  /// Execute this effect.
+  fn execute(&self) {
+    todo!();
+  }
+}
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub enum Effect {
@@ -18,12 +25,33 @@ pub enum Effect {
 
 impl Effectable for Effect {
   #[named]
-  fn execute(&self, ecs: &mut World) {
+  fn execute(&self) {
     use Effect::*;
     match self {
-      MoveEntity(effect) => effect.execute(ecs),
-      PrintError(effect) => effect.execute(ecs),
-      PrintRoom(effect) => effect.execute(ecs),
+      MoveEntity(effect) => effect.execute(),
+      PrintError(effect) => effect.execute(),
+      PrintRoom(effect) => effect.execute(),
+    }
+  }
+}
+
+lazy_static! {
+  pub static ref EFFECT_QUEUE: Mutex<VecDeque<Effect>> = Mutex::new(VecDeque::new());
+}
+
+#[named]
+pub fn enqueue_effect(effect: Effect) {
+  EFFECT_QUEUE.lock().unwrap().push_back(effect);
+}
+
+#[named]
+pub fn run_effect_queue() {
+  loop {
+    let effect_option: Option<Effect> = EFFECT_QUEUE.lock().unwrap().pop_front();
+    if let Some(effect) = effect_option {
+      effect.execute();
+    } else {
+      break;
     }
   }
 }
