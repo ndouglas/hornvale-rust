@@ -41,12 +41,8 @@ pub fn enqueue_action(action: Action) {
 
 #[named]
 pub fn run_action_queue() {
-  loop {
-    let action_option: Option<Action> = ACTION_QUEUE.lock().unwrap().pop_front();
-    if let Some(action) = action_option {
-      action.attempt();
-    } else {
-      break;
-    }
+  let actions = ACTION_QUEUE.lock().unwrap().drain(..).collect::<Vec<Action>>();
+  for action in actions.iter() {
+    action.attempt();
   }
 }

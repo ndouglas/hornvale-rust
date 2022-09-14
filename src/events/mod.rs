@@ -43,12 +43,8 @@ pub fn enqueue_event(event: Event) {
 
 #[named]
 pub fn run_event_queue() {
-  loop {
-    let event_option: Option<Event> = EVENT_QUEUE.lock().unwrap().pop_front();
-    if let Some(event) = event_option {
-      event.dispatch();
-    } else {
-      break;
-    }
+  let events = EVENT_QUEUE.lock().unwrap().drain(..).collect::<Vec<Event>>();
+  for event in events.iter() {
+    event.dispatch();
   }
 }

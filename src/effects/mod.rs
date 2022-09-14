@@ -46,12 +46,8 @@ pub fn enqueue_effect(effect: Effect) {
 
 #[named]
 pub fn run_effect_queue() {
-  loop {
-    let effect_option: Option<Effect> = EFFECT_QUEUE.lock().unwrap().pop_front();
-    if let Some(effect) = effect_option {
-      effect.execute();
-    } else {
-      break;
-    }
+  let effects = EFFECT_QUEUE.lock().unwrap().drain(..).collect::<Vec<Effect>>();
+  for effect in effects.iter() {
+    effect.execute();
   }
 }

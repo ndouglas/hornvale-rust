@@ -93,12 +93,8 @@ pub fn enqueue_command(command: Command) {
 
 #[named]
 pub fn run_command_queue() {
-  loop {
-    let command_option: Option<Command> = COMMAND_QUEUE.lock().unwrap().pop_front();
-    if let Some(command) = command_option {
-      command.execute();
-    } else {
-      break;
-    }
+  let commands = COMMAND_QUEUE.lock().unwrap().drain(..).collect::<Vec<Command>>();
+  for command in commands.iter() {
+    command.execute();
   }
 }
