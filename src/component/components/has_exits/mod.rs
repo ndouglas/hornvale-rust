@@ -1,5 +1,3 @@
-
-
 use crate::model::Exits;
 
 #[derive(Clone, Debug, Default, PartialEq)]

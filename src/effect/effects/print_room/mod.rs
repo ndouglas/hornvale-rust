@@ -1,4 +1,3 @@
-
 use crate::room::Room;
 
 use super::super::Effectable;

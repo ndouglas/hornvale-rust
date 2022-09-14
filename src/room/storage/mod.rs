@@ -1,5 +1,5 @@
-use crate::component::*;
 use super::Room;
+use crate::component::*;
 
 zcomponents_storage!(RoomStorage<Room>: {
   has_name: HasName,

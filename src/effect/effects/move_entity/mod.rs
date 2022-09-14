@@ -13,7 +13,7 @@ pub struct MoveEntityEffect {
 impl Effectable for MoveEntityEffect {
   #[named]
   fn execute(&self) {
-    move_entity_room!(self.entity, self.to);
+    move_entity!(self.entity, self.to);
     enq_effect!(eff_print_room!(self.to));
   }
 }

@@ -11,6 +11,14 @@ pub mod entity;
 #[macro_use]
 pub mod event;
 #[macro_use]
+pub mod exit;
+#[macro_use]
 pub mod message;
+#[macro_use]
+pub mod model;
+#[macro_use]
+pub mod player;
+#[macro_use]
+pub mod room;
 #[macro_use]
 pub mod tick;

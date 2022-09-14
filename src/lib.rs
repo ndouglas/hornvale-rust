@@ -20,6 +20,7 @@ pub mod event;
 pub mod io;
 pub mod message;
 pub mod model;
+pub mod object;
 pub mod player;
 pub mod room;
 pub mod run_mode;
