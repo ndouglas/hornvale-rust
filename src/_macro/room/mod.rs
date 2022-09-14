@@ -46,12 +46,25 @@ macro_rules! create_room {
 macro_rules! format_room {
   ($room: expr) => {{
     use colored::*;
+    use crate::component::IsInRoom;
+    use crate::entity::ENTITIES;
+    use crate::object::OBJECTS;
     let mut string = String::new();
     if let Some(name) = get_room_name!($room) {
       string.push_str(format!("{}\n", name.magenta()).as_str());
     }
     if let Some(description) = get_room_description!($room) {
       string.push_str(format!("{}\n", description.green()).as_str());
+    }
+    {
+      let objects = OBJECTS.lock().unwrap();
+      for id in objects.is_in_room.ids_collected() {
+        if IsInRoom(Some($room)) == *objects.is_in_room.get(id) {
+          if let Some(description) = objects.has_description.get_opt(id) {
+            string.push_str(format!("{}\n", description.0.blue()).as_str());
+          }
+        }
+      }
     }
     if let Some(exits) = get_exits!($room) {
       string.push_str(format!("{}\n", format!("{}", exits).bright_green()).as_str());

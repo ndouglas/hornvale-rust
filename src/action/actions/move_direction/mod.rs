@@ -15,7 +15,7 @@ pub struct MoveDirectionAction {
 impl Actionable for MoveDirectionAction {
   #[named]
   fn attempt(&self) {
-    let room = get_current_room!(self.entity).unwrap();
+    let room = get_current_room!(self.entity).unwrap().unwrap();
     match get_exit_to!(room, &self.direction) {
       Some(exit) => enq_effect!(eff_move_entity!(self.entity, room, exit.room_entity)),
       None => enq_effect!(eff_print_error!("You are unable to move in that direction!".to_string())),

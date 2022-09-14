@@ -13,12 +13,12 @@ macro_rules! get_current_room {
 }
 
 #[macro_export]
-macro_rules! move_entity {
+macro_rules! ent_move {
   ($entity: expr, $room: expr) => {{
     use crate::entity::ENTITIES;
     let mut entities = ENTITIES.lock().unwrap();
     if let Some(is_in_room) = entities.is_in_room.get_opt_mut($entity) {
-      is_in_room.0 = $room;
+      is_in_room.0 = Some($room);
     }
   }};
 }

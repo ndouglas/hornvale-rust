@@ -11,7 +11,7 @@ macro_rules! create_player {
       entities
         .has_description
         .insert(player_id, HasDescription($description.into()));
-      entities.is_in_room.insert(player_id, IsInRoom($in_room));
+      entities.is_in_room.insert(player_id, IsInRoom(Some($in_room)));
       player_id
     };
     PLAYER.lock().unwrap().0 = Some(player_id);

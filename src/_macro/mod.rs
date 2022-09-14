@@ -17,6 +17,8 @@ pub mod message;
 #[macro_use]
 pub mod model;
 #[macro_use]
+pub mod object;
+#[macro_use]
 pub mod player;
 #[macro_use]
 pub mod room;

@@ -70,6 +70,7 @@ More specific ideas:
   - Star Sign.  Random attribute/skill/whatever bonuses and penalties.
     - It'd be cool to automatically generate these.  For instance, we have 57 possible signs.  The world is generated and picks 8-17 of these, then the character is assigned one.
   - Talents.  Skill bonuses.
+- Initial descriptions for entities, objects, and rooms.  Once the initial description has been displayed, it will not be shown again.
 
 General Flow:
 

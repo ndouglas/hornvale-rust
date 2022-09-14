@@ -7,5 +7,5 @@ pub use storage::*;
 pub struct Object(u64);
 
 lazy_static! {
-  pub static ref ENTITIES: Mutex<ObjectStorage> = Mutex::new(ObjectStorage::new());
+  pub static ref OBJECTS: Mutex<ObjectStorage> = Mutex::new(ObjectStorage::new());
 }

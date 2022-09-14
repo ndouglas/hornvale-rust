@@ -12,8 +12,9 @@ lazy_static! {
 
 #[named]
 pub fn generate_map() {
-  let spawn_room = create_room!("Spawn Room", "This is the Spawn Room");
+  let spawn_room = create_room!("Spawn Room", "Dark olive trees crowd in on all sides, the air steams with the mist of a warm recent rain, midges hang in the air.");
   let _player = create_player!("Player", "It's you, you idiot.", spawn_room);
+  let _mushroom = create_object!("Mushroom", "A speckled mushroom grows out of the sodden earth, on a long stalk.", spawn_room);
   let ne_room = create_room!("Northeast Room", "This is the Northeastern Room.");
   let n_room = create_room!("North Room", "This is the Northern Room.");
   let nw_room = create_room!("Northwest Room", "This is the Northwestern Room.");

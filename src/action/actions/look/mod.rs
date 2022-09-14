@@ -9,7 +9,7 @@ pub struct LookAction {
 impl Actionable for LookAction {
   #[named]
   fn attempt(&self) {
-    if let Some(room) = get_current_room!(self.entity) {
+    if let Some(Some(room)) = get_current_room!(self.entity) {
       enq_effect!(eff_print_room!(room));
     }
   }
