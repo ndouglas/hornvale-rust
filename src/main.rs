@@ -29,7 +29,6 @@ use rustyline::{Editor, ExternalPrinter};
 #[named]
 fn main() {
   pretty_env_logger::init();
-  trace_enter!();
   state::State::new();
   io::start_output();
   let _args = cli::Arguments::parse();
