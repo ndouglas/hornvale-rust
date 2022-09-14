@@ -10,6 +10,7 @@ use crate::model::Direction;
 
 pub mod commands;
 pub use commands::*;
+#[macro_use] pub mod macros;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub enum Command {

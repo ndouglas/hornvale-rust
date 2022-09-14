@@ -1,7 +1,4 @@
 #[macro_use]
-pub mod command;
-pub use command::*;
-#[macro_use]
 pub mod debug;
 pub use debug::*;
 #[macro_use]

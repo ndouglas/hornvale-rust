@@ -26,7 +26,7 @@ pub use macros::*;
 
 #[macro_use] pub mod action;
 pub mod cli;
-pub mod command;
+#[macro_use] pub mod command;
 pub mod component;
 pub mod effect;
 pub mod event;
