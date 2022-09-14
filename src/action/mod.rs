@@ -4,6 +4,7 @@ use std::sync::Mutex;
 
 pub mod actions;
 pub use actions::*;
+#[macro_use] pub mod macros;
 
 pub trait Actionable {
   fn attempt(&self);

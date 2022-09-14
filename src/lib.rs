@@ -24,7 +24,7 @@ extern crate uuid;
 pub mod macros;
 pub use macros::*;
 
-pub mod action;
+#[macro_use] pub mod action;
 pub mod cli;
 pub mod command;
 pub mod component;
