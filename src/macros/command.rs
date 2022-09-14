@@ -31,3 +31,10 @@ macro_rules! cmd_quit {
     Command::Quit(QuitCommand { entity: $entity })
   }};
 }
+
+#[macro_export]
+macro_rules! enq_command {
+  ($command: expr) => {{
+    crate::command::enqueue_command($command)
+  }};
+}

@@ -68,3 +68,10 @@ macro_rules! evt_will_attempt_to_perform_action {
     )))
   }};
 }
+
+#[macro_export]
+macro_rules! enq_event {
+  ($event: expr) => {{
+    crate::event::enqueue_event($event)
+  }};
+}

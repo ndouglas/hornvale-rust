@@ -18,3 +18,10 @@ macro_rules! act_move_direction {
     })
   }};
 }
+
+#[macro_export]
+macro_rules! enq_action {
+  ($action: expr) => {{
+    crate::action::enqueue_action($action)
+  }};
+}

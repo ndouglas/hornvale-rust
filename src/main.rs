@@ -33,7 +33,7 @@ fn main() {
   state::State::new();
   io::start_output();
   let _args = cli::Arguments::parse();
-  queue::start_message_spammer();
+  message::start_message_spammer();
   tick::start_tick();
   // Main game loop.
   loop {

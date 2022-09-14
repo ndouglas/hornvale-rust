@@ -24,3 +24,10 @@ macro_rules! eff_print_error {
     Effect::PrintError(PrintErrorEffect { message: $message })
   }};
 }
+
+#[macro_export]
+macro_rules! enq_effect {
+  ($effect: expr) => {{
+    crate::effect::enqueue_effect($effect)
+  }};
+}

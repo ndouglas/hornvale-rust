@@ -7,7 +7,7 @@ use std::time::Duration;
 
 use crate::command::Command;
 
-use crate::queue::get_messages;
+use crate::message::get_messages;
 use crate::state::STATE;
 
 pub struct State {
