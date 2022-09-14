@@ -1,7 +1,7 @@
 use specs::prelude::*;
 use std::sync::Mutex;
 
-use crate::ecs::components::*;
+use crate::components::*;
 use crate::model::Direction;
 use crate::player::PLAYER;
 
@@ -12,6 +12,19 @@ pub struct State {
 
 lazy_static! {
   pub static ref STATE: Mutex<State> = Mutex::new(State::new());
+}
+
+
+#[named]
+pub fn register_components(ecs: &mut World) {
+  trace_enter!();
+  ecs.register::<HasDescription>();
+  ecs.register::<HasName>();
+  ecs.register::<HasExits>();
+  ecs.register::<IsAPlayer>();
+  ecs.register::<IsARoom>();
+  ecs.register::<IsInRoom>();
+  trace_exit!();
 }
 
 #[named]
