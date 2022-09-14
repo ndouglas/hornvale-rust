@@ -11,7 +11,7 @@ pub struct LookCommand {
 
 impl Commandable for LookCommand {
   #[named]
-  fn execute(&self, _ecs: &mut World) {
+  fn execute(&self) {
     enq_action!(act_look!(self.entity));
   }
 }

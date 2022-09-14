@@ -10,7 +10,7 @@ pub struct EchoCommand {
 
 impl Commandable for EchoCommand {
   #[named]
-  fn execute(&self, _ecs: &mut World) {
+  fn execute(&self) {
     enq_message!(format!("{}", self.string));
   }
 }

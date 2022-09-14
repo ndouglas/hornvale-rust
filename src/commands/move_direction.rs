@@ -14,7 +14,7 @@ pub struct MoveDirectionCommand {
 
 impl Commandable for MoveDirectionCommand {
   #[named]
-  fn execute(&self, _ecs: &mut World) {
+  fn execute(&self) {
     enq_action!(act_move_direction!(self.entity, self.direction.clone()));
   }
 }

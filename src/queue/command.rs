@@ -15,11 +15,11 @@ pub fn enqueue_command(command: Command) {
 }
 
 #[named]
-pub fn run_command_queue(ecs: &mut World) {
+pub fn run_command_queue() {
   loop {
     let command_option: Option<Command> = COMMAND_QUEUE.lock().unwrap().pop_front();
     if let Some(command) = command_option {
-      command.execute(ecs);
+      command.execute();
     } else {
       break;
     }

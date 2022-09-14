@@ -63,13 +63,13 @@ impl Command {
 
 impl Commandable for Command {
   #[named]
-  fn execute(&self, ecs: &mut World) {
+  fn execute(&self) {
     use Command::*;
     match self {
-      Echo(command) => command.execute(ecs),
-      Look(command) => command.execute(ecs),
-      MoveDirection(command) => command.execute(ecs),
-      Quit(command) => command.execute(ecs),
+      Echo(command) => command.execute(),
+      Look(command) => command.execute(),
+      MoveDirection(command) => command.execute(),
+      Quit(command) => command.execute(),
     }
   }
 }

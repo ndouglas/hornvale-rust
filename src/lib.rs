@@ -33,7 +33,9 @@ pub mod events;
 pub mod io;
 pub mod model;
 pub mod queue;
+pub mod run_mode;
 pub mod state;
+pub mod tick;
 pub mod traits;
 
 pub mod test {

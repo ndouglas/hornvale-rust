@@ -2,8 +2,6 @@ use specs::prelude::*;
 
 pub mod player;
 pub use player::*;
-pub mod run_mode;
-pub use run_mode::*;
 pub mod spawn_room;
 pub use spawn_room::*;
 pub mod tick;
@@ -14,7 +12,6 @@ use crate::model::Direction;
 
 #[named]
 pub fn insert_resources(ecs: &mut World) {
-  ecs.insert(RunMode::MainGame);
   ecs.insert(Tick(0));
   let spawn_room = create_room!(ecs, "Spawn Room", "This is the Spawn Room");
   ecs.insert(SpawnRoom(spawn_room));
