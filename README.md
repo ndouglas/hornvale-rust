@@ -53,12 +53,23 @@ More specific ideas:
 - I think text effects are out, but it'd be nice to demo some good formatting.
 - Add a mob!  We need something else animate so we can start working with event reactions, etc.
 - Change the spammer to be a little more interesting, maybe.  It might be time to start writing weather systems or whatever.
-- Start poaching ideas from TADS, Inform, etc.
+- Start poaching ideas from TADS, Inform, ADoM, NetHack, AtP, etc.
 - Start dealing with idea of energy/metabolism/speed/etc.
 - Pass through command parsing to player object, room, items in room, etc for commands that only make sense with a specific contextual element.
 - Try to simplify systems.
 - Add Results to Commands.
 - Probably ditch the ECS.  I think I'm working around it more than I'm benefiting from it.
+- Move messages to the IO module.
+- Attributes.
+- Species.
+- Faction.
+- Character build process.  I like the tug-the-threads model of AtP II.
+  - Species should give the attribute starting values, skill bonuses/penalties.  (Ogres will suck at lockpicking, faerie at taking hits)
+  - No class.  I want a Skyrim-style classless system.
+  - Sex/Gender is an interesting question.  I kinda wanna have it and kinda wanna not have it.
+  - Star Sign.  Random attribute/skill/whatever bonuses and penalties.
+    - It'd be cool to automatically generate these.  For instance, we have 57 possible signs.  The world is generated and picks 8-17 of these, then the character is assigned one.
+  - Talents.  Skill bonuses.
 
 General Flow:
 
