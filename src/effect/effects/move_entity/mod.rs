@@ -2,7 +2,7 @@ use specs::prelude::*;
 
 use crate::state::STATE;
 
-use super::Effectable;
+use super::super::Effectable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct MoveEntityEffect {

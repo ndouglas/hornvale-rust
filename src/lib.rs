@@ -21,12 +21,10 @@ extern crate specs;
 extern crate uuid;
 
 #[macro_use]
-pub mod macros;
-pub use macros::*;
-
-#[macro_use] pub mod action;
+pub mod _macro;
+pub mod action;
 pub mod cli;
-#[macro_use] pub mod command;
+pub mod command;
 pub mod component;
 pub mod effect;
 pub mod event;

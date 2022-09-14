@@ -1,6 +1,6 @@
 use colored::*;
 
-use super::Effectable;
+use super::super::Effectable;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub struct PrintErrorEffect {

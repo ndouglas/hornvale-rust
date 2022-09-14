@@ -7,14 +7,6 @@ macro_rules! get_player {
 }
 
 #[macro_export]
-macro_rules! get_tick {
-  ($ecs: expr) => {{
-    use crate::ecs::resources::Tick;
-    *$ecs.fetch::<Tick>()
-  }};
-}
-
-#[macro_export]
 macro_rules! get_current_room {
   ($ecs: expr, $entity: expr) => {{
     use crate::component::IsInRoom;

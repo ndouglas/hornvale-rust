@@ -1,6 +1,6 @@
 use specs::prelude::*;
 
-use super::Effectable;
+use super::super::Effectable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct PrintRoomEffect {
