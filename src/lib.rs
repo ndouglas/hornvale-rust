@@ -26,7 +26,7 @@ pub use macros::*;
 
 pub mod action;
 pub mod cli;
-pub mod commands;
+pub mod command;
 pub mod components;
 pub mod effects;
 pub mod events;

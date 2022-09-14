@@ -8,14 +8,8 @@ use std::sync::Mutex;
 
 use crate::model::Direction;
 
-pub mod echo;
-pub use echo::*;
-pub mod look;
-pub use look::*;
-pub mod move_direction;
-pub use move_direction::*;
-pub mod quit;
-pub use quit::*;
+pub mod commands;
+pub use commands::*;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub enum Command {

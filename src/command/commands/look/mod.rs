@@ -1,6 +1,6 @@
 use specs::prelude::*;
 
-use super::Commandable;
+use super::super::Commandable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct LookCommand {

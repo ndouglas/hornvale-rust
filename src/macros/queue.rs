@@ -8,7 +8,7 @@ macro_rules! enq_action {
 #[macro_export]
 macro_rules! enq_command {
   ($command: expr) => {{
-    crate::commands::enqueue_command($command)
+    crate::command::enqueue_command($command)
   }};
 }
 

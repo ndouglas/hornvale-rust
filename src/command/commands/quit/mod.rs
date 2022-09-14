@@ -2,7 +2,7 @@ use specs::prelude::*;
 
 use crate::run_mode::{RunMode, RUN_MODE};
 
-use super::Commandable;
+use super::super::Commandable;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub struct QuitCommand {

@@ -2,7 +2,7 @@ use specs::prelude::*;
 
 use crate::model::Direction;
 
-use super::Commandable;
+use super::super::Commandable;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub struct MoveDirectionCommand {

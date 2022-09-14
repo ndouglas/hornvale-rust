@@ -5,7 +5,7 @@ use std::sync::Mutex;
 use std::thread::{sleep, spawn};
 use std::time::Duration;
 
-use crate::commands::Command;
+use crate::command::Command;
 
 use crate::queue::get_messages;
 use crate::state::STATE;
