@@ -1,7 +1,7 @@
 use specs::prelude::*;
 use std::sync::Mutex;
 
-use crate::components::*;
+use crate::component::*;
 use crate::model::Direction;
 use crate::player::PLAYER;
 
