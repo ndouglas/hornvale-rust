@@ -28,11 +28,16 @@ macro_rules! format_room {
       string.push_str(format!("{}\n", description.green()).as_str());
     }
     {
-      let entities = ENTITIES.lock().unwrap();
-      for id in entities.is_in_room.ids_collected() {
-        if IsInRoom(Some($room)) == *entities.is_in_room.get(id) {
-          if let Some(description) = entities.has_description.get_opt(id) {
-            string.push_str(format!("{}\n", description.0.blue()).as_str());
+      let ids = {
+        let entities = ENTITIES.lock().unwrap();
+        entities.is_in_room.ids_collected()
+      };
+      for id in ids {
+        if let Some(Some(room)) = get_current_room!(id) {
+          if room == $room {
+            if let Some(description) = get_description!(id) {
+              string.push_str(format!("{}\n", description.blue()).as_str());
+            }  
           }
         }
       }
