@@ -1,16 +1,14 @@
+use std::collections::{HashMap, HashSet};
+use std::sync::Mutex;
 
+use crate::entity::Entity;
 
-
-
-
-/*
 #[derive(PartialEq, Eq, Clone, Copy, Debug, Hash, Default)]
 pub struct Room(pub Entity);
 
 lazy_static! {
-  pub static ref ROOMS: Mutex<HashSet<Room>> = Mutex::new(HashSet::new());
+  pub static ref ROOM_ENTITIES: Mutex<HashMap<Room, HashSet<Entity>>> = Mutex::new(HashMap::new());
 }
-*/
 
 #[named]
 pub fn generate_map() {

@@ -1,20 +1,4 @@
 #[macro_export]
-macro_rules! evt_print_message {
-  ($print_message_event: expr) => {{
-    use crate::event::Event;
-    Event::PrintMessage($print_message_event)
-  }};
-}
-
-#[macro_export]
-macro_rules! evt_print_room {
-  ($entity: expr) => {{
-    use crate::event::print_message::PrintMessageEvent;
-    evt_print_message!(PrintMessageEvent::RoomDescription($entity))
-  }};
-}
-
-#[macro_export]
 macro_rules! evt_action {
   ($action_event: expr) => {{
     use crate::event::Event;

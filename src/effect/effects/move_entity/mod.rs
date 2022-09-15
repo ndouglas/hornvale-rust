@@ -13,6 +13,6 @@ impl Effectable for MoveEntityEffect {
   #[named]
   fn execute(&self) {
     ent_move!(self.entity, self.to);
-    enq_effect!(eff_print_room!(self.to));
+    enq_action!(act_look!(self.entity));
   }
 }

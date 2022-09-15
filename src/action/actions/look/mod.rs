@@ -1,5 +1,5 @@
-use super::super::Actionable;
 use crate::entity::Entity;
+use super::super::Actionable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct LookAction {
