@@ -38,8 +38,8 @@ pub fn start_message_spammer() {
 // Unfortunately, it can end up interfering with other messages that get interleaved.
 #[named]
 pub fn show_spinner(length: usize) {
-  use std::thread::{spawn};
-  
+  use std::thread::spawn;
+
   spawn(move || {
     let frames = vec![
       "🕛 ", "🕐 ", "🕑 ", "🕒 ", "🕓 ", "🕔 ", "🕕 ", "🕖 ", "🕗 ", "🕘 ", "🕙 ", "🕚 ",

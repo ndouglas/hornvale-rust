@@ -1,8 +1,8 @@
 #[macro_export]
 macro_rules! create_exit_inner {
   ($from: expr, $to: expr, $direction: expr) => {{
-    use crate::model::{Direction, Exit};
     use crate::entity::ENTITIES;
+    use crate::model::{Direction, Exit};
     let mut entities = ENTITIES.lock().unwrap();
     if let Some(has_exits) = entities.has_exits.get_opt_mut($from) {
       has_exits.exits.set_exit(

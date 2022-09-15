@@ -8,3 +8,5 @@ pub mod has_exits;
 pub use has_exits::*;
 pub mod is_in_room;
 pub use is_in_room::*;
+pub mod on_get_description;
+pub use on_get_description::*;

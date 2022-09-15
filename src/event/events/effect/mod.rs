@@ -5,9 +5,17 @@ use crate::room::ROOM_ENTITIES;
 
 pub enum EffectEvent {
   /// Sent when the effect will happen.
-  WillHappen { effect: Effect, message: Option<String>, room: Entity },
+  WillHappen {
+    effect: Effect,
+    message: Option<String>,
+    room: Entity,
+  },
   /// Sent when the effect did happen.
-  DidHappen { effect: Effect, message: Option<String>, room: Entity },
+  DidHappen {
+    effect: Effect,
+    message: Option<String>,
+    room: Entity,
+  },
 }
 
 impl Eventable for EffectEvent {
@@ -15,9 +23,7 @@ impl Eventable for EffectEvent {
   fn dispatch(&self) {
     use EffectEvent::*;
     match self {
-      WillHappen { effect, message, room } => {
-
-      },
+      WillHappen { effect, message, room } => {},
       DidHappen { effect, message, room } => {},
     }
   }

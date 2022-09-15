@@ -4,15 +4,35 @@ use crate::entity::Entity;
 
 pub enum ActionEvent {
   /// When the entity cannot (by game rules) perform the action.
-  CouldNotPerformAction { action: Action, message: Option<String>, room: Entity },
+  CouldNotPerformAction {
+    action: Action,
+    message: Option<String>,
+    room: Entity,
+  },
   /// When the entity will attempt to perform the action.
-  WillAttemptToPerformAction { action: Action, message: Option<String>, room: Entity },
+  WillAttemptToPerformAction {
+    action: Action,
+    message: Option<String>,
+    room: Entity,
+  },
   /// When the entity will fail to successfully perform the action.
-  WillFailToPerformAction { action: Action, message: Option<String>, room: Entity  },
+  WillFailToPerformAction {
+    action: Action,
+    message: Option<String>,
+    room: Entity,
+  },
   /// When the entity successfully performed the action.
-  DidPerformAction { action: Action, message: Option<String>, room: Entity  },
+  DidPerformAction {
+    action: Action,
+    message: Option<String>,
+    room: Entity,
+  },
   /// When the entity failed to successfully perform the action.
-  DidFailToPerformAction { action: Action, message: Option<String>, room: Entity  },
+  DidFailToPerformAction {
+    action: Action,
+    message: Option<String>,
+    room: Entity,
+  },
 }
 
 impl Eventable for ActionEvent {

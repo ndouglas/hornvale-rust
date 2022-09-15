@@ -12,7 +12,7 @@ pub struct MoveEntityEffect {
 impl Effectable for MoveEntityEffect {
   #[named]
   fn execute(&self) {
-    ent_move!(self.entity, self.to);
+    move_entity!(self.entity, self.to);
     enq_action!(act_look!(self.entity));
   }
 }

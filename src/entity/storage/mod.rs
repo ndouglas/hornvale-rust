@@ -7,4 +7,5 @@ zcomponents_storage!(EntityStorage<Entity>: {
   has_name: HasName,
   has_visited_rooms: HasVisitedRooms,
   is_in_room: IsInRoom,
+  on_get_description: OnGetDescription,
 });

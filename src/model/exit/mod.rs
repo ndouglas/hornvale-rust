@@ -1,7 +1,7 @@
 use std::fmt;
 
-use crate::model::Direction;
 use crate::entity::Entity;
+use crate::model::Direction;
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Exit {

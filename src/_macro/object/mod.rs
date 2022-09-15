@@ -8,8 +8,8 @@ macro_rules! create_object {
     entities.has_name.insert(entity_id, HasName($name.into()));
     entities
       .has_description
-      .insert(entity_id, HasDescription({ |entity_id| $description.into() }));
-      entities.is_in_room.insert(entity_id, IsInRoom(None));
+      .insert(entity_id, HasDescription($description.into()));
+    entities.is_in_room.insert(entity_id, IsInRoom(None));
     entity_id
   }};
   ($name: expr, $description: expr, $in_room: expr) => {{
@@ -20,8 +20,8 @@ macro_rules! create_object {
     entities.has_name.insert(entity_id, HasName($name.into()));
     entities
       .has_description
-      .insert(entity_id, HasDescription({ |_entity_id| $description.into() }));
-      entities.is_in_room.insert(entity_id, IsInRoom(Some($in_room)));
+      .insert(entity_id, HasDescription($description.into()));
+    entities.is_in_room.insert(entity_id, IsInRoom(Some($in_room)));
     entity_id
   }};
 }
