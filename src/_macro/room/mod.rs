@@ -10,6 +10,7 @@ macro_rules! create_room {
       .has_description
       .insert(room_id, HasDescription($description.into()));
     entities.has_exits.insert(room_id, HasExits::default());
+    entities.is_a_room.insert(room_id, IsARoom);
     room_id
   }};
 }
@@ -17,6 +18,7 @@ macro_rules! create_room {
 #[macro_export]
 macro_rules! format_room {
   ($room: expr) => {{
+    use std::collections::HashSet;
     use crate::component::*;
     use crate::entity::ENTITIES;
     use colored::*;
@@ -28,16 +30,18 @@ macro_rules! format_room {
       string.push_str(format!("{}\n", description.green()).as_str());
     }
     {
-      let ids = {
+      let ids: HashSet<Entity> = {
         let entities = ENTITIES.lock().unwrap();
-        entities.is_in_room.ids_collected()
+        let entities_in_a_room = entities.is_in_room.ids_collected().into_iter().collect::<HashSet<Entity>>();
+        let object_entities = entities.is_an_object.ids_collected().into_iter().collect::<HashSet<Entity>>();
+        entities_in_a_room.intersection(&object_entities).into_iter().map(|entity| *entity).collect()
       };
       for id in ids {
         if let Some(Some(room)) = get_current_room!(id) {
           if room == $room {
             if let Some(description) = get_description!(id) {
               string.push_str(format!("{}\n", description.blue()).as_str());
-            }  
+            }
           }
         }
       }

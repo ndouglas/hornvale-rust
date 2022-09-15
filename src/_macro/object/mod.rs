@@ -9,6 +9,7 @@ macro_rules! create_object {
     entities
       .has_description
       .insert(entity_id, HasDescription($description.into()));
+    entities.is_an_object.insert(entity_id, IsAnObject);
     entities.is_in_room.insert(entity_id, IsInRoom(None));
     entity_id
   }};
@@ -21,6 +22,7 @@ macro_rules! create_object {
     entities
       .has_description
       .insert(entity_id, HasDescription($description.into()));
+    entities.is_an_object.insert(entity_id, IsAnObject);
     entities.is_in_room.insert(entity_id, IsInRoom(Some($in_room)));
     entity_id
   }};

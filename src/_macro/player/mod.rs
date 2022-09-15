@@ -16,9 +16,9 @@ macro_rules! create_player {
       entities
         .has_visited_rooms
         .insert(player_id, HasVisitedRooms(HashSet::new()));
-      entities
-        .on_get_description
-        .insert(player_id, OnGetDescription(|_|{
+      entities.on_get_description.insert(
+        player_id,
+        OnGetDescription(|_| {
           use rand::seq::SliceRandom;
           let descriptions = vec![
             "No... really. It's just you.",
@@ -27,7 +27,9 @@ macro_rules! create_player {
             "Okay.  You're ugly and you smell funny.  Are you happy now?",
           ];
           Some(format!("{}", descriptions.choose(&mut rand::thread_rng()).unwrap()))
-        }));
+        }),
+      );
+      entities.is_a_player.insert(player_id, IsAPlayer);
       player_id
     };
     PLAYER.lock().unwrap().0 = Some(player_id);
