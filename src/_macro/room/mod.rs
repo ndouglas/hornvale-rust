@@ -18,10 +18,10 @@ macro_rules! create_room {
 #[macro_export]
 macro_rules! format_room {
   ($room: expr) => {{
-    use std::collections::HashSet;
     use crate::component::*;
     use crate::entity::ENTITIES;
     use colored::*;
+    use std::collections::HashSet;
     let mut string = String::new();
     if let Some(name) = get_name!($room) {
       string.push_str(format!("{}\n", name.magenta()).as_str());
@@ -32,9 +32,21 @@ macro_rules! format_room {
     {
       let ids: HashSet<Entity> = {
         let entities = ENTITIES.lock().unwrap();
-        let entities_in_a_room = entities.is_in_room.ids_collected().into_iter().collect::<HashSet<Entity>>();
-        let object_entities = entities.is_an_object.ids_collected().into_iter().collect::<HashSet<Entity>>();
-        entities_in_a_room.intersection(&object_entities).into_iter().map(|entity| *entity).collect()
+        let entities_in_a_room = entities
+          .is_in_room
+          .ids_collected()
+          .into_iter()
+          .collect::<HashSet<Entity>>();
+        let object_entities = entities
+          .is_an_object
+          .ids_collected()
+          .into_iter()
+          .collect::<HashSet<Entity>>();
+        entities_in_a_room
+          .intersection(&object_entities)
+          .into_iter()
+          .map(|entity| *entity)
+          .collect()
       };
       for id in ids {
         if let Some(Some(room)) = get_current_room!(id) {
