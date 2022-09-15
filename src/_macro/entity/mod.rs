@@ -60,3 +60,13 @@ macro_rules! get_description {
     result
   }};
 }
+
+#[macro_export]
+macro_rules! add_component {
+  ($entity: expr, $type: ident, $value: expr) => {{
+    use crate::entity::ENTITIES;
+    use crate::component::*;
+    let mut entities = ENTITIES.lock().unwrap();
+    entities.$type.insert($entity, $value);
+  }};
+}

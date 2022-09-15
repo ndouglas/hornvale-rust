@@ -74,6 +74,11 @@ More specific ideas:
 - Triggers? (when an in-game message appears, execute a command)
 - Prompt customizability?
 - Spatial hashing? lol
+- onTake()
+- onDrop()
+- onEat()
+- onExamine()
+- onTaste()
 
 General Flow:
 
