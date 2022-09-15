@@ -18,11 +18,3 @@ macro_rules! create_player {
     player_id
   }};
 }
-
-#[macro_export]
-macro_rules! get_player {
-  () => {{
-    use crate::player::PLAYER;
-    PLAYER.lock().unwrap().0.unwrap()
-  }};
-}

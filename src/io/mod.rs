@@ -31,13 +31,14 @@ pub fn start_output() {
 
 #[named]
 pub fn read_input() {
-  let input = { INPUT.lock().unwrap().readline(format!("{} ", ">".blue()).as_str()) };    
+  let input = INPUT.lock().unwrap().readline(format!("{} ", ">".blue()).as_str());
   let result = match input {
     Ok(line) => {
-      let player_entity = get_player!();
-      match Command::from_str(&line, player_entity) {
-        Ok(command) => enq_command!(command),
-        Err(_) => enq_message!(format!("{}", "What?".bright_red())),
+      if let Some(player_entity) = PLAYER.lock().unwrap().0 {
+        match Command::from_str(&line, player_entity) {
+          Ok(command) => enq_command!(command),
+          Err(_) => enq_message!(format!("{}", "What?".bright_red())),
+        }
       }
     },
     Err(_) => {},
