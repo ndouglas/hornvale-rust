@@ -10,3 +10,5 @@ pub mod is_in_room;
 pub use is_in_room::*;
 pub mod on_get_description;
 pub use on_get_description::*;
+pub mod on_get_name;
+pub use on_get_name::*;

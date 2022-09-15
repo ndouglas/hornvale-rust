@@ -33,6 +33,11 @@ macro_rules! get_name {
     if let Some(HasName(name)) = entities.has_name.get_opt($entity) {
       result = Some(name.to_owned());
     }
+    if let Some(OnGetName(get_name)) = entities.on_get_name.get_opt($entity) {
+      if let Some(name) = get_name($entity) {
+        result = Some(name);
+      }
+    }
     result
   }};
 }
