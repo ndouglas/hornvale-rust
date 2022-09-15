@@ -1,27 +1,27 @@
 #[macro_export]
 macro_rules! create_object {
   ($name: expr, $description: expr) => {{
-    use crate::component::{HasDescription, HasName, IsInRoom};
-    use crate::object::OBJECTS;
-    let mut objects = OBJECTS.lock().unwrap();
-    let obj_id = objects.alloc_id();
-    objects.has_name.insert(obj_id, HasName($name.into()));
-    objects
+    use crate::component::*;
+    use crate::entity::ENTITIES;
+    let mut entities = ENTITIES.lock().unwrap();
+    let entity_id = entities.alloc_id();
+    entities.has_name.insert(entity_id, HasName($name.into()));
+    entities
       .has_description
-      .insert(obj_id, HasDescription({ |room_id| $description.into() }));
-    objects.is_in_room.insert(obj_id, IsInRoom(None));
-    obj_id
+      .insert(entity_id, HasDescription({ |entity_id| $description.into() }));
+      entities.is_in_room.insert(entity_id, IsInRoom(None));
+    entity_id
   }};
   ($name: expr, $description: expr, $in_room: expr) => {{
-    use crate::component::{HasDescription, HasName, IsInRoom};
-    use crate::object::OBJECTS;
-    let mut objects = OBJECTS.lock().unwrap();
-    let obj_id = objects.alloc_id();
-    objects.has_name.insert(obj_id, HasName($name.into()));
-    objects
+    use crate::component::*;
+    use crate::entity::ENTITIES;
+    let mut entities = ENTITIES.lock().unwrap();
+    let entity_id = entities.alloc_id();
+    entities.has_name.insert(entity_id, HasName($name.into()));
+    entities
       .has_description
-      .insert(obj_id, HasDescription({ |room_id| $description.into() }));
-    objects.is_in_room.insert(obj_id, IsInRoom(Some($in_room)));
-    obj_id
+      .insert(entity_id, HasDescription({ |_entity_id| $description.into() }));
+      entities.is_in_room.insert(entity_id, IsInRoom(Some($in_room)));
+    entity_id
   }};
 }

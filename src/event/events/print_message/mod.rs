@@ -1,9 +1,9 @@
-use crate::room::Room;
+use crate::entity::Entity;
 
 use super::Eventable;
 
 pub enum PrintMessageEvent {
-  RoomDescription(Room),
+  RoomDescription(Entity),
 }
 
 impl Eventable for PrintMessageEvent {

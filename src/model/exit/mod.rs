@@ -1,12 +1,12 @@
 use std::fmt;
 
 use crate::model::Direction;
-use crate::room::Room;
+use crate::entity::Entity;
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Exit {
   pub direction: Direction,
-  pub room_entity: Room,
+  pub room_entity: Entity,
   pub is_passable: bool,
 }
 

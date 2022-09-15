@@ -1,11 +1,11 @@
 #[macro_export]
 macro_rules! get_room_name {
   ($room: expr) => {{
-    use crate::component::HasName;
-    use crate::room::ROOMS;
+    use crate::component::*;
+    use crate::entity::ENTITIES;
     let mut result = None;
-    let rooms = ROOMS.lock().unwrap();
-    if let Some(HasName(name)) = rooms.has_name.get_opt($room) {
+    let entities = ENTITIES.lock().unwrap();
+    if let Some(HasName(name)) = entities.has_name.get_opt($room) {
       result = Some(name.to_owned());
     }
     result
@@ -15,11 +15,11 @@ macro_rules! get_room_name {
 #[macro_export]
 macro_rules! get_room_description {
   ($room: expr) => {{
-    use crate::component::HasDescription;
-    use crate::room::ROOMS;
+    use crate::component::*;
+    use crate::entity::ENTITIES;
     let mut result = None;
-    let rooms = ROOMS.lock().unwrap();
-    if let Some(HasDescription(description)) = rooms.has_description.get_opt($room) {
+    let entities = ENTITIES.lock().unwrap();
+    if let Some(HasDescription(description)) = entities.has_description.get_opt($room) {
       result = Some(description.to_owned());
     }
     result
@@ -29,24 +29,34 @@ macro_rules! get_room_description {
 #[macro_export]
 macro_rules! create_room {
   ($name: expr, $description: expr) => {{
-    use crate::component::{HasBeenVisited, HasDescription, HasExits, HasName};
-    use crate::room::ROOMS;
-    let mut rooms = ROOMS.lock().unwrap();
-    let room_id = rooms.alloc_id();
-    rooms.has_name.insert(room_id, HasName($name.into()));
-    rooms.has_description.insert(
+    use crate::component::*;
+    use crate::entity::ENTITIES;
+    let mut entities = ENTITIES.lock().unwrap();
+    let room_id = entities.alloc_id();
+    entities.has_name.insert(room_id, HasName($name.into()));
+    entities.has_description.insert(
       room_id,
       HasDescription(|room_id| {
-        let mut rooms = ROOMS.lock().unwrap();
-        if let Some(has_been_visited) = rooms.has_been_visited.get_opt(room_id) {
-          format!("{}", "You've already seen this!")
+        use crate::entity::ENTITIES;
+        use crate::player::PLAYER;
+        if let Some(player_id) = PLAYER.lock().unwrap().0 {
+          let mut entities = ENTITIES.lock().unwrap();
+          if let Some(has_visited_rooms) = entities.has_visited_rooms.get_opt_mut(player_id) {
+            if has_visited_rooms.0.contains(&room_id) {
+              format!("{}", "You've already seen this!")
+            } else {
+              has_visited_rooms.0.insert(room_id.clone());
+              $description.into()
+            }
+          } else {
+            $description.into()
+          }  
         } else {
-          rooms.has_been_visited.insert(room_id, HasBeenVisited);
           $description.into()
         }
       }),
     );
-    rooms.has_exits.insert(room_id, HasExits::default());
+    entities.has_exits.insert(room_id, HasExits::default());
     room_id
   }};
 }
@@ -54,9 +64,8 @@ macro_rules! create_room {
 #[macro_export]
 macro_rules! format_room {
   ($room: expr) => {{
-    use crate::component::IsInRoom;
+    use crate::component::*;
     use crate::entity::ENTITIES;
-    use crate::object::OBJECTS;
     use colored::*;
     let mut string = String::new();
     if let Some(name) = get_room_name!($room) {
@@ -66,10 +75,10 @@ macro_rules! format_room {
       string.push_str(format!("{}\n", description($room).green()).as_str());
     }
     {
-      let objects = OBJECTS.lock().unwrap();
-      for id in objects.is_in_room.ids_collected() {
-        if IsInRoom(Some($room)) == *objects.is_in_room.get(id) {
-          if let Some(description) = objects.has_description.get_opt(id) {
+      let entities = ENTITIES.lock().unwrap();
+      for id in entities.is_in_room.ids_collected() {
+        if IsInRoom(Some($room)) == *entities.is_in_room.get(id) {
+          if let Some(description) = entities.has_description.get_opt(id) {
             string.push_str(format!("{}\n", description.0($room).blue()).as_str());
           }
         }

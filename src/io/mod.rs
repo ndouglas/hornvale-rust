@@ -34,6 +34,7 @@ pub fn read_input() {
   let input = INPUT.lock().unwrap().readline(format!("{} ", ">".blue()).as_str());
   let result = match input {
     Ok(line) => {
+      use crate::player::PLAYER;
       if let Some(player_entity) = PLAYER.lock().unwrap().0 {
         match Command::from_str(&line, player_entity) {
           Ok(command) => enq_command!(command),

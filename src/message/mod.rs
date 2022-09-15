@@ -38,11 +38,9 @@ pub fn start_message_spammer() {
 // Unfortunately, it can end up interfering with other messages that get interleaved.
 #[named]
 pub fn show_spinner(length: usize) {
-  use rand::{thread_rng, Rng};
-  use std::thread::{sleep, spawn};
-  use std::time::Duration;
+  use std::thread::{spawn};
+  
   spawn(move || {
-    let mut rng = thread_rng();
     let frames = vec![
       "🕛 ", "🕐 ", "🕑 ", "🕒 ", "🕓 ", "🕔 ", "🕕 ", "🕖 ", "🕗 ", "🕘 ", "🕙 ", "🕚 ",
     ];

@@ -2,9 +2,9 @@
 macro_rules! create_exit_inner {
   ($from: expr, $to: expr, $direction: expr) => {{
     use crate::model::{Direction, Exit};
-    use crate::room::ROOMS;
-    let mut rooms = ROOMS.lock().unwrap();
-    if let Some(has_exits) = rooms.has_exits.get_opt_mut($from) {
+    use crate::entity::ENTITIES;
+    let mut entities = ENTITIES.lock().unwrap();
+    if let Some(has_exits) = entities.has_exits.get_opt_mut($from) {
       has_exits.exits.set_exit(
         $direction,
         Some(Exit {
@@ -31,10 +31,10 @@ macro_rules! create_exit {
 macro_rules! get_exits {
   ($room: expr) => {{
     use crate::component::HasExits;
-    use crate::room::ROOMS;
+    use crate::entity::ENTITIES;
     let mut result = None;
-    let rooms = ROOMS.lock().unwrap();
-    if let Some(HasExits { exits }) = rooms.has_exits.get_opt($room) {
+    let entities = ENTITIES.lock().unwrap();
+    if let Some(HasExits { exits }) = entities.has_exits.get_opt($room) {
       result = Some(exits.to_owned());
     }
     result

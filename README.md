@@ -72,6 +72,8 @@ More specific ideas:
   - Talents.  Skill bonuses.
 - Initial descriptions for entities, objects, and rooms.  Once the initial description has been displayed, it will not be shown again.
 - I think I need to recombine rooms, entities, and objects.  I think the things I want to do are going to involve function pointers, and Rust's strict type-checking will make that a pain unless I recombine.  I might figure out a clever (read: obvious to anyone else) way around it, though.
+- Triggers? (when an in-game message appears, execute a command)
+- Prompt customizability?
 
 General Flow:
 

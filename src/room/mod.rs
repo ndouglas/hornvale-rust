@@ -1,14 +1,16 @@
-pub mod storage;
-pub use storage::*;
 
-use std::sync::Mutex;
 
+
+
+
+/*
 #[derive(PartialEq, Eq, Clone, Copy, Debug, Hash, Default)]
-pub struct Room(pub u64);
+pub struct Room(pub Entity);
 
 lazy_static! {
-  pub static ref ROOMS: Mutex<RoomStorage> = Mutex::new(RoomStorage::new());
+  pub static ref ROOMS: Mutex<HashSet<Room>> = Mutex::new(HashSet::new());
 }
+*/
 
 #[named]
 pub fn generate_map() {

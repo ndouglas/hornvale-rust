@@ -1,10 +1,10 @@
-use crate::room::Room;
+use crate::entity::Entity;
 
 use super::super::Effectable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct PrintRoomEffect {
-  pub room: Room,
+  pub room: Entity,
 }
 
 impl Effectable for PrintRoomEffect {

@@ -2,7 +2,9 @@ use super::Entity;
 use crate::component::*;
 
 zcomponents_storage!(EntityStorage<Entity>: {
-  has_name: HasName,
   has_description: HasDescription,
+  has_exits: HasExits,
+  has_name: HasName,
+  has_visited_rooms: HasVisitedRooms,
   is_in_room: IsInRoom,
 });

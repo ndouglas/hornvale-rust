@@ -1,13 +1,12 @@
 use crate::entity::Entity;
-use crate::room::Room;
 
 use super::super::Effectable;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub struct MoveEntityEffect {
   pub entity: Entity,
-  pub from: Room,
-  pub to: Room,
+  pub from: Entity,
+  pub to: Entity,
 }
 
 impl Effectable for MoveEntityEffect {
