@@ -8,7 +8,7 @@ macro_rules! create_object {
     objects.has_name.insert(obj_id, HasName($name.into()));
     objects
       .has_description
-      .insert(obj_id, HasDescription($description.into()));
+      .insert(obj_id, HasDescription({ |room_id| $description.into() }));
     objects.is_in_room.insert(obj_id, IsInRoom(None));
     obj_id
   }};
@@ -20,7 +20,7 @@ macro_rules! create_object {
     objects.has_name.insert(obj_id, HasName($name.into()));
     objects
       .has_description
-      .insert(obj_id, HasDescription($description.into()));
+      .insert(obj_id, HasDescription({ |room_id| $description.into() }));
     objects.is_in_room.insert(obj_id, IsInRoom(Some($in_room)));
     obj_id
   }};

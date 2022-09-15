@@ -1,3 +1,5 @@
+pub mod has_been_visited;
+pub use has_been_visited::*;
 pub mod has_description;
 pub use has_description::*;
 pub mod has_name;

@@ -10,7 +10,7 @@ macro_rules! create_player {
       entities.has_name.insert(player_id, HasName($name.into()));
       entities
         .has_description
-        .insert(player_id, HasDescription($description.into()));
+        .insert(player_id, HasDescription({ |room_id| $description.into() }));
       entities.is_in_room.insert(player_id, IsInRoom(Some($in_room)));
       player_id
     };
