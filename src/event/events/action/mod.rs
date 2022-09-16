@@ -2,49 +2,33 @@ use super::super::Eventable;
 use crate::action::Action;
 use crate::entity::Entity;
 
-pub enum ActionEvent {
-  /// When the entity cannot (by game rules) perform the action.
-  CouldNotPerformAction {
-    action: Action,
-    message: Option<String>,
-    room: Entity,
-  },
-  /// When the entity will attempt to perform the action.
-  WillAttemptToPerformAction {
-    action: Action,
-    message: Option<String>,
-    room: Entity,
-  },
-  /// When the entity will fail to successfully perform the action.
-  WillFailToPerformAction {
-    action: Action,
-    message: Option<String>,
-    room: Entity,
-  },
-  /// When the entity successfully performed the action.
-  DidPerformAction {
-    action: Action,
-    message: Option<String>,
-    room: Entity,
-  },
-  /// When the entity failed to successfully perform the action.
-  DidFailToPerformAction {
-    action: Action,
-    message: Option<String>,
-    room: Entity,
-  },
+#[derive(Clone, Copy, Debug, Hash, PartialEq)]
+pub enum ActionEventType {
+  CouldNotPerformAction,
+  WillAttemptToPerformAction,
+  WillFailToPerformAction,
+  DidPerformAction,
+  DidFailToPerformAction,
+}
+
+#[derive(Clone, Debug, Hash, PartialEq)]
+pub struct ActionEvent {
+  pub r#type: ActionEventType,
+  pub action: Action,
+  pub message: Option<String>,
+  pub room: Entity,
 }
 
 impl Eventable for ActionEvent {
   /// Dispatch this event.
   fn dispatch(&self) {
-    use ActionEvent::*;
-    match self {
-      CouldNotPerformAction { .. } => {},
-      WillAttemptToPerformAction { .. } => {},
-      WillFailToPerformAction { .. } => {},
-      DidPerformAction { .. } => {},
-      DidFailToPerformAction { .. } => {},
+    use ActionEventType::*;
+    match self.r#type {
+      CouldNotPerformAction => dispatch_action_event!(self, could_not_perform),
+      WillAttemptToPerformAction => dispatch_action_event!(self, will_attempt_to_perform),
+      WillFailToPerformAction => dispatch_action_event!(self, will_fail_to_perform),
+      DidPerformAction => dispatch_action_event!(self, did_perform),
+      DidFailToPerformAction => dispatch_action_event!(self, did_fail_to_perform),
     }
   }
 }

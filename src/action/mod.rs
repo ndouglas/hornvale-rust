@@ -18,8 +18,12 @@ impl Action {
   #[named]
   fn attempt(&self) {
     use Action::*;
+
+
     match self {
-      Look(action) => action.attempt(),
+      Look(action) => {
+        action.attempt();
+      },
       MoveDirection(action) => action.attempt(),
     }
   }

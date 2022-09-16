@@ -79,6 +79,7 @@ More specific ideas:
 - onEat()
 - onExamine()
 - onTaste()
+- Shift to using callbacks rather than the event queue.
 
 General Flow:
 
