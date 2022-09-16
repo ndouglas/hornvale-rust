@@ -26,7 +26,6 @@ pub fn manual_tick() {
   run_command_queue();
   run_action_queue();
   run_effect_queue();
-  run_event_queue();
 }
 
 #[named]

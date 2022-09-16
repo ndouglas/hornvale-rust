@@ -10,6 +10,7 @@ pub trait Eventable {
   }
 }
 
+#[derive(Clone, Debug, Hash, PartialEq)]
 pub enum Event {
   /// An action (could|will|did) (happen|not happen).
   Action(ActionEvent),

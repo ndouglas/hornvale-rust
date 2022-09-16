@@ -1,6 +1,8 @@
 use std::collections::VecDeque;
 use std::sync::Mutex;
 
+use crate::event::{ Event, ActionEvent, Eventable};
+
 pub mod actions;
 pub use actions::*;
 
@@ -22,6 +24,9 @@ impl Action {
 
     match self {
       Look(action) => {
+        if let Some(Some(room)) = get_current_room!(action.entity) {
+          evt_will_attempt_to_perform_action!(self.clone(), None, room).dispatch();
+        }
         action.attempt();
       },
       MoveDirection(action) => action.attempt(),

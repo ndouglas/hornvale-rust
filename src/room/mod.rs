@@ -13,6 +13,15 @@ lazy_static! {
 #[named]
 pub fn generate_map() {
   let spawn_room = create_room!("Spawn Room", "Dark olive trees crowd in on all sides, the air steams with the mist of a warm recent rain, midges hang in the air.");
+  add_component!(spawn_room, on_action_event, OnActionEvent {
+    could_not_perform: None,
+    will_attempt_to_perform: Some(|action| {
+      enq_effect!(eff_print_error!("omg becky".into()));
+    }),
+    will_fail_to_perform: None,
+    did_perform: None,
+    did_fail_to_perform: None,    
+  });
   let _player = create_player!("Player", "It's you, you idiot.", spawn_room);
   let mushroom = create_object!(
     "Mushroom",

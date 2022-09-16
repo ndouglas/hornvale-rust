@@ -21,6 +21,7 @@ macro_rules! eff_move_entity {
 #[macro_export]
 macro_rules! eff_print_error {
   ($message: expr) => {{
+    use crate::effect::*;
     Effect::PrintError(PrintErrorEffect { message: $message })
   }};
 }

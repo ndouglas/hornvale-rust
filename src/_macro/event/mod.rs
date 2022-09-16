@@ -73,7 +73,7 @@ macro_rules! dispatch_action_event {
   ($event: expr, $property: ident) => {{
     use std::collections::HashSet;
     use crate::component::*;
-    use crate::entity::ENTITIES;
+    use crate::entity::{Entity, ENTITIES};
     let entity_ids = {
       let entities = ENTITIES.lock().unwrap();
       let entities_in_a_room = entities
@@ -90,7 +90,7 @@ macro_rules! dispatch_action_event {
         .intersection(&observant_entities)
         .into_iter()
         .map(|entity| *entity)
-        .filter(|entity| IsInRoom(Some($event.room)) == *entities.is_in_room.get(*entity))
+        .filter(|entity| IsInRoom(Some((*$event).room)) == *entities.is_in_room.get(*entity))
         .collect::<Vec<Entity>>()
     };
     let mut components = Vec::new();
@@ -107,7 +107,6 @@ macro_rules! dispatch_action_event {
       component.$property.unwrap()($event.clone());
     }
     {
-      let entities = ENTITIES.lock().unwrap();
       if let Some(room_component) = ENTITIES.lock().unwrap().on_action_event.get_opt($event.room) {
         if let Some(function) = room_component.$property {
           function($event.clone());
