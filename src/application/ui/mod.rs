@@ -1,18 +1,18 @@
-use crossterm::event::Event;
-use eyre::Result;
-use std::error::Error;
-use std::io;
+
+
+
+
 use tui::backend::Backend;
-use tui::backend::CrosstermBackend;
-use tui::layout::{Alignment, Rect};
+
+use tui::layout::{Alignment};
 use tui::layout::{Constraint, Direction, Layout};
-use tui::style::{Color, Modifier, Style};
+use tui::style::{Color, Style};
 use tui::text::{Span, Spans};
 use tui::widgets::{Block, BorderType, Borders, Paragraph};
 use tui::Frame;
-use tui::Terminal;
+
 use tui_logger::TuiLoggerWidget;
-use tui_textarea::{Input, Key, TextArea};
+use tui_textarea::{TextArea};
 
 use crate::application::Application;
 use crate::application::ApplicationState;
@@ -47,7 +47,7 @@ where
   rect.render_widget(logs, chunks[1]);
 
   // CLI
-  let mut is_valid = validate(&mut app.cli_textarea);
+  let _is_valid = validate(&mut app.cli_textarea);
   let cli_widget = app.cli_textarea.widget();
   rect.render_widget(cli_widget, chunks[2]);
 
