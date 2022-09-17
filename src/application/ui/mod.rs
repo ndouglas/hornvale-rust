@@ -27,7 +27,7 @@ use tui::widgets::{Block, Borders};
 use tui::Terminal;
 use tui_textarea::{Input, Key, TextArea};
 
-fn validate(textarea: &mut TextArea) -> bool {
+pub fn validate(textarea: &mut TextArea) -> bool {
   if let Err(err) = textarea.lines()[0].parse::<f64>() {
     textarea.set_style(Style::default().fg(Color::LightRed));
     textarea.set_block(Block::default().borders(Borders::ALL).title(format!("ERROR: {}", err)));
@@ -54,7 +54,7 @@ where
 {
   let layout = Layout::default()
     .direction(Direction::Vertical)
-    .constraints([Constraint::Min(1), Constraint::Length(3), ].as_slice());
+    .constraints([Constraint::Min(1), Constraint::Length(3)].as_slice());
   let chunks = layout.split(rect.size());
   let mut is_valid = validate(&mut app.cli_textarea);
   let cli_widget = app.cli_textarea.widget();

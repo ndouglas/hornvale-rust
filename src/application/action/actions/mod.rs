@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use crate::application::Action;
 use crate::application::input::key::Key;
+use crate::application::Action;
 
 /// The application should have some contextual actions.
 #[derive(Default, Debug, Clone)]
@@ -60,32 +60,17 @@ impl From<Vec<Action>> for Actions {
 
 #[cfg(test)]
 mod tests {
-  use super::*;
   use super::super::Action;
+  use super::*;
 
   #[test]
   fn should_create_actions_from_vec() {
-    let _actions: Actions = vec![
-      Action::Quit,
-      Action::Sleep,
-      Action::IncrementDelay,
-      Action::DecrementDelay,
-    ]
-    .into();
+    let _actions: Actions = vec![Action::Quit, Action::Sleep].into();
   }
 
   #[test]
   #[should_panic]
   fn should_panic_when_create_actions_conflict_key() {
-    let _actions: Actions = vec![
-      Action::Quit,
-      Action::DecrementDelay,
-      Action::Sleep,
-      Action::IncrementDelay,
-      Action::IncrementDelay,
-      Action::Quit,
-      Action::DecrementDelay,
-    ]
-    .into();
+    let _actions: Actions = vec![Action::Quit, Action::Sleep, Action::Quit].into();
   }
 }

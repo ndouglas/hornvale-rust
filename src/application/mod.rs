@@ -52,9 +52,7 @@ impl Application<'_> {
   pub async fn handle_key(&mut self, key: Key) -> RunMode {
     if let Some(action) = self.actions.find(key) {
       match action {
-        Action::Quit => {
-          RunMode::Exit
-        },
+        Action::Quit => RunMode::Exit,
         Action::Sleep => {
           if let Some(duration) = self.state.duration().cloned() {
             // Sleep is an I/O action, we dispatch on the IO channel that's run on another thread
@@ -62,25 +60,20 @@ impl Application<'_> {
           }
           RunMode::Continue
         },
-        // IncrementDelay and DecrementDelay is handled in the UI thread
-        Action::IncrementDelay => {
-          self.state.increment_delay();
-          RunMode::Continue
-        },
-        // Note, that we clamp the duration, so we stay >= 0
-        Action::DecrementDelay => {
-          self.state.decrement_delay();
-          RunMode::Continue
-        },
       }
+    } else if let Key::Enter = key {
+      if validate(&mut self.cli_textarea) {
+        RunMode::Exit
+      } else {
+        RunMode::Continue
+      }
+    } else if let Key::Char(char) = key {
+      self.cli_textarea.input(Input::from(crossterm::event::KeyEvent {
+        code: crossterm::event::KeyCode::Char(char),
+        modifiers: crossterm::event::KeyModifiers::empty(),
+      }));
+      RunMode::Continue
     } else {
-      if let Key::Char(char) = key {
-        self.cli_textarea.input(Input::from(crossterm::event::KeyEvent {
-          code: crossterm::event::KeyCode::Char(char),
-          modifiers: crossterm::event::KeyModifiers::empty(),
-        }));  
-      }
-      warn!("No action associated to {}", key);
       RunMode::Continue
     }
   }
@@ -89,7 +82,7 @@ impl Application<'_> {
     RunMode::Continue
   }
 
-  pub fn should_continue(&self) -> bool {
+  pub fn should_continue(&mut self) -> bool {
     self.run_mode != RunMode::Exit
   }
 
@@ -133,7 +126,7 @@ pub async fn start_ui(app: &Arc<Mutex<Application<'_>>>) -> Result<()> {
   let stdout = stdout();
   let mut stdout = stdout.lock();
   enable_raw_mode()?;
-  crossterm::execute!(stdout, EnterAlternateScreen)?;//, EnableMouseCapture)?;
+  crossterm::execute!(stdout, EnterAlternateScreen)?; //, EnableMouseCapture)?;
   let backend = CrosstermBackend::new(stdout);
   let mut terminal = Terminal::new(backend)?;
   terminal.clear()?;
