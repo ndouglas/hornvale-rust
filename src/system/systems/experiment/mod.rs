@@ -1,6 +1,5 @@
 use specs::prelude::*;
 use specs::shrev::EventChannel;
-use specs_derive::*;
 
 use crate::component::*;
 use crate::event::OutputEvent;
@@ -20,10 +19,10 @@ impl<'a> System<'a> for ExperimentSystem {
 
   fn run(&mut self, mut data: Self::SystemData) {
     println!("Welll...");
-    for i in 1..20 {
+    for _i in 1..20 {
       data.output_event_channel.single_write(OutputEvent {
         string: "HMM....".to_string(),
-      });  
+      });
     }
     for (_entity, _has_name, _has_description) in (&data.entities, &data.has_name, &data.has_description).join() {
       // println!("{}", has_name.0);

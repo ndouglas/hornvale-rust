@@ -1,10 +1,6 @@
-use colored::*;
-use rustyline::Editor;
 use specs::prelude::*;
 use specs::shrev::EventChannel;
-use specs_derive::*;
 
-use crate::component::*;
 use crate::event::InputEvent;
 use crate::resource::*;
 

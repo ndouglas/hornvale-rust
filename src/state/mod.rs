@@ -1,10 +1,8 @@
 use colored::*;
-use rustyline::{Editor, ExternalPrinter};
+
 use specs::prelude::*;
 use specs::shrev::EventChannel;
 use std::collections::HashSet;
-use std::thread::{sleep, spawn};
-use std::time::Duration;
 
 use crate::component::components::*;
 use crate::dispatcher::get_new_dispatcher;

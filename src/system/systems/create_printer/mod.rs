@@ -1,8 +1,5 @@
-use rustyline::{Editor, ExternalPrinter};
 use specs::prelude::*;
-use specs_derive::*;
 
-use crate::component::*;
 use crate::resource::*;
 
 pub struct CreatePrinterSystem {}

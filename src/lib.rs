@@ -12,6 +12,7 @@ extern crate zcomponents;
 #[macro_use]
 pub mod _macro;
 pub mod action;
+pub mod application;
 pub mod cli;
 pub mod command;
 pub mod component;

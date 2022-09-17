@@ -1,5 +1,5 @@
-use rustyline::{ Editor, ExternalPrinter };
-use specs::prelude::*;
+use rustyline::ExternalPrinter;
+
 use std::fmt;
 
 #[derive(Default)]

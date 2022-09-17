@@ -1,10 +1,9 @@
 use specs::prelude::*;
 use specs::shrev::{EventChannel, ReaderId};
-use specs_derive::*;
 
 use crate::command::Command;
-use crate::component::*;
-use crate::event::{ActionEvent, CommandEvent, InputEvent};
+
+use crate::event::{ActionEvent, CommandEvent};
 use crate::resource::*;
 
 pub struct ProcessCommandSystem {

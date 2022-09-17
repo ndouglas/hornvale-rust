@@ -1,7 +1,4 @@
-use specs::prelude::*;
-
 use crate::command::Command;
-use crate::resource::ShouldContinueResource;
 
 use super::*;
 

@@ -1,10 +1,7 @@
 use rustyline::ExternalPrinter;
 use specs::prelude::*;
 use specs::shrev::{EventChannel, ReaderId};
-use specs_derive::*;
 
-use crate::command::Command;
-use crate::component::*;
 use crate::event::OutputEvent;
 use crate::resource::*;
 
@@ -25,11 +22,11 @@ impl<'a> System<'a> for ProcessOutputSystem {
   type SystemData = ProcessOutputSystemData<'a>;
 
   fn run(&mut self, mut data: Self::SystemData) {
-    let mut printer_option = data.printer_resource.0.as_mut();
+    let printer_option = data.printer_resource.0.as_mut();
     if let Some(printer) = printer_option {
       for event in data.output_event_channel.read(&mut self.reader_id) {
         printer.print(format!("{:?}", event)).expect("External print failure");
-      }    
+      }
     }
   }
 }

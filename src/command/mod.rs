@@ -1,4 +1,3 @@
-use colored::*;
 use specs::prelude::*;
 use std::str::FromStr;
 
@@ -43,7 +42,10 @@ impl Command {
     use Command::*;
     match self {
       Look { entity } => Ok(Action::Look { entity: *entity }),
-      MoveDirection { entity, direction } => Ok(Action::MoveDirection { entity: *entity, direction: *direction }),
+      MoveDirection { entity, direction } => Ok(Action::MoveDirection {
+        entity: *entity,
+        direction: *direction,
+      }),
       _ => Err(()),
     }
   }

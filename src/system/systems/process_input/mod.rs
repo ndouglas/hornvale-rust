@@ -1,9 +1,8 @@
 use specs::prelude::*;
 use specs::shrev::{EventChannel, ReaderId};
-use specs_derive::*;
 
 use crate::command::Command;
-use crate::component::*;
+
 use crate::event::{CommandEvent, InputEvent};
 use crate::resource::*;
 

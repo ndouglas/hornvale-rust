@@ -1,11 +1,7 @@
 use specs::prelude::*;
 use specs::shrev::{EventChannel, ReaderId};
-use specs_derive::*;
 
-use crate::action::Action;
-use crate::component::*;
-use crate::event::{ActionEvent, CommandEvent, InputEvent};
-use crate::resource::*;
+use crate::event::ActionEvent;
 
 pub struct ProcessActionSystem {
   pub reader_id: ReaderId<ActionEvent>,

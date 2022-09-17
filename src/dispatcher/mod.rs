@@ -1,9 +1,8 @@
-use rustyline::{Editor, ExternalPrinter};
 use specs::prelude::*;
 use specs::shrev::EventChannel;
 
 use crate::event::{ActionEvent, CommandEvent, InputEvent, OutputEvent};
-use crate::resource::*;
+
 use crate::system::*;
 
 pub fn get_new_dispatcher<'a, 'b>(ecs: &mut World) -> Dispatcher<'a, 'b> {
