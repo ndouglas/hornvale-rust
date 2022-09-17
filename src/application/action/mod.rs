@@ -1,4 +1,3 @@
-
 use std::fmt::{self, Display};
 use std::slice::Iter;
 
@@ -38,24 +37,5 @@ impl Display for Action {
       Action::Sleep => "Sleep",
     };
     write!(f, "{}", str)
-  }
-}
-
-#[cfg(test)]
-mod tests {
-  use super::*;
-
-  #[test]
-  fn should_find_action_by_key() {
-    let actions: Actions = vec![Action::Quit, Action::Sleep].into();
-    let result = actions.find(Key::Ctrl('c'));
-    assert_eq!(result, Some(&Action::Quit));
-  }
-
-  #[test]
-  fn should_find_action_by_key_not_found() {
-    let actions: Actions = vec![Action::Quit, Action::Sleep].into();
-    let result = actions.find(Key::Alt('w'));
-    assert_eq!(result, None);
   }
 }

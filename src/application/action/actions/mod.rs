@@ -46,20 +46,3 @@ impl From<Vec<Action>> for Actions {
     Self(actions)
   }
 }
-
-#[cfg(test)]
-mod tests {
-  use super::super::Action;
-  use super::*;
-
-  #[test]
-  fn should_create_actions_from_vec() {
-    let _actions: Actions = vec![Action::Quit, Action::Sleep].into();
-  }
-
-  #[test]
-  #[should_panic]
-  fn should_panic_when_create_actions_conflict_key() {
-    let _actions: Actions = vec![Action::Quit, Action::Sleep, Action::Quit].into();
-  }
-}

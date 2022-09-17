@@ -44,9 +44,8 @@ pub enum Keystroke {
 }
 
 impl Keystroke {
-
   pub fn get_ctrl(&self) -> bool {
-    if let Keystroke::Ctrl(char) = self {
+    if let Keystroke::Ctrl(_char) = self {
       true
     } else {
       false
@@ -54,7 +53,7 @@ impl Keystroke {
   }
 
   pub fn get_alt(&self) -> bool {
-    if let Keystroke::Alt(char) = self {
+    if let Keystroke::Alt(_char) = self {
       true
     } else {
       false
@@ -62,7 +61,7 @@ impl Keystroke {
   }
 
   pub fn get_shift(&self) -> bool {
-    if let Keystroke::Shift(char) = self {
+    if let Keystroke::Shift(_char) = self {
       true
     } else {
       false
@@ -205,40 +204,40 @@ impl From<event::KeyEvent> for Keystroke {
 
 impl From<Keystroke> for Input {
   fn from(keystroke: Keystroke) -> Self {
-      let ctrl = keystroke.get_ctrl();
-      let alt = keystroke.get_alt();
-      use Keystroke::*;
-      let key = match keystroke {
-          Char(c) => Key::Char(c),
-          Shift(c) => Key::Char(c),
-          Backspace => Key::Backspace,
-          Enter => Key::Enter,
-          Left => Key::Left,
-          Right => Key::Right,
-          Up => Key::Up,
-          Down => Key::Down,
-          Tab => Key::Tab,
-          Delete => Key::Delete,
-          Home => Key::Home,
-          End => Key::End,
-          PageUp => Key::PageUp,
-          PageDown => Key::PageDown,
-          Esc => Key::Esc,
-          F0 => Key::F(0),
-          F1 => Key::F(1),
-          F2 => Key::F(2),
-          F3 => Key::F(3),
-          F4 => Key::F(4),
-          F5 => Key::F(5),
-          F6 => Key::F(6),
-          F7 => Key::F(7),
-          F8 => Key::F(8),
-          F9 => Key::F(9),
-          F10 => Key::F(10),
-          F11 => Key::F(11),
-          F12 => Key::F(12),
-          _ => Key::Null,
-      };
-      Self { key, ctrl, alt }
+    let ctrl = keystroke.get_ctrl();
+    let alt = keystroke.get_alt();
+    use Keystroke::*;
+    let key = match keystroke {
+      Char(c) => Key::Char(c),
+      Shift(c) => Key::Char(c),
+      Backspace => Key::Backspace,
+      Enter => Key::Enter,
+      Left => Key::Left,
+      Right => Key::Right,
+      Up => Key::Up,
+      Down => Key::Down,
+      Tab => Key::Tab,
+      Delete => Key::Delete,
+      Home => Key::Home,
+      End => Key::End,
+      PageUp => Key::PageUp,
+      PageDown => Key::PageDown,
+      Esc => Key::Esc,
+      F0 => Key::F(0),
+      F1 => Key::F(1),
+      F2 => Key::F(2),
+      F3 => Key::F(3),
+      F4 => Key::F(4),
+      F5 => Key::F(5),
+      F6 => Key::F(6),
+      F7 => Key::F(7),
+      F8 => Key::F(8),
+      F9 => Key::F(9),
+      F10 => Key::F(10),
+      F11 => Key::F(11),
+      F12 => Key::F(12),
+      _ => Key::Null,
+    };
+    Self { key, ctrl, alt }
   }
 }

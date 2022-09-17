@@ -1,4 +1,4 @@
-use crossterm::event::{DisableMouseCapture};
+use crossterm::event::DisableMouseCapture;
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen};
 use eyre::Result;
 use std::io::stdout;
@@ -7,7 +7,7 @@ use std::time::Duration;
 use tokio::sync::mpsc::Sender;
 use tokio::sync::Mutex;
 use tui::backend::CrosstermBackend;
-use tui::style::{Style};
+use tui::style::Style;
 use tui::Terminal;
 use tui_textarea::{Input, TextArea};
 

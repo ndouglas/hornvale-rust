@@ -1,10 +1,6 @@
-
-
-
-
 use tui::backend::Backend;
 
-use tui::layout::{Alignment};
+use tui::layout::Alignment;
 use tui::layout::{Constraint, Direction, Layout};
 use tui::style::{Color, Style};
 use tui::text::{Span, Spans};
@@ -12,7 +8,7 @@ use tui::widgets::{Block, BorderType, Borders, Paragraph};
 use tui::Frame;
 
 use tui_logger::TuiLoggerWidget;
-use tui_textarea::{TextArea};
+use tui_textarea::TextArea;
 
 use crate::application::Application;
 use crate::application::ApplicationState;
