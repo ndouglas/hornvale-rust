@@ -33,7 +33,7 @@ impl From<Vec<Action>> for Actions {
     }
     let conflicts = map
       .iter()
-      .filter(|(_, actions)| actions.len() > 1) 
+      .filter(|(_, actions)| actions.len() > 1)
       .map(|(key, actions)| {
         // At least two actions share same shortcut; panic!
         let actions = actions.iter().map(Action::to_string).collect::<Vec<_>>().join(", ");

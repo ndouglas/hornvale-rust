@@ -61,7 +61,6 @@ impl ApplicationState {
       None
     }
   }
-
 }
 
 impl Default for ApplicationState {

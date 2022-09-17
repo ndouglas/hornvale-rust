@@ -104,11 +104,7 @@ impl Application<'_> {
   }
 
   pub fn did_initialize(&mut self) {
-    self.actions = vec![
-      Action::Quit,
-      Action::Sleep,
-    ]
-    .into();
+    self.actions = vec![Action::Quit, Action::Sleep].into();
     self.state = ApplicationState::initialized();
   }
 
