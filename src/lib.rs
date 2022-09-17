@@ -7,6 +7,8 @@ pub use ::function_name::named;
 #[macro_use]
 extern crate lazy_static;
 #[macro_use]
+extern crate log;
+#[macro_use]
 extern crate zcomponents;
 
 #[macro_use]

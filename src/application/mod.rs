@@ -3,85 +3,95 @@ use crossterm::terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScree
 use eyre::Result;
 use std::io::stdout;
 use std::sync::Arc;
+use std::time::Duration;
 use tokio::sync::mpsc::Sender;
 use tokio::sync::Mutex;
 use tui::backend::CrosstermBackend;
 use tui::style::{Color, Style};
 use tui::Terminal;
-use tui_textarea::{Input, Key, TextArea};
+use tui_textarea::{Input, Key as TextAreaKey, TextArea};
 
+pub mod action;
+pub use action::*;
+pub mod input;
+pub use input::*;
 pub mod io;
 pub use io::*;
+pub mod run_mode;
+pub use run_mode::*;
+pub mod state;
+pub use state::*;
 pub mod ui;
 pub use ui::*;
 
 // The main application.
 pub struct Application<'a> {
-  // We could dispatch an IO event
   pub io_tx: Sender<IoEvent>,
   pub cli_textarea: TextArea<'a>,
-  pub should_continue: bool,
-  // actions: Actions,
-  // is_loading: bool,
-  // state: AppState,
+  pub run_mode: RunMode,
+  pub actions: Actions,
+  pub state: ApplicationState,
 }
 
 impl Application<'_> {
   #[named]
   pub fn new(io_tx: Sender<IoEvent>) -> Self {
-    // let actions = vec![Action::Quit].into();
-    // let is_loading = false;
-    // let state = AppState::default();
+    let actions = vec![Action::Quit].into();
+    let state = ApplicationState::default();
     let mut cli_textarea = TextArea::default();
     cli_textarea.set_cursor_line_style(Style::default());
     Self {
       io_tx,
       cli_textarea,
-      should_continue: true,
-      // actions,
-      // is_loading,
-      // state,
+      run_mode: RunMode::Continue,
+      actions,
+      state,
     }
   }
 
-  /*
-  pub async fn handle_key(&mut self, key: Key) -> AppReturn {
+  pub async fn handle_key(&mut self, key: Key) -> RunMode {
     if let Some(action) = self.actions.find(key) {
       match action {
-        Action::Quit => AppReturn::Exit,
+        Action::Quit => {
+          RunMode::Exit
+        },
         Action::Sleep => {
           if let Some(duration) = self.state.duration().cloned() {
             // Sleep is an I/O action, we dispatch on the IO channel that's run on another thread
             self.dispatch(IoEvent::Sleep(duration)).await
           }
-          AppReturn::Continue
+          RunMode::Continue
         },
         // IncrementDelay and DecrementDelay is handled in the UI thread
         Action::IncrementDelay => {
           self.state.increment_delay();
-          AppReturn::Continue
+          RunMode::Continue
         },
         // Note, that we clamp the duration, so we stay >= 0
         Action::DecrementDelay => {
           self.state.decrement_delay();
-          AppReturn::Continue
+          RunMode::Continue
         },
       }
     } else {
-      warn!("No action accociated to {}", key);
-      AppReturn::Continue
+      if let Key::Char(char) = key {
+        self.cli_textarea.input(Input::from(crossterm::event::KeyEvent {
+          code: crossterm::event::KeyCode::Char(char),
+          modifiers: crossterm::event::KeyModifiers::empty(),
+        }));  
+      }
+      warn!("No action associated to {}", key);
+      RunMode::Continue
     }
   }
-  */
 
-  /*
-  /// We could update the app or dispatch event on tick
-  pub async fn update_on_tick(&mut self) -> AppReturn {
-    // here we just increment a counter
-    self.state.incr_tick();
-    AppReturn::Continue
+  pub async fn tick(&mut self) -> RunMode {
+    RunMode::Continue
   }
-  */
+
+  pub fn should_continue(&self) -> bool {
+    self.run_mode != RunMode::Exit
+  }
 
   /// Send a network event to the IO thread
   pub async fn dispatch(&mut self, action: IoEvent) {
@@ -123,11 +133,15 @@ pub async fn start_ui(app: &Arc<Mutex<Application<'_>>>) -> Result<()> {
   let stdout = stdout();
   let mut stdout = stdout.lock();
   enable_raw_mode()?;
-  crossterm::execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
+  crossterm::execute!(stdout, EnterAlternateScreen)?;//, EnableMouseCapture)?;
   let backend = CrosstermBackend::new(stdout);
   let mut terminal = Terminal::new(backend)?;
   terminal.clear()?;
   terminal.hide_cursor()?;
+
+  // Start processing events.
+  let tick_rate = Duration::from_millis(200);
+  let mut input_event_reader = InputEventReader::new(tick_rate);
 
   // Main application loop.
   loop {
@@ -135,15 +149,21 @@ pub async fn start_ui(app: &Arc<Mutex<Application<'_>>>) -> Result<()> {
     terminal.draw(|rect| {
       ui::draw(rect, &mut app);
     })?;
-    if !app.should_continue {
+    match input_event_reader.next().await {
+      InputEvent::Input(key) => {
+        app.run_mode = app.handle_key(key).await;
+      },
+      InputEvent::Tick => {
+        app.run_mode = app.tick().await;
+      },
+    }
+    if !app.should_continue() {
+      input_event_reader.close();
       break;
     }
   }
 
   /*
-  // User event handler
-  let tick_rate = Duration::from_millis(200);
-  let mut events = Events::new(tick_rate);
 
   // Trigger state change from Init to Initialized
   {

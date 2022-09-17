@@ -9,11 +9,11 @@ use log::{error, info};
 use super::IoEvent;
 use crate::application::Application;
 
-pub struct IoHandler<'a> {
+pub struct IoEventHandler<'a> {
   application: Arc<Mutex<Application<'a>>>,
 }
 
-impl<'a> IoHandler<'a> {
+impl<'a> IoEventHandler<'a> {
   pub fn new(application: Arc<Mutex<Application<'a>>>) -> Self {
     Self { application }
   }

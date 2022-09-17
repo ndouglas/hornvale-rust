@@ -13,7 +13,7 @@ use tokio::sync::mpsc::channel;
 use tokio::sync::Mutex;
 use tui_logger::{init_logger, set_default_level};
 
-use application::io::handler::IoHandler;
+use application::io::handler::IoEventHandler;
 use application::io::IoEvent;
 use application::start_ui;
 
@@ -37,11 +37,12 @@ async fn main() -> Result<()> {
 
   // Spawn a distinct thread for I/O.
   tokio::spawn(async move {
-    let mut handler = IoHandler::new(app);
+    let mut handler = IoEventHandler::new(app);
     // Process incoming I/O.
     while let Some(io_event) = sync_io_rx.recv().await {
       handler.handle_io_event(io_event).await;
     }
+    todo!("LOL");
   });
 
   /*
