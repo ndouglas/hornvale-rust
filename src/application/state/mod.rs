@@ -62,21 +62,6 @@ impl ApplicationState {
     }
   }
 
-  pub fn increment_delay(&mut self) {
-    if let Self::Initialized { duration, .. } = self {
-      // Set the duration, note that the duration is in 1s..10s
-      let secs = (duration.as_secs() + 1).clamp(1, 10);
-      *duration = Duration::from_secs(secs);
-    }
-  }
-
-  pub fn decrement_delay(&mut self) {
-    if let Self::Initialized { duration, .. } = self {
-      // Set the duration, note that the duration is in 1s..10s
-      let secs = (duration.as_secs() - 1).clamp(1, 10);
-      *duration = Duration::from_secs(secs);
-    }
-  }
 }
 
 impl Default for ApplicationState {

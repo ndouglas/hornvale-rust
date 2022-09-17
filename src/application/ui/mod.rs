@@ -1,20 +1,3 @@
-/*
-use std::time::Duration;
-
-use symbols::line;
-use tui::backend::Backend;
-use tui::style::{Color, Modifier, Style};
-use tui::text::{Span, Spans};
-use tui::widgets::{Block, BorderType, Borders, Cell, LineGauge, Paragraph, Row, Table};
-use tui::{symbols, Frame};
-
-pub mod title;
-pub use title::*;
-
-use super::actions::Actions;
-use super::state::AppState;
-*/
-
 use crossterm::event::Event;
 use eyre::Result;
 use std::error::Error;
@@ -27,6 +10,12 @@ use tui::widgets::{Block, BorderType, Borders, Paragraph};
 use tui::Terminal;
 use tui_logger::TuiLoggerWidget;
 use tui_textarea::{Input, Key, TextArea};
+use tui::backend::Backend;
+use tui::layout::{Constraint, Direction, Layout};
+use tui::Frame;
+
+use crate::application::Application;
+use crate::application::ApplicationState;
 
 pub fn validate(textarea: &mut TextArea) -> bool {
   if let Err(err) = textarea.lines()[0].parse::<f64>() {
@@ -39,16 +28,6 @@ pub fn validate(textarea: &mut TextArea) -> bool {
     true
   }
 }
-
-use tui::backend::Backend;
-use tui::layout::{Constraint, Direction, Layout};
-use tui::Frame;
-
-use crate::application::Application;
-use crate::application::ApplicationState;
-
-pub mod cli;
-pub use cli::*;
 
 pub fn draw<B>(rect: &mut Frame<B>, app: &mut Application) -> std::io::Result<()>
 where
