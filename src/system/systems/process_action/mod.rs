@@ -20,7 +20,7 @@ impl<'a> System<'a> for ProcessActionSystem {
 
   fn run(&mut self, data: Self::SystemData) {
     for event in data.action_event_channel.read(&mut self.reader_id) {
-      println!("{:?}", event);
+      // println!("{:?}", event);
     }
   }
 }

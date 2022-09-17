@@ -24,7 +24,6 @@ impl<'a> System<'a> for PromptSystem {
       return;
     }
     if let None = &data.editor_resource.0 {
-      println!("Hmmm..");
       return;
     }
     let input = {
@@ -36,7 +35,7 @@ impl<'a> System<'a> for PromptSystem {
       Ok(line) => {
         data.input_channel.single_write(InputEvent { input: line.into() });
       },
-      Err(_) => println!("wut"),
+      Err(_) => panic!("wut"),
     };
   }
 }

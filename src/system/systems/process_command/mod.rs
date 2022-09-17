@@ -34,7 +34,7 @@ impl<'a> System<'a> for ProcessCommandSystem {
           if let Ok(action) = command.get_action() {
             self.process_action(action, &mut data.action_event_channel);
           } else {
-            println!("fail");
+            // println!("fail");
           }
         },
       }

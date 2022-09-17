@@ -18,7 +18,7 @@ impl<'a> System<'a> for ExperimentSystem {
   type SystemData = ExperimentSystemData<'a>;
 
   fn run(&mut self, mut data: Self::SystemData) {
-    println!("Welll...");
+    warn!("Running experiment!");
     for _i in 1..20 {
       data.output_event_channel.single_write(OutputEvent {
         string: "HMM....".to_string(),

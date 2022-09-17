@@ -8,7 +8,6 @@ use tui::style::{Color, Modifier, Style};
 use tui::text::{Span, Spans};
 use tui::widgets::{Block, BorderType, Borders, Cell, LineGauge, Paragraph, Row, Table};
 use tui::{symbols, Frame};
-use tui_logger::TuiLoggerWidget;
 
 pub mod title;
 pub use title::*;
@@ -25,6 +24,7 @@ use tui::backend::CrosstermBackend;
 use tui::style::{Color, Style};
 use tui::widgets::{Block, Borders};
 use tui::Terminal;
+use tui_logger::TuiLoggerWidget;
 use tui_textarea::{Input, Key, TextArea};
 
 pub fn validate(textarea: &mut TextArea) -> bool {
@@ -54,11 +54,19 @@ where
 {
   let layout = Layout::default()
     .direction(Direction::Vertical)
-    .constraints([Constraint::Min(1), Constraint::Length(3)].as_slice());
+    .constraints([Constraint::Min(1),                 Constraint::Length(12), Constraint::Length(3)].as_slice());
   let chunks = layout.split(rect.size());
+
+
+
+  // Logs
+  let logs = draw_logs();
+  rect.render_widget(logs, chunks[1]);
+
+  // CLI
   let mut is_valid = validate(&mut app.cli_textarea);
   let cli_widget = app.cli_textarea.widget();
-  rect.render_widget(cli_widget, chunks[1]);
+  rect.render_widget(cli_widget, chunks[2]);
   /*
   match crossterm::event::read()?.into() {
     Input { key: Key::Esc, .. } => {
@@ -120,9 +128,6 @@ where
     rect.render_widget(duration_block, chunks[1]);
   }
 
-  // Logs
-  let logs = draw_logs();
-  rect.render_widget(logs, chunks[2]);
 
   // Title.  I'll probably get rid of this.
   let title = draw_title();
@@ -216,3 +221,19 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 */
+
+fn draw_logs<'a>() -> TuiLoggerWidget<'a> {
+  TuiLoggerWidget::default()
+      .style_error(Style::default().fg(Color::Red))
+      .style_debug(Style::default().fg(Color::Green))
+      .style_warn(Style::default().fg(Color::Yellow))
+      .style_trace(Style::default().fg(Color::Gray))
+      .style_info(Style::default().fg(Color::Blue))
+      .block(
+          Block::default()
+              .title("Logs")
+              .border_style(Style::default().fg(Color::White).bg(Color::Black))
+              .borders(Borders::ALL),
+      )
+      .style(Style::default().fg(Color::White).bg(Color::Black))
+}

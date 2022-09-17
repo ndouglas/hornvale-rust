@@ -52,17 +52,8 @@ impl<'a, 'b> State<'a, 'b> {
   }
 
   #[named]
-  pub fn should_continue(&self) -> bool {
-    self.ecs.read_resource::<ShouldContinueResource>().0
+  pub fn tick(&mut self) {
+    self.dispatcher.dispatch(&self.ecs);
   }
 
-  #[named]
-  pub fn run(&mut self) {
-    loop {
-      self.dispatcher.dispatch(&self.ecs);
-      if !self.should_continue() {
-        break;
-      }
-    }
-  }
 }

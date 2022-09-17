@@ -11,6 +11,8 @@ use tui::style::{Color, Style};
 use tui::Terminal;
 use tui_textarea::{Input, Key as TextAreaKey, TextArea};
 
+use crate::state::State as GameState;
+
 pub mod action;
 pub use action::*;
 pub mod input;
@@ -135,7 +137,7 @@ pub async fn start_ui(app: &Arc<Mutex<Application<'_>>>) -> Result<()> {
   // Start processing events.
   let tick_rate = Duration::from_millis(200);
   let mut input_event_reader = InputEventReader::new(tick_rate);
-
+  let mut game_state = GameState::new();
   // Main application loop.
   loop {
     let mut app = app.lock().await;
@@ -147,6 +149,7 @@ pub async fn start_ui(app: &Arc<Mutex<Application<'_>>>) -> Result<()> {
         app.run_mode = app.handle_key(key).await;
       },
       InputEvent::Tick => {
+        game_state.tick();
         app.run_mode = app.tick().await;
       },
     }

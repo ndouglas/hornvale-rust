@@ -3,6 +3,8 @@
 
 #[macro_use]
 extern crate function_name;
+#[macro_use]
+extern crate log;
 
 use clap::Parser;
 use eyre::Result;
@@ -30,7 +32,6 @@ async fn main() -> Result<()> {
   // Configure logs.
   init_logger(LevelFilter::Debug).unwrap();
   set_default_level(log::LevelFilter::Debug);
-
   // We need to share the App between threads.
   let app = Arc::new(Mutex::new(application::Application::new(sync_io_tx.clone())));
   let app_ui = Arc::clone(&app);
@@ -42,7 +43,6 @@ async fn main() -> Result<()> {
     while let Some(io_event) = sync_io_rx.recv().await {
       handler.handle_io_event(io_event).await;
     }
-    todo!("LOL");
   });
 
   /*
