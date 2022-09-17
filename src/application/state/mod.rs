@@ -26,13 +26,13 @@ impl ApplicationState {
     matches!(self, &Self::Initialized { .. })
   }
 
-  pub fn incr_sleep(&mut self) {
+  pub fn increment_sleep(&mut self) {
     if let Self::Initialized { counter_sleep, .. } = self {
       *counter_sleep += 1;
     }
   }
 
-  pub fn incr_tick(&mut self) {
+  pub fn increment_tick(&mut self) {
     if let Self::Initialized { counter_tick, .. } = self {
       *counter_tick += 1;
     }

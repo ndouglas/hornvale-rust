@@ -35,7 +35,7 @@ pub fn get_new_dispatcher<'a, 'b>(ecs: &mut World) -> Dispatcher<'a, 'b> {
     .with(
       TickSystem {},
       "tick",
-      &[],//&["create_editor", "create_player", "process_action", "experiment"],
+      &[], //&["create_editor", "create_player", "process_action", "experiment"],
     )
     .build();
   dispatcher

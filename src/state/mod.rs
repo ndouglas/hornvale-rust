@@ -55,5 +55,4 @@ impl<'a, 'b> State<'a, 'b> {
   pub fn tick(&mut self) {
     self.dispatcher.dispatch(&self.ecs);
   }
-
 }
