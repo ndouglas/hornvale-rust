@@ -44,8 +44,8 @@ impl<'a> IoEventHandler<'a> {
     info!("😴 Go sleeping for {:?}...", duration);
     sleep(duration).await;
     info!("⏰ Wake up !");
-    let mut application = self.application.lock().await;
-    application.did_sleep();
+    // let mut application = self.application.lock().await;
+    // application.did_sleep();
     Ok(())
   }
 }

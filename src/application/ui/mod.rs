@@ -11,7 +11,7 @@ use tui_logger::TuiLoggerWidget;
 use tui_textarea::TextArea;
 
 use crate::application::Application;
-use crate::application::ApplicationState;
+use crate::application::state::State;
 
 pub fn validate(textarea: &mut TextArea) -> bool {
   if let Err(err) = textarea.lines()[0].parse::<f64>() {
@@ -51,23 +51,11 @@ where
   Ok(())
 }
 
-fn draw_body<'a>(is_busy: bool, state: &ApplicationState) -> Paragraph<'a> {
-  let initialized_text = if state.is_initialized() {
-    "Initialized"
-  } else {
-    "Not Initialized !"
-  };
+fn draw_body<'a>(is_busy: bool, state: &State) -> Paragraph<'a> {
+  let initialized_text = "Initialized";
   let loading_text = if is_busy { "Loading..." } else { "" };
-  let sleep_text = if let Some(sleeps) = state.count_sleep() {
-    format!("Sleep count: {}", sleeps)
-  } else {
-    String::default()
-  };
-  let tick_text = if let Some(ticks) = state.count_tick() {
-    format!("Tick count: {}", ticks)
-  } else {
-    String::default()
-  };
+  let sleep_text = String::default();
+  let tick_text = format!("Tick count: {}", state.tick_counter);
   Paragraph::new(vec![
     Spans::from(Span::raw(initialized_text)),
     Spans::from(Span::raw(loading_text)),

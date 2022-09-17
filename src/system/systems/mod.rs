@@ -1,9 +1,5 @@
-pub mod create_editor;
-pub use create_editor::*;
 pub mod create_player;
 pub use create_player::*;
-pub mod create_printer;
-pub use create_printer::*;
 pub mod experiment;
 pub use experiment::*;
 pub mod process_action;
@@ -14,7 +10,5 @@ pub mod process_input;
 pub use process_input::*;
 pub mod process_output;
 pub use process_output::*;
-pub mod prompt;
-pub use prompt::*;
 pub mod tick;
 pub use tick::*;

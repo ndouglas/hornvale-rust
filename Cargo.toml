@@ -23,7 +23,6 @@ lazy_static = "1.4.0"
 log = { version = "0.4.17", features= ["max_level_trace", "release_max_level_warn"] }
 pretty_env_logger = "0.4.0"
 rand = "0.8.5"
-rustyline = "10.0.0"
 serde = {version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 specs = { version = "0.18.0", features = ["shred-derive", "specs-derive"] }

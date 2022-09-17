@@ -4,7 +4,6 @@ use specs::shrev::{EventChannel, ReaderId};
 use crate::command::Command;
 
 use crate::event::{ActionEvent, CommandEvent};
-use crate::resource::*;
 
 pub struct ProcessCommandSystem {
   pub reader_id: ReaderId<CommandEvent>,
@@ -17,7 +16,6 @@ pub struct ProcessCommandSystemData<'a> {
   pub entities: Entities<'a>,
   pub action_event_channel: Write<'a, EventChannel<ActionEvent>>,
   pub command_event_channel: Read<'a, EventChannel<CommandEvent>>,
-  pub should_continue_resource: Write<'a, ShouldContinueResource>,
 }
 
 impl<'a> System<'a> for ProcessCommandSystem {
@@ -29,7 +27,7 @@ impl<'a> System<'a> for ProcessCommandSystem {
       use Command::*;
       match command {
         Echo { .. } => self.process_echo(command),
-        Quit { .. } => self.process_quit(&mut data.should_continue_resource),
+        Quit { .. } => self.process_quit(),
         _ => {
           if let Ok(action) = command.get_action() {
             self.process_action(action, &mut data.action_event_channel);

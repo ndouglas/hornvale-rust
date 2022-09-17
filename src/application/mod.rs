@@ -11,8 +11,6 @@ use tui::style::Style;
 use tui::Terminal;
 use tui_textarea::{Input, TextArea};
 
-use crate::state::State as GameState;
-
 pub mod action;
 pub use action::*;
 pub mod input;
@@ -33,15 +31,15 @@ pub struct Application<'a> {
   pub input_mode: InputMode,
   pub run_mode: RunMode,
   pub actions: Actions,
-  pub state: ApplicationState,
+  pub state: State<'a>,
   pub is_busy: bool,
 }
 
-impl Application<'_> {
+impl<'a> Application<'a> {
   #[named]
   pub fn new(io_tx: Sender<IoEvent>) -> Self {
     let actions = vec![Action::Quit].into();
-    let state = ApplicationState::default();
+    let state = State::new();
     let run_mode = RunMode::Continue;
     let input_mode = InputMode::Cli;
     let mut cli_textarea = TextArea::default();
@@ -63,10 +61,6 @@ impl Application<'_> {
       match action {
         Action::Quit => RunMode::Exit,
         Action::Sleep => {
-          if let Some(duration) = self.state.duration().cloned() {
-            // Sleep is an I/O action, we dispatch on the IO channel that's run on another thread
-            self.dispatch(IoEvent::Sleep(duration)).await
-          }
           RunMode::Continue
         },
       }
@@ -82,7 +76,6 @@ impl Application<'_> {
   }
 
   pub async fn tick(&mut self) -> RunMode {
-    self.state.increment_tick();
     RunMode::Continue
   }
 
@@ -100,20 +93,16 @@ impl Application<'_> {
 
   pub fn did_initialize(&mut self) {
     self.actions = vec![Action::Quit, Action::Sleep].into();
-    self.state = ApplicationState::initialized();
   }
 
   pub fn did_load(&mut self) {
     self.is_busy = false;
   }
 
-  pub fn did_sleep(&mut self) {
-    self.state.increment_sleep();
-  }
 }
 
 #[named]
-pub async fn start_ui(app: &Arc<Mutex<Application<'_>>>) -> Result<()> {
+pub async fn start_ui<'a>(app: &Arc<Mutex<Application<'a>>>) -> Result<()> {
   // Setup.
   let stdout = stdout();
   let mut stdout = stdout.lock();
@@ -133,7 +122,6 @@ pub async fn start_ui(app: &Arc<Mutex<Application<'_>>>) -> Result<()> {
   // Start processing events.
   let tick_rate = Duration::from_millis(200);
   let mut input_event_reader = InputEventReader::new(tick_rate);
-  let mut game_state = GameState::new();
   // Main application loop.
   loop {
     let mut app = app.lock().await;
@@ -145,7 +133,7 @@ pub async fn start_ui(app: &Arc<Mutex<Application<'_>>>) -> Result<()> {
         app.run_mode = app.handle_keystroke(keystroke).await;
       },
       InputEvent::Tick => {
-        game_state.tick();
+        app.state.tick().await;
         app.run_mode = app.tick().await;
       },
     }

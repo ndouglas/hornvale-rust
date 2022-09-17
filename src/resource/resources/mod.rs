@@ -1,15 +1,5 @@
-pub mod editor;
-pub use editor::*;
 pub mod player;
 pub use player::*;
-pub mod printer;
-pub use printer::*;
-pub mod prompt_format;
-pub use prompt_format::*;
-pub mod should_continue;
-pub use should_continue::*;
-pub mod should_prompt;
-pub use should_prompt::*;
 pub mod tick;
 pub use tick::*;
 pub mod visited_rooms;

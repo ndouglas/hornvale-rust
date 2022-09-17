@@ -1,70 +1,42 @@
-use std::time::Duration;
+use specs::prelude::*;
+use std::sync::Arc;
+use tokio::sync::Mutex;
 
-#[derive(Clone)]
-pub enum ApplicationState {
-  Initializing,
-  Initialized {
-    duration: Duration,
-    counter_sleep: u32,
-    counter_tick: u64,
-  },
+use crate::dispatcher::get_new_dispatcher;
+use crate::resource::TickResource;
+
+pub mod components;
+pub use components::*;
+pub mod event_channels;
+pub use event_channels::*;
+pub mod resources;
+pub use resources::*;
+
+pub struct State<'a> {
+  pub dispatcher: Arc<Mutex<Dispatcher<'a, 'a>>>,
+  pub ecs: World,
+  pub tick_counter: u64,
 }
 
-impl ApplicationState {
-  pub fn initialized() -> Self {
-    let duration = Duration::from_secs(1);
-    let counter_sleep = 0;
-    let counter_tick = 0;
-    Self::Initialized {
-      duration,
-      counter_sleep,
-      counter_tick,
-    }
+unsafe impl Send for State<'_> {}
+
+impl State<'_> {
+  #[named]
+  pub fn new() -> Self {
+    let mut ecs = World::new();
+    insert_resources(&mut ecs);
+    insert_event_channels(&mut ecs);
+    register_components(&mut ecs);
+    let dispatcher = Arc::new(Mutex::new(get_new_dispatcher(&mut ecs)));
+    let tick_counter = 0;
+    Self { ecs, dispatcher, tick_counter }
   }
 
-  pub fn is_initialized(&self) -> bool {
-    matches!(self, &Self::Initialized { .. })
+  #[named]
+  pub async fn tick(&mut self) {
+    let mut dispatcher = self.dispatcher.lock().await;
+    dispatcher.dispatch(&self.ecs);
+    self.tick_counter = self.ecs.read_resource::<TickResource>().0;
   }
 
-  pub fn increment_sleep(&mut self) {
-    if let Self::Initialized { counter_sleep, .. } = self {
-      *counter_sleep += 1;
-    }
-  }
-
-  pub fn increment_tick(&mut self) {
-    if let Self::Initialized { counter_tick, .. } = self {
-      *counter_tick += 1;
-    }
-  }
-
-  pub fn count_sleep(&self) -> Option<u32> {
-    if let Self::Initialized { counter_sleep, .. } = self {
-      Some(*counter_sleep)
-    } else {
-      None
-    }
-  }
-
-  pub fn count_tick(&self) -> Option<u64> {
-    if let Self::Initialized { counter_tick, .. } = self {
-      Some(*counter_tick)
-    } else {
-      None
-    }
-  }
-
-  pub fn duration(&self) -> Option<&Duration> {
-    if let Self::Initialized { duration, .. } = self {
-      Some(duration)
-    } else {
-      None
-    }
-  }
-}
-
-impl Default for ApplicationState {
-  fn default() -> Self {
-    Self::Initializing
-  }
 }
