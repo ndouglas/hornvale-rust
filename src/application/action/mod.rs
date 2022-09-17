@@ -31,10 +31,10 @@ impl Action {
   /// List of key associated to action
   pub fn keys(&self) -> &[Key] {
     match self {
-      Action::Quit => &[Key::Ctrl('c'), Key::Char('q')],
-      Action::Sleep => &[Key::Char('s')],
-      Action::IncrementDelay => &[Key::Char('+')],
-      Action::DecrementDelay => &[Key::Char('-')],
+      Action::Quit => &[Key::Ctrl('c'), Key::Ctrl('q')],
+      Action::Sleep => &[Key::Ctrl('s')],
+      Action::IncrementDelay => &[Key::Ctrl('+')],
+      Action::DecrementDelay => &[Key::Ctrl('-')],
     }
   }
 }
