@@ -2,7 +2,7 @@
 use std::fmt::{self, Display};
 use std::slice::Iter;
 
-use super::input::key::Key;
+use super::input::keystroke::Keystroke;
 
 pub mod actions;
 pub use actions::*;
@@ -21,11 +21,11 @@ impl Action {
     ACTIONS.iter()
   }
 
-  /// List of key associated to action
-  pub fn keys(&self) -> &[Key] {
+  /// List of keystrokes associated to action
+  pub fn keystrokes(&self) -> &[Keystroke] {
     match self {
-      Action::Quit => &[Key::Ctrl('c'), Key::Ctrl('q')],
-      Action::Sleep => &[Key::Ctrl('s')],
+      Action::Quit => &[Keystroke::Ctrl('c'), Keystroke::Ctrl('q')],
+      Action::Sleep => &[Keystroke::Ctrl('s')],
     }
   }
 }

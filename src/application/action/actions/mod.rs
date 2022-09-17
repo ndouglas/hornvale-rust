@@ -1,16 +1,16 @@
 use std::collections::HashMap;
 
-use crate::application::input::key::Key;
+use crate::application::input::keystroke::Keystroke;
 use crate::application::Action;
 
 #[derive(Default, Debug, Clone)]
 pub struct Actions(Vec<Action>);
 
 impl Actions {
-  pub fn find(&self, key: Key) -> Option<&Action> {
+  pub fn find(&self, keystroke: Keystroke) -> Option<&Action> {
     Action::iterator()
       .filter(|action| self.0.contains(action))
-      .find(|action| action.keys().contains(&key))
+      .find(|action| action.keystrokes().contains(&keystroke))
   }
 
   pub fn actions(&self) -> &[Action] {
@@ -20,9 +20,9 @@ impl Actions {
 
 impl From<Vec<Action>> for Actions {
   fn from(actions: Vec<Action>) -> Self {
-    let mut map: HashMap<Key, Vec<Action>> = HashMap::new();
+    let mut map: HashMap<Keystroke, Vec<Action>> = HashMap::new();
     for action in actions.iter() {
-      for key in action.keys().iter() {
+      for key in action.keystrokes().iter() {
         match map.get_mut(key) {
           Some(vec) => vec.push(*action),
           None => {

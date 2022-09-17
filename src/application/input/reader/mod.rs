@@ -6,14 +6,13 @@ use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::mpsc::{channel, Receiver, Sender};
 
-use super::key::Key;
+use super::keystroke::Keystroke;
 use super::InputEvent;
 
 pub struct InputEventReader {
   rx: Receiver<InputEvent>,
-  // Needs to be retained to prevent disposing of the sender.
+  // Needs to be retained to prevent closing the channel.
   _tx: Sender<InputEvent>,
-  // To stop the loop.
   stop_capture: Arc<AtomicBool>,
 }
 
@@ -29,8 +28,8 @@ impl InputEventReader {
         // If we do not receive another event, send a tick event.
         if poll(tick_rate).unwrap() {
           if let EventKey(key) = read().unwrap() {
-            let key = Key::from(key);
-            if let Err(err) = event_tx.send(InputEvent::Input(key)).await {
+            let keystroke = Keystroke::from(key);
+            if let Err(err) = event_tx.send(InputEvent::Keystroke(keystroke)).await {
               error!("Encountered an error transmitting an input event: {}", err);
             }
           }

@@ -58,8 +58,8 @@ impl Application<'_> {
     }
   }
 
-  pub async fn handle_key(&mut self, key: Key) -> RunMode {
-    if let Some(action) = self.actions.find(key) {
+  pub async fn handle_keystroke(&mut self, keystroke: Keystroke) -> RunMode {
+    if let Some(action) = self.actions.find(keystroke) {
       match action {
         Action::Quit => RunMode::Exit,
         Action::Sleep => {
@@ -71,15 +71,10 @@ impl Application<'_> {
         },
       }
     } else if self.input_mode == InputMode::Cli {
-      if key == Key::Enter && validate(&mut self.cli_textarea) {
+      if keystroke == Keystroke::Enter && validate(&mut self.cli_textarea) {
         return RunMode::Exit;
       }
-      if let Key::Char(char) = key {
-        self.cli_textarea.input(Input::from(crossterm::event::KeyEvent {
-          code: crossterm::event::KeyCode::Char(char),
-          modifiers: crossterm::event::KeyModifiers::empty(),
-        }));
-      }
+      self.cli_textarea.input(Input::from(keystroke));
       RunMode::Continue
     } else {
       RunMode::Continue
@@ -146,8 +141,8 @@ pub async fn start_ui(app: &Arc<Mutex<Application<'_>>>) -> Result<()> {
       ui::draw(rect, &mut app);
     })?;
     match input_event_reader.next().await {
-      InputEvent::Input(key) => {
-        app.run_mode = app.handle_key(key).await;
+      InputEvent::Keystroke(keystroke) => {
+        app.run_mode = app.handle_keystroke(keystroke).await;
       },
       InputEvent::Tick => {
         game_state.tick();

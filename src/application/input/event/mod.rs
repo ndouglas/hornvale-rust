@@ -1,7 +1,7 @@
-use super::key::Key;
+use super::keystroke::Keystroke;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub enum InputEvent {
-  Input(Key),
+  Keystroke(Keystroke),
   Tick,
 }

@@ -1,7 +1,7 @@
 pub mod event;
 pub use event::*;
-pub mod key;
-pub use key::*;
+pub mod keystroke;
+pub use keystroke::*;
 pub mod mode;
 pub use mode::*;
 pub mod reader;
