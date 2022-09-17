@@ -6,27 +6,16 @@ extern crate function_name;
 
 use clap::Parser;
 use pretty_env_logger::init as pretty_env_logger_init;
+use specs::prelude::*;
 
-use io::start_output;
-use message::start_message_spammer;
-use room::generate_map;
-use tick::start_tick;
+use state::State;
 
 use hornvale::*;
 
 #[named]
 fn main() {
   pretty_env_logger_init();
-  generate_map();
-  start_output();
   let _args = cli::Arguments::parse();
-  start_message_spammer();
-  start_tick();
-  // Main game loop.
-  loop {
-    io::read_input();
-    if !run_mode::RUN_MODE.lock().unwrap().should_continue() {
-      break;
-    }
-  }
+  let mut state = State::new();
+  state.run();
 }

@@ -1,52 +1,19 @@
-use std::collections::VecDeque;
-use std::sync::Mutex;
+use colored::*;
+use specs::prelude::*;
 
-use crate::event::{ Event, ActionEvent, Eventable};
+use crate::navigation::Direction;
 
-pub mod actions;
-pub use actions::*;
-
-pub trait Actionable {
-  fn attempt(&self);
-}
-
-#[derive(Clone, Debug, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub enum Action {
-  Look(LookAction),
-  MoveDirection(MoveDirectionAction),
+  Look {
+    entity: Entity,
+  },
+  MoveDirection {
+    entity: Entity,
+    direction: Direction,
+  },
 }
 
 impl Action {
-  #[named]
-  fn attempt(&self) {
-    use Action::*;
 
-
-    match self {
-      Look(action) => {
-        if let Some(Some(room)) = get_current_room!(action.entity) {
-          evt_will_attempt_to_perform_action!(self.clone(), None, room).dispatch();
-        }
-        action.attempt();
-      },
-      MoveDirection(action) => action.attempt(),
-    }
-  }
-}
-
-lazy_static! {
-  pub static ref ACTION_QUEUE: Mutex<VecDeque<Action>> = Mutex::new(VecDeque::new());
-}
-
-#[named]
-pub fn enqueue_action(action: Action) {
-  ACTION_QUEUE.lock().unwrap().push_back(action);
-}
-
-#[named]
-pub fn run_action_queue() {
-  let actions = ACTION_QUEUE.lock().unwrap().drain(..).collect::<Vec<Action>>();
-  for action in actions.iter() {
-    action.attempt();
-  }
 }

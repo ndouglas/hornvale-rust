@@ -13,15 +13,19 @@ lazy_static! {
 #[named]
 pub fn generate_map() {
   let spawn_room = create_room!("Spawn Room", "Dark olive trees crowd in on all sides, the air steams with the mist of a warm recent rain, midges hang in the air.");
-  add_component!(spawn_room, on_action_event, OnActionEvent {
-    could_not_perform: None,
-    will_attempt_to_perform: Some(|action| {
-      enq_effect!(eff_print_error!("omg becky".into()));
-    }),
-    will_fail_to_perform: None,
-    did_perform: None,
-    did_fail_to_perform: None,    
-  });
+  add_component!(
+    spawn_room,
+    on_action_event,
+    OnActionEvent {
+      could_not_perform: None,
+      will_attempt_to_perform: Some(|action| {
+        enq_effect!(eff_print_error!("omg becky".into()));
+      }),
+      will_fail_to_perform: None,
+      did_perform: None,
+      did_fail_to_perform: None,
+    }
+  );
   let _player = create_player!("Player", "It's you, you idiot.", spawn_room);
   let mushroom = create_object!(
     "Mushroom",
@@ -36,16 +40,20 @@ pub fn generate_map() {
   let se_room = create_room!("Southeast Room", "This is the Southeastern Room.");
   let s_room = create_room!("South Room", "This is the Southern Room.");
   let sw_room = create_room!("Southwest Room", "This is the Southwestern Room.");
-  add_component!(mushroom, on_get_description, OnGetDescription(|_| {
-    use rand::seq::SliceRandom;
-    let descriptions = vec![
-      "No... really. It's just you.",
-      "This is not going to get any more interesting.",
-      "Do you have a bad home life?",
-      "Okay.  You're ugly and you smell funny.  Are you happy now?",
-    ];
-    Some(format!("{}", descriptions.choose(&mut rand::thread_rng()).unwrap()))
-  }));
+  add_component!(
+    mushroom,
+    on_get_description,
+    OnGetDescription(|_| {
+      use rand::seq::SliceRandom;
+      let descriptions = vec![
+        "No... really. It's just you.",
+        "This is not going to get any more interesting.",
+        "Do you have a bad home life?",
+        "Okay.  You're ugly and you smell funny.  Are you happy now?",
+      ];
+      Some(format!("{}", descriptions.choose(&mut rand::thread_rng()).unwrap()))
+    })
+  );
   create_exit!(spawn_room, ne_room, &Direction::Northeast, true);
   create_exit!(spawn_room, n_room, &Direction::North, true);
   create_exit!(n_room, ne_room, &Direction::East, true);

@@ -13,23 +13,6 @@ lazy_static! {
 }
 
 #[named]
-pub fn start_output() {
-  let mut printer = INPUT.lock().unwrap().create_external_printer().unwrap();
-  let duration = Duration::from_millis(50);
-  spawn(move || loop {
-    let messages = get_messages();
-    if messages.len() > 0 {
-      for message in messages.iter() {
-        printer.print(format!("{}", message)).expect("External print failure");
-        std::thread::sleep(std::time::Duration::from_millis(50));
-      }
-      printer.print(format!("{}", " ")).expect("External print failure");
-    }
-    sleep(duration);
-  });
-}
-
-#[named]
 pub fn read_input() {
   let input = INPUT.lock().unwrap().readline(format!("{} ", ">".blue()).as_str());
   let result = match input {

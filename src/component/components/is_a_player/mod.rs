@@ -1,4 +1,6 @@
-use crate::entity::Entity;
+use specs::prelude::*;
+use specs_derive::*;
 
-#[derive(Copy, Clone, Debug, Hash, PartialEq)]
+#[derive(Clone, Copy, Component, Debug, Default, Hash, PartialEq)]
+#[storage(NullStorage)]
 pub struct IsAPlayer;

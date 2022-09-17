@@ -1,6 +1,9 @@
-use crate::model::Exits;
+use specs::prelude::*;
+use specs_derive::*;
 
-#[derive(Clone, Debug, Default, PartialEq)]
+use crate::navigation::Exits;
+
+#[derive(Clone, Copy, Component, Debug, Default, PartialEq)]
 pub struct HasExits {
   pub exits: Exits,
 }

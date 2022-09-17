@@ -1,44 +1,16 @@
 use colored::*;
-use std::collections::VecDeque;
-use std::error::Error as ErrorTrait;
-use std::fmt;
+use specs::prelude::*;
 use std::str::FromStr;
-use std::sync::Mutex;
 
-use crate::entity::Entity;
-use crate::model::Direction;
-
-pub mod commands;
-pub use commands::*;
+use crate::action::Action;
+use crate::navigation::Direction;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub enum Command {
-  Echo(EchoCommand),
-  Look(LookCommand),
-  MoveDirection(MoveDirectionCommand),
-  Quit(QuitCommand),
-}
-
-#[derive(Debug)]
-pub enum Error {
-  WTFError,
-}
-
-impl ErrorTrait for Error {}
-
-impl fmt::Display for Error {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    match self {
-      Error::WTFError => write!(f, "{}", "What?".bright_red()),
-    }
-  }
-}
-
-pub trait Commandable {
-  /// Execute this command.
-  fn execute(&self) {
-    todo!();
-  }
+  Echo { entity: Entity, string: String },
+  Look { entity: Entity },
+  MoveDirection { entity: Entity, direction: Direction },
+  Quit { entity: Entity },
 }
 
 impl Command {
@@ -47,48 +19,32 @@ impl Command {
     let words: Vec<&str> = string.split_whitespace().collect();
     let first: String = words.get(0).unwrap_or(&"").to_string();
     let second: String = words.get(1).unwrap_or(&"").to_string();
+    use Command::*;
     match first.as_str() {
-      "echo" => Ok(cmd_echo!(entity, words[1..].join(" "))),
-      "quit" => Ok(cmd_quit!(entity)),
-      "look" | "l" => Ok(cmd_look!(entity)),
+      "echo" => Ok(Echo {
+        entity,
+        string: words[1..].join(" "),
+      }),
+      "look" | "l" => Ok(Look { entity }),
       "move" | "go" => match Direction::from_str(&second) {
-        Ok(direction) => Ok(cmd_move_to!(entity, direction)),
+        Ok(direction) => Ok(MoveDirection { entity, direction }),
         Err(_) => Err(()),
       },
+      "quit" => Ok(Quit { entity }),
       other => match Direction::from_str(other) {
-        Ok(direction) => Ok(cmd_move_to!(entity, direction)),
+        Ok(direction) => Ok(MoveDirection { entity, direction }),
         Err(_) => Err(()),
       },
     }
   }
-}
 
-impl Commandable for Command {
   #[named]
-  fn execute(&self) {
+  pub fn get_action(&self) -> Result<Action, ()> {
     use Command::*;
     match self {
-      Echo(command) => command.execute(),
-      Look(command) => command.execute(),
-      MoveDirection(command) => command.execute(),
-      Quit(command) => command.execute(),
+      Look { entity } => Ok(Action::Look { entity: *entity }),
+      MoveDirection { entity, direction } => Ok(Action::MoveDirection { entity: *entity, direction: *direction }),
+      _ => Err(()),
     }
-  }
-}
-
-lazy_static! {
-  pub static ref COMMAND_QUEUE: Mutex<VecDeque<Command>> = Mutex::new(VecDeque::new());
-}
-
-#[named]
-pub fn enqueue_command(command: Command) {
-  COMMAND_QUEUE.lock().unwrap().push_back(command);
-}
-
-#[named]
-pub fn run_command_queue() {
-  let commands = COMMAND_QUEUE.lock().unwrap().drain(..).collect::<Vec<Command>>();
-  for command in commands.iter() {
-    command.execute();
   }
 }

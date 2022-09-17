@@ -58,7 +58,7 @@ More specific ideas:
 - Pass through command parsing to player object, room, items in room, etc for commands that only make sense with a specific contextual element.
 - Try to simplify systems.
 - Add Results to Commands.
-- Probably ditch the ECS.  I think I'm working around it more than I'm benefiting from it.
+- Moving back to ECS, now that I've sampled the alternative, lol.
 - Move messages to the IO module.
 - Attributes.
 - Species.
@@ -80,6 +80,8 @@ More specific ideas:
 - onExamine()
 - onTaste()
 - Shift to using callbacks rather than the event queue.
+- Aliases for objects/entities/rooms.
+- before, on, after actions.
 
 General Flow:
 
