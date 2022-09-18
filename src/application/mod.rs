@@ -61,7 +61,14 @@ impl<'a> Application<'a> {
       use HotkeyAction::*;
       match action {
         Quit => RunMode::Exit,
-        Sleep => RunMode::Continue,
+        Undo => {
+          self.cli_textarea.undo();
+          RunMode::Continue
+        },
+        Redo => {
+          self.cli_textarea.redo();
+          RunMode::Continue
+        },
       }
     } else if self.input_mode == InputMode::Cli {
       if keystroke == Keystroke::Enter && validate(&mut self.cli_textarea) {
@@ -93,7 +100,7 @@ impl<'a> Application<'a> {
 
   pub fn did_initialize(&mut self) {
     use HotkeyAction::*;
-    self.actions = vec![Quit, Sleep].into();
+    self.actions = vec![Quit, Undo, Redo].into();
   }
 
   pub fn did_load(&mut self) {

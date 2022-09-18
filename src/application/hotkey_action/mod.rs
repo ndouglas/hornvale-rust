@@ -9,14 +9,15 @@ pub use hotkey_actions::*;
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum HotkeyAction {
   Quit,
-  Sleep,
+  Undo,
+  Redo,
 }
 
 impl HotkeyAction {
   /// All available actions
   pub fn iterator() -> Iter<'static, HotkeyAction> {
     use HotkeyAction::*;
-    static HOTKEY_ACTIONS: [HotkeyAction; 2] = [Quit, Sleep];
+    static HOTKEY_ACTIONS: [HotkeyAction; 3] = [Quit, Undo, Redo];
     HOTKEY_ACTIONS.iter()
   }
 
@@ -26,7 +27,8 @@ impl HotkeyAction {
     use Keystroke::*;
     match self {
       Quit => &[Ctrl('c'), Ctrl('q')],
-      Sleep => &[Ctrl('s')],
+      Undo => &[Ctrl('z')],
+      Redo => &[Ctrl('r')],
     }
   }
 }
@@ -37,7 +39,8 @@ impl Display for HotkeyAction {
     use HotkeyAction::*;
     let str = match self {
       Quit => "Quit",
-      Sleep => "Sleep",
+      Undo => "Undo",
+      Redo => "Redo",
     };
     write!(f, "{}", str)
   }
