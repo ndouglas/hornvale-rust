@@ -17,7 +17,7 @@ pub struct ExperimentSystemData<'a> {
 impl<'a> System<'a> for ExperimentSystem {
   type SystemData = ExperimentSystemData<'a>;
 
-  fn run(&mut self, mut data: Self::SystemData) {
+  fn run(&mut self, data: Self::SystemData) {
     for (_entity, _has_name, _has_description) in (&data.entities, &data.has_name, &data.has_description).join() {
       // println!("{}", has_name.0);
       // println!("{}", has_description.0);

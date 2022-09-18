@@ -3,38 +3,41 @@ use std::slice::Iter;
 
 use super::input::keystroke::Keystroke;
 
-pub mod actions;
-pub use actions::*;
+pub mod hotkey_actions;
+pub use hotkey_actions::*;
 
-/// We define all available action
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
-pub enum Action {
+pub enum HotkeyAction {
   Quit,
   Sleep,
 }
 
-impl Action {
+impl HotkeyAction {
   /// All available actions
-  pub fn iterator() -> Iter<'static, Action> {
-    static ACTIONS: [Action; 2] = [Action::Quit, Action::Sleep];
-    ACTIONS.iter()
+  pub fn iterator() -> Iter<'static, HotkeyAction> {
+    use HotkeyAction::*;
+    static HOTKEY_ACTIONS: [HotkeyAction; 2] = [Quit, Sleep];
+    HOTKEY_ACTIONS.iter()
   }
 
   /// List of keystrokes associated to action
   pub fn keystrokes(&self) -> &[Keystroke] {
+    use HotkeyAction::*;
+    use Keystroke::*;
     match self {
-      Action::Quit => &[Keystroke::Ctrl('c'), Keystroke::Ctrl('q')],
-      Action::Sleep => &[Keystroke::Ctrl('s')],
+      Quit => &[Ctrl('c'), Ctrl('q')],
+      Sleep => &[Ctrl('s')],
     }
   }
 }
 
 /// To display a user friendly short description of action
-impl Display for Action {
+impl Display for HotkeyAction {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    use HotkeyAction::*;
     let str = match self {
-      Action::Quit => "Quit",
-      Action::Sleep => "Sleep",
+      Quit => "Quit",
+      Sleep => "Sleep",
     };
     write!(f, "{}", str)
   }

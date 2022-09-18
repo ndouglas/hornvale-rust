@@ -21,7 +21,7 @@ impl<'a> System<'a> for ProcessOutputSystem {
   type SystemData = ProcessOutputSystemData<'a>;
 
   fn run(&mut self, mut data: Self::SystemData) {
-    let mut messages = &mut data.messages_resource.0;
+    let messages = &mut data.messages_resource.0;
     for event in data.output_event_channel.read(&mut self.reader_id) {
       messages.push_back(event.string.clone());
     }

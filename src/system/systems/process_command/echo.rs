@@ -1,4 +1,4 @@
-use specs::shrev::{EventChannel, ReaderId};
+use specs::shrev::EventChannel;
 
 use crate::command::Command;
 use crate::event::OutputEvent;

@@ -1,4 +1,3 @@
-use colored::*;
 use specs::prelude::*;
 use specs::shrev::EventChannel;
 use tui::backend::Backend;
@@ -12,22 +11,29 @@ use tui::Frame;
 use tui_logger::TuiLoggerWidget;
 use tui_textarea::TextArea;
 
-use crate::application::Application;
 use crate::application::state::State;
+use crate::application::Application;
 use crate::event::InputEvent;
 
 pub fn send_input(textarea: &mut TextArea, state: &mut State) {
   if let Some(input) = textarea.lines().first() {
-    state.ecs.write_resource::<EventChannel<InputEvent>>().single_write(InputEvent {
-      input: input.to_owned(),
-    });  
+    state
+      .ecs
+      .write_resource::<EventChannel<InputEvent>>()
+      .single_write(InputEvent {
+        input: input.to_owned(),
+      });
   }
 }
 
 pub fn validate(textarea: &mut TextArea) -> bool {
   if textarea.lines()[0].len() == 0 {
     textarea.set_style(Style::default().fg(Color::LightRed));
-    textarea.set_block(Block::default().borders(Borders::ALL).title(format!("ERROR: {}", "pls enter a command")));
+    textarea.set_block(
+      Block::default()
+        .borders(Borders::ALL)
+        .title(format!("ERROR: {}", "pls enter a command")),
+    );
     false
   } else {
     textarea.set_style(Style::default().fg(Color::LightGreen));
@@ -65,7 +71,7 @@ where
 
 fn draw_body<'a>(state: &'a mut State<'_>, height: u16) -> Paragraph<'a> {
   let mut spans = vec![];
-  let mut messages = &mut state.messages;
+  let messages = &mut state.messages;
   for i in 0..height {
     if let Some(string) = messages.get(i as usize) {
       spans.push(Spans::from(Span::raw(string)));
@@ -75,15 +81,15 @@ fn draw_body<'a>(state: &'a mut State<'_>, height: u16) -> Paragraph<'a> {
   }
   spans.reverse();
   Paragraph::new(spans)
-  .style(Style::default().fg(Color::LightCyan))
-  .alignment(Alignment::Left)
-  .block(
-    Block::default()
-      .title("Hornvale")
-      .borders(Borders::ALL)
-      .style(Style::default().fg(Color::White))
-      .border_type(BorderType::Rounded),
-  )
+    .style(Style::default().fg(Color::LightCyan))
+    .alignment(Alignment::Left)
+    .block(
+      Block::default()
+        .title("Hornvale")
+        .borders(Borders::ALL)
+        .style(Style::default().fg(Color::White))
+        .border_type(BorderType::Rounded),
+    )
 }
 
 fn draw_logs<'a>() -> TuiLoggerWidget<'a> {
@@ -99,6 +105,6 @@ fn draw_logs<'a>() -> TuiLoggerWidget<'a> {
         .border_style(Style::default().fg(Color::White).bg(Color::Black))
         .borders(Borders::ALL)
         .border_type(BorderType::Thick),
-      )
+    )
     .style(Style::default().fg(Color::White).bg(Color::Black))
 }

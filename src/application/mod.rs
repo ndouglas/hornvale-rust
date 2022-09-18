@@ -11,8 +11,8 @@ use tui::style::Style;
 use tui::Terminal;
 use tui_textarea::{Input, TextArea};
 
-pub mod action;
-pub use action::*;
+pub mod hotkey_action;
+pub use hotkey_action::*;
 pub mod input;
 pub use input::*;
 pub mod io;
@@ -30,7 +30,7 @@ pub struct Application<'a> {
   pub cli_textarea: TextArea<'a>,
   pub input_mode: InputMode,
   pub run_mode: RunMode,
-  pub actions: Actions,
+  pub actions: HotkeyActions,
   pub state: State<'a>,
   pub is_busy: bool,
 }
@@ -38,7 +38,7 @@ pub struct Application<'a> {
 impl<'a> Application<'a> {
   #[named]
   pub fn new(io_tx: Sender<IoEvent>) -> Self {
-    let actions = vec![Action::Quit].into();
+    let actions = vec![HotkeyAction::Quit].into();
     let state = State::new();
     let run_mode = RunMode::Continue;
     let input_mode = InputMode::Cli;
@@ -58,11 +58,10 @@ impl<'a> Application<'a> {
 
   pub async fn handle_keystroke(&mut self, keystroke: Keystroke) -> RunMode {
     if let Some(action) = self.actions.find(keystroke) {
+      use HotkeyAction::*;
       match action {
-        Action::Quit => RunMode::Exit,
-        Action::Sleep => {
-          RunMode::Continue
-        },
+        Quit => RunMode::Exit,
+        Sleep => RunMode::Continue,
       }
     } else if self.input_mode == InputMode::Cli {
       if keystroke == Keystroke::Enter && validate(&mut self.cli_textarea) {
@@ -93,13 +92,13 @@ impl<'a> Application<'a> {
   }
 
   pub fn did_initialize(&mut self) {
-    self.actions = vec![Action::Quit, Action::Sleep].into();
+    use HotkeyAction::*;
+    self.actions = vec![Quit, Sleep].into();
   }
 
   pub fn did_load(&mut self) {
     self.is_busy = false;
   }
-
 }
 
 #[named]

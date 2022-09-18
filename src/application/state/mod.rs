@@ -32,7 +32,12 @@ impl State<'_> {
     let dispatcher = Arc::new(Mutex::new(get_new_dispatcher(&mut ecs)));
     let tick_counter = 0;
     let messages = VecDeque::new();
-    Self { ecs, dispatcher, tick_counter, messages }
+    Self {
+      ecs,
+      dispatcher,
+      tick_counter,
+      messages,
+    }
   }
 
   #[named]
@@ -40,7 +45,12 @@ impl State<'_> {
     let mut dispatcher = self.dispatcher.lock().await;
     dispatcher.dispatch(&self.ecs);
     self.tick_counter = self.ecs.read_resource::<TickResource>().0;
-    let new_messages = self.ecs.write_resource::<MessagesResource>().0.drain(..).collect::<Vec<String>>();
+    let new_messages = self
+      .ecs
+      .write_resource::<MessagesResource>()
+      .0
+      .drain(..)
+      .collect::<Vec<String>>();
     for message in new_messages {
       self.messages.push_front(message);
     }
@@ -48,5 +58,4 @@ impl State<'_> {
       self.messages.pop_back();
     }
   }
-
 }
