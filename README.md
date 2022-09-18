@@ -82,6 +82,7 @@ More specific ideas:
 - Shift to using callbacks rather than the event queue.
 - Aliases for objects/entities/rooms.
 - before, on, after actions.
+- Possibly use tui-input instead of tui-textarea.
 
 General Flow:
 

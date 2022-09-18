@@ -18,14 +18,9 @@ pub mod cli;
 pub mod command;
 pub mod component;
 pub mod dispatcher;
-// pub mod effect;
-// pub mod entity;
 pub mod event;
-// pub mod io;
-// pub mod message;
 pub mod navigation;
 pub mod resource;
-// pub mod room;
 pub mod system;
 
 pub mod test {

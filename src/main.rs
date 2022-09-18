@@ -45,14 +45,6 @@ async fn main() -> Result<()> {
     }
   });
 
-  /*
-  // Spawn a distinct thread for the ECS.
-  tokio::spawn(async move {
-    let mut state = state::State::new();
-    state.run();
-  });
-  */
-
   // Start the user interface.
   application::start_ui(&app_ui).await?;
   Ok(())

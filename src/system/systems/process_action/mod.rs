@@ -19,9 +19,11 @@ pub struct ProcessActionSystemData<'a> {
 impl<'a> System<'a> for ProcessActionSystem {
   type SystemData = ProcessActionSystemData<'a>;
 
-  fn run(&mut self, data: Self::SystemData) {
-    for _event in data.action_event_channel.read(&mut self.reader_id) {
-      // println!("{:?}", event);
+  fn run(&mut self, mut data: Self::SystemData) {
+    for event in data.action_event_channel.read(&mut self.reader_id) {
+      data.output_event_channel.single_write(OutputEvent {
+        string: format!("{:?}", event.action),
+      });
     }
   }
 }

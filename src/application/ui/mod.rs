@@ -1,11 +1,13 @@
 use specs::prelude::*;
 use specs::shrev::EventChannel;
+use std::collections::VecDeque;
+use textwrap::wrap as wrap_text;
 use tui::backend::Backend;
 use tui::layout::Alignment;
 use tui::layout::{Constraint, Direction, Layout};
 use tui::style::{Color, Style};
 use tui::text::{Span, Spans};
-use tui::widgets::{Block, BorderType, Borders, Paragraph};
+use tui::widgets::{Block, BorderType, Borders, Paragraph, Wrap};
 use tui::Frame;
 
 use tui_logger::TuiLoggerWidget;
@@ -55,7 +57,8 @@ where
 
   // Hornvale!
   let body_height = chunks[0].height - 2;
-  let body = draw_body(&mut app.state, body_height);
+  let body_width = chunks[0].width - 2;
+  let body = draw_body(&mut app.state, body_height, body_width);
   rect.render_widget(body, chunks[0]);
 
   // Logs
@@ -71,11 +74,17 @@ where
   Ok(())
 }
 
-fn draw_body<'a>(state: &'a mut State<'_>, height: u16) -> Paragraph<'a> {
+fn draw_body<'a>(state: &'a mut State<'_>, height: u16, width: u16) -> Paragraph<'a> {
   let mut spans = vec![];
-  let messages = &mut state.messages;
-  for i in 0..height {
-    if let Some(string) = messages.get(i as usize) {
+  let mut lines = state
+    .messages
+    .iter()
+    .take(height.into())
+    .map(|string| wrap_text(&string, width as usize).iter().rev().map(|cow| cow.to_string()).collect::<Vec<String>>())
+    .flatten()
+    .collect::<VecDeque<String>>();
+  while spans.len() < height as usize {
+    if let Some(string) = lines.pop_front() {
       spans.push(Spans::from(Span::raw(string)));
     } else {
       spans.push(Spans::from(Span::raw("")));
