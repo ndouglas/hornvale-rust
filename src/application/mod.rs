@@ -66,9 +66,10 @@ impl<'a> Application<'a> {
       }
     } else if self.input_mode == InputMode::Cli {
       if keystroke == Keystroke::Enter && validate(&mut self.cli_textarea) {
-        return RunMode::Exit;
+        send_input(&mut self.cli_textarea, &mut self.state);
+      } else {
+        self.cli_textarea.input(Input::from(keystroke));
       }
-      self.cli_textarea.input(Input::from(keystroke));
       RunMode::Continue
     } else {
       RunMode::Continue

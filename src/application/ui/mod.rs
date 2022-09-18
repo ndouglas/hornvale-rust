@@ -1,5 +1,7 @@
+use colored::*;
+use specs::prelude::*;
+use specs::shrev::EventChannel;
 use tui::backend::Backend;
-
 use tui::layout::Alignment;
 use tui::layout::{Constraint, Direction, Layout};
 use tui::style::{Color, Style};
@@ -12,11 +14,20 @@ use tui_textarea::TextArea;
 
 use crate::application::Application;
 use crate::application::state::State;
+use crate::event::InputEvent;
+
+pub fn send_input(textarea: &mut TextArea, state: &mut State) {
+  if let Some(input) = textarea.lines().first() {
+    state.ecs.write_resource::<EventChannel<InputEvent>>().single_write(InputEvent {
+      input: input.to_owned(),
+    });  
+  }
+}
 
 pub fn validate(textarea: &mut TextArea) -> bool {
-  if let Err(err) = textarea.lines()[0].parse::<f64>() {
+  if textarea.lines()[0].len() == 0 {
     textarea.set_style(Style::default().fg(Color::LightRed));
-    textarea.set_block(Block::default().borders(Borders::ALL).title(format!("ERROR: {}", err)));
+    textarea.set_block(Block::default().borders(Borders::ALL).title(format!("ERROR: {}", "pls enter a command")));
     false
   } else {
     textarea.set_style(Style::default().fg(Color::LightGreen));
@@ -35,7 +46,8 @@ where
   let chunks = layout.split(rect.size());
 
   // Hornvale!
-  let body = draw_body(app.is_busy, &mut app.state);
+  let body_height = chunks[0].height - 2;
+  let body = draw_body(&mut app.state, body_height);
   rect.render_widget(body, chunks[0]);
 
   // Logs
@@ -51,22 +63,23 @@ where
   Ok(())
 }
 
-fn draw_body<'a>(is_busy: bool, state: &State) -> Paragraph<'a> {
-  let initialized_text = "Initialized";
-  let loading_text = if is_busy { "Loading..." } else { "" };
-  let sleep_text = String::default();
-  let tick_text = format!("Tick count: {}", state.tick_counter);
-  Paragraph::new(vec![
-    Spans::from(Span::raw(initialized_text)),
-    Spans::from(Span::raw(loading_text)),
-    Spans::from(Span::raw(sleep_text)),
-    Spans::from(Span::raw(tick_text)),
-  ])
+fn draw_body<'a>(state: &'a mut State<'_>, height: u16) -> Paragraph<'a> {
+  let mut spans = vec![];
+  let mut messages = &mut state.messages;
+  for i in 0..height {
+    if let Some(string) = messages.get(i as usize) {
+      spans.push(Spans::from(Span::raw(string)));
+    } else {
+      spans.push(Spans::from(Span::raw("")));
+    }
+  }
+  spans.reverse();
+  Paragraph::new(spans)
   .style(Style::default().fg(Color::LightCyan))
   .alignment(Alignment::Left)
   .block(
     Block::default()
-      // .title("Body")
+      .title("Hornvale")
       .borders(Borders::ALL)
       .style(Style::default().fg(Color::White))
       .border_type(BorderType::Plain),
