@@ -30,6 +30,7 @@ impl State<'_> {
     insert_resources(&mut ecs);
     insert_event_channels(&mut ecs);
     register_components(&mut ecs);
+    run_initial_systems(&mut ecs);
     let dispatcher = Arc::new(Mutex::new(get_new_dispatcher(&mut ecs)));
     let tick_counter = 0;
     let messages = VecDeque::new();
@@ -40,7 +41,7 @@ impl State<'_> {
       messages,
     }
   }
-
+  
   #[named]
   pub async fn tick(&mut self) {
     let mut dispatcher = self.dispatcher.lock().await;

@@ -6,6 +6,7 @@ use crate::navigation::Direction;
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct Exit {
   pub direction: Direction,
+  pub from: Entity,
   pub to: Entity,
   pub is_passable: bool,
 }

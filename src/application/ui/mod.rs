@@ -80,7 +80,13 @@ fn draw_body<'a>(state: &'a mut State<'_>, height: u16, width: u16) -> Paragraph
     .messages
     .iter()
     .take(height.into())
-    .map(|string| wrap_text(&string, width as usize).iter().rev().map(|cow| cow.to_string()).collect::<Vec<String>>())
+    .map(|string| {
+      wrap_text(&string, width as usize)
+        .iter()
+        .rev()
+        .map(|cow| cow.to_string())
+        .collect::<Vec<String>>()
+    })
     .flatten()
     .collect::<VecDeque<String>>();
   while spans.len() < height as usize {
