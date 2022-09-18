@@ -23,6 +23,8 @@ pub fn send_input(textarea: &mut TextArea, state: &mut State) {
       .single_write(InputEvent {
         input: input.to_owned(),
       });
+    textarea.delete_line_by_head();
+    textarea.delete_line_by_end();
   }
 }
 
@@ -94,11 +96,11 @@ fn draw_body<'a>(state: &'a mut State<'_>, height: u16) -> Paragraph<'a> {
 
 fn draw_logs<'a>() -> TuiLoggerWidget<'a> {
   TuiLoggerWidget::default()
-    .style_error(Style::default().fg(Color::Red))
-    .style_debug(Style::default().fg(Color::Green))
+    .style_error(Style::default().fg(Color::Yellow))
+    .style_debug(Style::default().fg(Color::Yellow))
     .style_warn(Style::default().fg(Color::Yellow))
-    .style_trace(Style::default().fg(Color::Gray))
-    .style_info(Style::default().fg(Color::Blue))
+    .style_trace(Style::default().fg(Color::Yellow))
+    .style_info(Style::default().fg(Color::Yellow))
     .block(
       Block::default()
         .title("Logs")
