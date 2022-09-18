@@ -15,7 +15,6 @@ pub mod application;
 pub mod cli;
 pub mod command;
 pub mod component;
-pub mod dispatcher;
 pub mod event;
 pub mod navigation;
 pub mod resource;

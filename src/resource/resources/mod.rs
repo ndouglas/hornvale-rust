@@ -2,6 +2,8 @@ pub mod messages;
 pub use messages::*;
 pub mod player;
 pub use player::*;
+pub mod spawn_room;
+pub use spawn_room::*;
 pub mod tick;
 pub use tick::*;
 pub mod visited_rooms;

@@ -3,11 +3,12 @@ use std::collections::VecDeque;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-use crate::dispatcher::get_new_dispatcher;
 use crate::resource::resources::*;
 
 pub mod components;
 pub use components::*;
+pub mod dispatcher;
+pub use dispatcher::*;
 pub mod event_channels;
 pub use event_channels::*;
 pub mod resources;

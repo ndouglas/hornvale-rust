@@ -8,6 +8,7 @@ use crate::resource::resources::*;
 pub fn insert_resources(ecs: &mut World) {
   ecs.insert(MessagesResource(VecDeque::new()));
   ecs.insert(PlayerResource(None));
+  ecs.insert(SpawnRoomResource(None));
   ecs.insert(TickResource(0));
   ecs.insert(VisitedRoomsResource(HashSet::new()));
 }

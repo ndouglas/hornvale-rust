@@ -23,10 +23,8 @@ pub fn get_new_dispatcher<'a, 'b>(ecs: &mut World) -> Dispatcher<'a, 'b> {
     ProcessOutputSystem { reader_id }
   };
   let dispatcher = DispatcherBuilder::new()
-    //.with(CreateEditorSystem {}, "create_editor", &[])
-    //.with(CreatePrinterSystem {}, "create_printer", &["create_editor"])
     .with(CreatePlayerSystem {}, "create_player", &[])
-    //.with(PromptSystem {}, "prompt", &["create_editor"])
+    .with(CreateWorldSystem {}, "create_world", &[])
     .with(ExperimentSystem {}, "experiment", &[])
     .with(process_output_system, "process_output", &[])
     .with(process_input_system, "process_input", &[])
@@ -35,7 +33,7 @@ pub fn get_new_dispatcher<'a, 'b>(ecs: &mut World) -> Dispatcher<'a, 'b> {
     .with(
       TickSystem {},
       "tick",
-      &[], //&["create_editor", "create_player", "process_action", "experiment"],
+      &[],
     )
     .build();
   dispatcher
