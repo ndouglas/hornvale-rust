@@ -82,7 +82,7 @@ fn draw_body<'a>(state: &'a mut State<'_>, height: u16) -> Paragraph<'a> {
       .title("Hornvale")
       .borders(Borders::ALL)
       .style(Style::default().fg(Color::White))
-      .border_type(BorderType::Plain),
+      .border_type(BorderType::Rounded),
   )
 }
 
@@ -97,7 +97,8 @@ fn draw_logs<'a>() -> TuiLoggerWidget<'a> {
       Block::default()
         .title("Logs")
         .border_style(Style::default().fg(Color::White).bg(Color::Black))
-        .borders(Borders::ALL),
-    )
+        .borders(Borders::ALL)
+        .border_type(BorderType::Thick),
+      )
     .style(Style::default().fg(Color::White).bg(Color::Black))
 }
