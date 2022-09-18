@@ -49,6 +49,7 @@ impl<'a> System<'a> for ProcessActionSystem {
         Look { entity } => {
           self.process_look(action.clone(), &mut data);
         },
+        LookDirection { entity, direction } => self.process_look_direction(action.clone(), &mut data),
         MoveDirection { entity, direction } => self.process_move_direction(action.clone(), &mut data),
       }
     }
@@ -57,4 +58,5 @@ impl<'a> System<'a> for ProcessActionSystem {
 }
 
 mod look;
+mod look_direction;
 mod move_direction;

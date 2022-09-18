@@ -8,6 +8,7 @@ use crate::navigation::Direction;
 pub enum Command {
   Echo { entity: Entity, string: String },
   Look { entity: Entity },
+  LookDirection { entity: Entity, direction: Direction },
   MoveDirection { entity: Entity, direction: Direction },
   Quit { entity: Entity },
 }
@@ -24,7 +25,13 @@ impl Command {
         entity,
         string: words[1..].join(" "),
       }),
-      "look" | "l" => Ok(Look { entity }),
+      "look" | "l" => match second.as_str() {
+        "" => Ok(Look { entity }),
+        _ => match Direction::from_str(&second) {
+          Ok(direction) => Ok(LookDirection { entity, direction }),
+          Err(_) => Err(()),
+        },
+      },
       "move" | "go" => match Direction::from_str(&second) {
         Ok(direction) => Ok(MoveDirection { entity, direction }),
         Err(_) => Err(()),
@@ -42,6 +49,10 @@ impl Command {
     use Command::*;
     match self {
       Look { entity } => Ok(Action::Look { entity: *entity }),
+      LookDirection { entity, direction } => Ok(Action::LookDirection {
+        entity: *entity,
+        direction: *direction,
+      }),
       MoveDirection { entity, direction } => Ok(Action::MoveDirection {
         entity: *entity,
         direction: *direction,
