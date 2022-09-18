@@ -25,7 +25,10 @@ impl<'a> System<'a> for ProcessCommandSystem {
   #[named]
   fn run(&mut self, mut data: Self::SystemData) {
     trace_enter!();
-    let command_events = data.command_event_channel.read(&mut self.reader_id).collect::<Vec<&CommandEvent>>();
+    let command_events = data
+      .command_event_channel
+      .read(&mut self.reader_id)
+      .collect::<Vec<&CommandEvent>>();
     let event_count = command_events.len();
     if event_count == 0 {
       return;

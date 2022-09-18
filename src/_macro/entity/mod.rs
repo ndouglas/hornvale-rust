@@ -9,7 +9,6 @@ macro_rules! get_name {
   }};
 }
 
-
 #[macro_export]
 macro_rules! get_description {
   ($system_data: expr, $entity: expr) => {{
@@ -28,7 +27,7 @@ macro_rules! get_current_room {
     let mut result = None;
     if let Some(is_in_room) = $system_data.is_in_room.get($entity) {
       if let IsInRoom(Some(room)) = is_in_room {
-        result = Some(room.to_owned());  
+        result = Some(room.to_owned());
       }
     }
     result

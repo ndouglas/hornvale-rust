@@ -14,8 +14,8 @@ impl<'a> ProcessActionSystem {
         info!("Sending event (description of current room).");
         data.output_event_channel.single_write(OutputEvent {
           string: format_room!(data, room_id),
-        });  
-      }  
+        });
+      }
     }
     trace_exit!();
   }

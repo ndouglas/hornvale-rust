@@ -26,7 +26,10 @@ impl<'a> System<'a> for ProcessInputSystem {
   #[named]
   fn run(&mut self, mut data: Self::SystemData) {
     trace_enter!();
-    let input_events = data.input_event_channel.read(&mut self.reader_id).collect::<Vec<&InputEvent>>();
+    let input_events = data
+      .input_event_channel
+      .read(&mut self.reader_id)
+      .collect::<Vec<&InputEvent>>();
     let event_count = input_events.len();
     if event_count == 0 {
       return;

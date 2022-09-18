@@ -15,6 +15,9 @@ impl<'a> ProcessActionSystem {
           Some(exit) => {
             if let Some(player_id) = data.player_resource.0 {
               data.is_in_room.insert(player_id, IsInRoom(Some(exit.to)));
+              data.action_event_channel.single_write(ActionEvent {
+                action: Action::Look { entity: player_id },
+              });
             }
           },
           None => {
@@ -23,7 +26,7 @@ impl<'a> ProcessActionSystem {
             });
           },
         }
-      }  
+      }
     }
     trace_exit!();
   }

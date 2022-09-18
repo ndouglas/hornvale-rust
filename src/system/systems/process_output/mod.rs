@@ -22,7 +22,10 @@ impl<'a> System<'a> for ProcessOutputSystem {
   #[named]
   fn run(&mut self, mut data: Self::SystemData) {
     trace_enter!();
-    let output_events = data.output_event_channel.read(&mut self.reader_id).collect::<Vec<&OutputEvent>>();
+    let output_events = data
+      .output_event_channel
+      .read(&mut self.reader_id)
+      .collect::<Vec<&OutputEvent>>();
     let event_count = output_events.len();
     if event_count == 0 {
       return;

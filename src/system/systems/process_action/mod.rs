@@ -3,8 +3,8 @@ use specs::shrev::{EventChannel, ReaderId};
 
 use crate::action::Action;
 use crate::component::components::*;
-use crate::resource::resources::*;
 use crate::event::{ActionEvent, OutputEvent};
+use crate::resource::resources::*;
 
 pub struct ProcessActionSystem {
   pub reader_id: ReaderId<ActionEvent>,
@@ -20,7 +20,7 @@ pub struct ProcessActionSystemData<'a> {
   pub has_name: ReadStorage<'a, HasName>,
   pub is_in_room: WriteStorage<'a, IsInRoom>,
   pub player_resource: Read<'a, PlayerResource>,
-  pub action_event_channel: Read<'a, EventChannel<ActionEvent>>,
+  pub action_event_channel: Write<'a, EventChannel<ActionEvent>>,
   pub output_event_channel: Write<'a, EventChannel<OutputEvent>>,
 }
 
@@ -48,7 +48,7 @@ impl<'a> System<'a> for ProcessActionSystem {
       match action {
         Look { entity } => {
           self.process_look(action.clone(), &mut data);
-        }
+        },
         MoveDirection { entity, direction } => self.process_move_direction(action.clone(), &mut data),
       }
     }

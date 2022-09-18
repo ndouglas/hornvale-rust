@@ -41,7 +41,7 @@ impl State<'_> {
       messages,
     }
   }
-  
+
   #[named]
   pub async fn tick(&mut self) {
     let mut dispatcher = self.dispatcher.lock().await;
