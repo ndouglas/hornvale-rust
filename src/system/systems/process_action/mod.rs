@@ -18,6 +18,7 @@ pub struct ProcessActionSystemData<'a> {
   pub has_description: ReadStorage<'a, HasDescription>,
   pub has_exits: ReadStorage<'a, HasExits>,
   pub has_name: ReadStorage<'a, HasName>,
+  pub is_an_object: ReadStorage<'a, IsAnObject>,
   pub is_in_room: WriteStorage<'a, IsInRoom>,
   pub player_resource: Read<'a, PlayerResource>,
   pub action_event_channel: Write<'a, EventChannel<ActionEvent>>,
