@@ -13,6 +13,7 @@ pub struct CreatePlayerSystemData<'a> {
   pub has_name: WriteStorage<'a, HasName>,
 }
 
+// This system should normally only be run at startup.
 impl<'a> System<'a> for CreatePlayerSystem {
   type SystemData = CreatePlayerSystemData<'a>;
 

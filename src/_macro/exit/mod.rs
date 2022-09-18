@@ -32,3 +32,16 @@ macro_rules! get_exits {
     result
   }};
 }
+
+#[macro_export]
+macro_rules! get_exit_to {
+  ($system_data: expr, $room: expr, $direction: expr) => {{
+    let mut result = None;
+    if let Some(exits) = get_exits!($system_data, $room) {
+      if let Some(exit) = exits.get_exit($direction) {
+        result = Some(exit.to_owned());
+      }
+    }
+    result
+  }};
+}

@@ -3,6 +3,7 @@ use specs::shrev::{EventChannel, ReaderId};
 
 use crate::action::Action;
 use crate::component::components::*;
+use crate::resource::resources::*;
 use crate::event::{ActionEvent, OutputEvent};
 
 pub struct ProcessActionSystem {
@@ -17,7 +18,8 @@ pub struct ProcessActionSystemData<'a> {
   pub has_description: ReadStorage<'a, HasDescription>,
   pub has_exits: ReadStorage<'a, HasExits>,
   pub has_name: ReadStorage<'a, HasName>,
-  pub is_in_room: ReadStorage<'a, IsInRoom>,
+  pub is_in_room: WriteStorage<'a, IsInRoom>,
+  pub player_resource: Read<'a, PlayerResource>,
   pub action_event_channel: Read<'a, EventChannel<ActionEvent>>,
   pub output_event_channel: Write<'a, EventChannel<OutputEvent>>,
 }
@@ -25,14 +27,22 @@ pub struct ProcessActionSystemData<'a> {
 impl<'a> System<'a> for ProcessActionSystem {
   type SystemData = ProcessActionSystemData<'a>;
 
+  #[named]
   fn run(&mut self, mut data: Self::SystemData) {
+    trace_enter!();
     let events = data
       .action_event_channel
       .read(&mut self.reader_id)
       .into_iter()
       .map(|event| event.clone())
       .collect::<Vec<ActionEvent>>();
+    let event_count = events.len();
+    if event_count == 0 {
+      return;
+    }
+    info!("Processing {} action event(s)...", event_count);
     for event in events.iter() {
+      debug!("Processing next action event, {:?}", event);
       let ActionEvent { action } = event;
       use Action::*;
       match action {
@@ -42,6 +52,7 @@ impl<'a> System<'a> for ProcessActionSystem {
         MoveDirection { entity, direction } => self.process_move_direction(action.clone(), &mut data),
       }
     }
+    trace_exit!();
   }
 }
 

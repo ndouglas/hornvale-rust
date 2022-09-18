@@ -127,7 +127,7 @@ pub async fn start_ui<'a>(app: &Arc<Mutex<Application<'a>>>) -> Result<()> {
   }
 
   // Start processing events.
-  let tick_rate = Duration::from_millis(400);
+  let tick_rate = Duration::from_millis(200);
   let mut input_event_reader = InputEventReader::new(tick_rate);
   // Main application loop.
   loop {

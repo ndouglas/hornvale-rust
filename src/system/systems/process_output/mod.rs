@@ -19,10 +19,17 @@ pub struct ProcessOutputSystemData<'a> {
 
 impl<'a> System<'a> for ProcessOutputSystem {
   type SystemData = ProcessOutputSystemData<'a>;
-
+  #[named]
   fn run(&mut self, mut data: Self::SystemData) {
+    trace_enter!();
+    let output_events = data.output_event_channel.read(&mut self.reader_id).collect::<Vec<&OutputEvent>>();
+    let event_count = output_events.len();
+    if event_count == 0 {
+      return;
+    }
+    info!("Processing {} output event(s)...", event_count);
     let messages = &mut data.messages_resource.0;
-    for event in data.output_event_channel.read(&mut self.reader_id) {
+    for event in output_events.iter() {
       messages.push_back(event.string.clone());
     }
   }

@@ -1,3 +1,4 @@
+use ansi_to_tui::IntoText;
 use specs::prelude::*;
 use specs::shrev::EventChannel;
 use std::collections::VecDeque;
@@ -6,7 +7,7 @@ use tui::backend::Backend;
 use tui::layout::Alignment;
 use tui::layout::{Constraint, Direction, Layout};
 use tui::style::{Color, Style};
-use tui::text::{Span, Spans};
+use tui::text::{Span, Spans, Text};
 use tui::widgets::{Block, BorderType, Borders, Paragraph};
 use tui::Frame;
 
@@ -91,13 +92,17 @@ fn draw_body<'a>(state: &'a mut State<'_>, height: u16, width: u16) -> Paragraph
     .collect::<VecDeque<String>>();
   while spans.len() < height as usize {
     if let Some(string) = lines.pop_front() {
-      spans.push(Spans::from(Span::raw(string)));
+      spans.push(string.into_text().unwrap());
     } else {
-      spans.push(Spans::from(Span::raw("")));
+      spans.push("".into_text().unwrap());
     }
   }
   spans.reverse();
-  Paragraph::new(spans)
+  let mut text = Text::from("");
+  for span in spans {
+    text.extend(span);
+  }
+  Paragraph::new(text)
     .style(Style::default().fg(Color::LightCyan))
     .alignment(Alignment::Left)
     .block(

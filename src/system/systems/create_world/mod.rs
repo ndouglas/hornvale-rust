@@ -18,6 +18,7 @@ pub struct CreateWorldSystemData<'a> {
   pub is_in_room: WriteStorage<'a, IsInRoom>,
 }
 
+// This system should normally only be run at startup.
 impl<'a> System<'a> for CreateWorldSystem {
   type SystemData = CreateWorldSystemData<'a>;
 

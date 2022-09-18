@@ -1,3 +1,4 @@
+use colored::*;
 use specs::prelude::*;
 use specs::shrev::{EventChannel, ReaderId};
 
@@ -21,9 +22,17 @@ pub struct ProcessCommandSystemData<'a> {
 
 impl<'a> System<'a> for ProcessCommandSystem {
   type SystemData = ProcessCommandSystemData<'a>;
-
+  #[named]
   fn run(&mut self, mut data: Self::SystemData) {
-    for event in data.command_event_channel.read(&mut self.reader_id) {
+    trace_enter!();
+    let command_events = data.command_event_channel.read(&mut self.reader_id).collect::<Vec<&CommandEvent>>();
+    let event_count = command_events.len();
+    if event_count == 0 {
+      return;
+    }
+    info!("Processing {} command event(s)...", event_count);
+    for event in command_events.iter() {
+      debug!("Processing next command event {:?}", event);
       let CommandEvent { command } = event;
       use Command::*;
       match command {
@@ -33,11 +42,14 @@ impl<'a> System<'a> for ProcessCommandSystem {
           if let Ok(action) = command.get_action() {
             self.process_action(action, &mut data.action_event_channel);
           } else {
-            // println!("fail");
+            data.output_event_channel.single_write(OutputEvent {
+              string: format!("{}", "I couldn't turn that command into an action.".red()),
+            });
           }
         },
       }
     }
+    trace_exit!();
   }
 }
 
