@@ -1,7 +1,6 @@
 use specs::prelude::*;
 
 use crate::action::Action;
-use crate::event::ActionEvent;
 
 use super::*;
 

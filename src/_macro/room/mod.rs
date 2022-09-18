@@ -3,12 +3,22 @@ macro_rules! create_room {
   ($system_data: expr, $name: expr, $description: expr) => {{
     use crate::component::*;
     let room_id = $system_data.entities.create();
-    $system_data.has_name.insert(room_id, HasName($name.into()));
+    $system_data
+      .has_name
+      .insert(room_id, HasName($name.into()))
+      .expect(&format!("Unable to insert name {} for entity!", $name));
     $system_data
       .has_description
-      .insert(room_id, HasDescription($description.into()));
-    $system_data.has_exits.insert(room_id, HasExits::default());
-    $system_data.is_a_room.insert(room_id, IsARoom);
+      .insert(room_id, HasDescription($description.into()))
+      .expect(&format!("Unable to insert description {} for entity!", $description));
+    $system_data
+      .has_exits
+      .insert(room_id, HasExits::default())
+      .expect("Unable to insert exits for entity!");
+    $system_data
+      .is_a_room
+      .insert(room_id, IsARoom)
+      .expect("Unable to insert is-a-room for entity!");
     room_id
   }};
 }

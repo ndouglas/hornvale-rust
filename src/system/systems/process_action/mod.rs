@@ -47,11 +47,11 @@ impl<'a> System<'a> for ProcessActionSystem {
       let ActionEvent { action } = event;
       use Action::*;
       match action {
-        Look { entity } => {
+        Look { .. } => {
           self.process_look(action.clone(), &mut data);
         },
-        LookDirection { entity, direction } => self.process_look_direction(action.clone(), &mut data),
-        MoveDirection { entity, direction } => self.process_move_direction(action.clone(), &mut data),
+        LookDirection { .. } => self.process_look_direction(action.clone(), &mut data),
+        MoveDirection { .. } => self.process_move_direction(action.clone(), &mut data),
       }
     }
     trace_exit!();

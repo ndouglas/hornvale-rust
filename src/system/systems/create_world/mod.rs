@@ -25,9 +25,10 @@ impl<'a> System<'a> for CreateWorldSystem {
   fn run(&mut self, mut data: Self::SystemData) {
     let spawn_room = create_room!(data, "Spawn Room", "Dark olive trees crowd in on all sides, the air steams with the mist of a warm recent rain, midges hang in the air.");
     if let Some(player_id) = data.player_resource.0 {
-      data.is_in_room.insert(player_id, IsInRoom(Some(spawn_room)));
+      data.is_in_room.insert(player_id, IsInRoom(Some(spawn_room)))
+      .expect("Unable to insert is-in-room for entity!");
     }
-    let mushroom = create_object!(
+    let _mushroom = create_object!(
       data,
       "Mushroom",
       "A speckled mushroom grows out of the sodden earth, on a long stalk.",

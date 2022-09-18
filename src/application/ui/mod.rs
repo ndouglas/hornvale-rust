@@ -7,7 +7,7 @@ use tui::backend::Backend;
 use tui::layout::Alignment;
 use tui::layout::{Constraint, Direction, Layout};
 use tui::style::{Color, Style};
-use tui::text::{Span, Spans, Text};
+use tui::text::Text;
 use tui::widgets::{Block, BorderType, Borders, Paragraph};
 use tui::Frame;
 
