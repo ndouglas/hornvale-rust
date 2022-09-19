@@ -43,6 +43,7 @@ impl<'a> System<'a> for ProcessCommandSystem {
         Quit { .. } => self.process_quit(),
         _ => {
           if let Ok(action) = command.get_action() {
+            info!("Calculated action {:?} for command {:?}...", action, command);
             self.process_action(action, &mut data.action_event_channel);
           } else {
             data.output_event_channel.single_write(OutputEvent {

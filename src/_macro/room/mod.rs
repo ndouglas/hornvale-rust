@@ -32,7 +32,7 @@ macro_rules! format_room {
       string.push_str(format!("{}\n", name.magenta()).as_str());
     }
     if let Some(description) = get_description!($system_data, $room) {
-      string.push_str(format!("{}\n", description.green()).as_str());
+      string.push_str(format!("{}\n", description.yellow()).as_str());
     }
     {
       for (_entities, _is_in_room, _is_an_object, has_description) in (
@@ -44,11 +44,11 @@ macro_rules! format_room {
         .join()
         .filter(|(_entity, is_in_room, _is_an_object, _has_description)| is_in_room.0 == Some($room))
       {
-        string.push_str(format!("{}\n", has_description.0.blue()).as_str());
+        string.push_str(format!("{}\n", has_description.0.bright_blue()).as_str());
       }
     }
     if let Some(exits) = get_exits!($system_data, $room) {
-      string.push_str(format!("{}\n", format!("{}", exits).bright_green()).as_str());
+      string.push_str(format!("{}\n", format!("{}", exits).green()).as_str());
     }
     format!("{}", string)
   }};

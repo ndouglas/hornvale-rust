@@ -6,54 +6,51 @@ use crate::navigation::Direction;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub enum Command {
-  Echo { entity: Entity, string: String },
-  Look { entity: Entity },
-  LookDirection { entity: Entity, direction: Direction },
-  MoveDirection { entity: Entity, direction: Direction },
-  Quit { entity: Entity },
+  Echo {
+    entity: Entity,
+    string: String,
+    original_input: String,
+  },
+  Look {
+    entity: Entity,
+    original_input: String,
+  },
+  LookDirection {
+    entity: Entity,
+    direction: Direction,
+    original_input: String,
+  },
+  LookAtObject {
+    entity: Entity,
+    object: Entity,
+    original_input: String,
+  },
+  MoveDirection {
+    entity: Entity,
+    direction: Direction,
+    original_input: String,
+  },
+  Quit {
+    entity: Entity,
+    original_input: String,
+  },
 }
 
 impl Command {
   #[named]
-  pub fn from_str(string: &str, entity: Entity) -> Result<Self, ()> {
-    let words: Vec<&str> = string.split_whitespace().collect();
-    let first: String = words.get(0).unwrap_or(&"").to_string();
-    let second: String = words.get(1).unwrap_or(&"").to_string();
-    use Command::*;
-    match first.as_str() {
-      "echo" => Ok(Echo {
-        entity,
-        string: words[1..].join(" "),
-      }),
-      "look" | "l" => match second.as_str() {
-        "" => Ok(Look { entity }),
-        _ => match Direction::from_str(&second) {
-          Ok(direction) => Ok(LookDirection { entity, direction }),
-          Err(_) => Err(()),
-        },
-      },
-      "move" | "go" => match Direction::from_str(&second) {
-        Ok(direction) => Ok(MoveDirection { entity, direction }),
-        Err(_) => Err(()),
-      },
-      "quit" => Ok(Quit { entity }),
-      other => match Direction::from_str(other) {
-        Ok(direction) => Ok(MoveDirection { entity, direction }),
-        Err(_) => Err(()),
-      },
-    }
-  }
-
-  #[named]
   pub fn get_action(&self) -> Result<Action, ()> {
     use Command::*;
     match self {
-      Look { entity } => Ok(Action::Look { entity: *entity }),
-      LookDirection { entity, direction } => Ok(Action::LookDirection {
+      Look { entity, .. } => Ok(Action::Look { entity: *entity }),
+      LookDirection { entity, direction, .. } => Ok(Action::LookDirection {
         entity: *entity,
         direction: *direction,
       }),
-      MoveDirection { entity, direction } => Ok(Action::MoveDirection {
+      LookAtObject { entity, object, .. } => Ok(Action::LookAtObject {
+        entity: *entity,
+        object: *object,
+      }),
+      MoveDirection { entity, direction, .. } => Ok(Action::MoveDirection {
         entity: *entity,
         direction: *direction,
       }),

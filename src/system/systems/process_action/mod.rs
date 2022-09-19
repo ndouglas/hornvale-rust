@@ -50,6 +50,7 @@ impl<'a> System<'a> for ProcessActionSystem {
         Look { .. } => {
           self.process_look(action.clone(), &mut data);
         },
+        LookAtObject { .. } => self.process_look_at_object(action.clone(), &mut data),
         LookDirection { .. } => self.process_look_direction(action.clone(), &mut data),
         MoveDirection { .. } => self.process_move_direction(action.clone(), &mut data),
       }
@@ -59,5 +60,6 @@ impl<'a> System<'a> for ProcessActionSystem {
 }
 
 mod look;
+mod look_at_object;
 mod look_direction;
 mod move_direction;

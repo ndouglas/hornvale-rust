@@ -6,6 +6,7 @@ use crate::navigation::Direction;
 pub enum Action {
   Look { entity: Entity },
   LookDirection { entity: Entity, direction: Direction },
+  LookAtObject { entity: Entity, object: Entity },
   MoveDirection { entity: Entity, direction: Direction },
 }
 

@@ -12,7 +12,9 @@ impl<'a> ProcessActionSystem {
         match get_exit_to!(data, room_id, &direction) {
           Some(exit) => {
             if let Some(player_id) = data.player_resource.0 {
-              data.is_in_room.insert(player_id, IsInRoom(Some(exit.to)))
+              data
+                .is_in_room
+                .insert(player_id, IsInRoom(Some(exit.to)))
                 .expect("Unable to insert is-in-room for entity!");
               data.action_event_channel.single_write(ActionEvent {
                 action: Action::Look { entity: player_id },
