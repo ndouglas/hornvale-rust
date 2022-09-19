@@ -13,3 +13,6 @@ pub use object::*;
 #[macro_use]
 pub mod room;
 pub use room::*;
+#[macro_use]
+pub mod scripting;
+pub use scripting::*;
