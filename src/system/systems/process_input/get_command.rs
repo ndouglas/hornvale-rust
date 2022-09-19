@@ -20,6 +20,11 @@ impl<'a> ProcessInputSystem {
         string: words[1..].join(" "),
         original_input: original_input.to_string(),
       }),
+      "eval" => Ok(Eval {
+        entity,
+        string: words[1..].join(" "),
+        original_input: original_input.to_string(),
+      }),
       "look" | "l" => match second.as_str() {
         "" => Ok(Look {
           entity,

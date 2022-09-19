@@ -1,7 +1,5 @@
 use specs::prelude::*;
 
-use crate::event::events::OutputEvent;
-
 use super::*;
 
 impl<'a> ProcessInputSystem {

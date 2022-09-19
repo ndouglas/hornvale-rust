@@ -1,5 +1,3 @@
-use specs::prelude::*;
-
 use crate::action::Action;
 
 use super::*;
@@ -8,7 +6,7 @@ impl<'a> ProcessActionSystem {
   #[named]
   pub fn process_look_at_object(&mut self, action: Action, data: &mut ProcessActionSystemData<'a>) {
     trace_enter!();
-    if let Action::LookAtObject { entity, object } = action {
+    if let Action::LookAtObject { object, .. } = action {
       info!("Sending event (description of indicated object).");
       data.output_event_channel.single_write(OutputEvent {
         string: format!(

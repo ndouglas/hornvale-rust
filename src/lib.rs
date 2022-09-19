@@ -18,6 +18,7 @@ pub mod component;
 pub mod event;
 pub mod navigation;
 pub mod resource;
+pub mod scripting;
 pub mod system;
 
 pub mod test {

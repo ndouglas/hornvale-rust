@@ -1,5 +1,4 @@
 use specs::prelude::*;
-use std::str::FromStr;
 
 use crate::action::Action;
 use crate::navigation::Direction;
@@ -7,6 +6,11 @@ use crate::navigation::Direction;
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub enum Command {
   Echo {
+    entity: Entity,
+    string: String,
+    original_input: String,
+  },
+  Eval {
     entity: Entity,
     string: String,
     original_input: String,

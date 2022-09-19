@@ -28,7 +28,8 @@ impl<'a> System<'a> for ProcessCommandSystem {
     let command_events = data
       .command_event_channel
       .read(&mut self.reader_id)
-      .collect::<Vec<&CommandEvent>>();
+      .map(|event| event.clone())
+      .collect::<Vec<CommandEvent>>();
     let event_count = command_events.len();
     if event_count == 0 {
       return;
@@ -41,6 +42,7 @@ impl<'a> System<'a> for ProcessCommandSystem {
       match command {
         Echo { .. } => self.process_echo(command, &mut data.output_event_channel),
         Quit { .. } => self.process_quit(),
+        Eval { .. } => self.process_eval(command, &mut data),
         _ => {
           if let Ok(action) = command.get_action() {
             info!("Calculated action {:?} for command {:?}...", action, command);
@@ -59,4 +61,5 @@ impl<'a> System<'a> for ProcessCommandSystem {
 
 mod action;
 mod echo;
+mod eval;
 mod quit;
