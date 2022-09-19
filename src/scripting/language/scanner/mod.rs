@@ -1,7 +1,7 @@
 use std::fmt;
 
+use crate::scripting::language::token::{TOKEN_KEYWORDS, Token, TokenLiteral, TokenType};
 use crate::scripting::language::ScriptingLanguage;
-use crate::scripting::language::token::{TokenLiteral, Token, TokenType};
 
 #[derive(Debug, PartialEq)]
 pub struct Scanner<'a> {
@@ -15,7 +15,6 @@ pub struct Scanner<'a> {
 }
 
 impl<'a> Scanner<'a> {
-
   pub fn new(source: &str, owner: &'a mut ScriptingLanguage) -> Self {
     let tokens = vec![];
     let owned_string = source.to_string();
@@ -77,32 +76,26 @@ impl<'a> Scanner<'a> {
         true => self.add_token(LessThanOrEqual, None),
         false => self.add_token(LessThan, None),
       },
-      '/' => match self.match_current('/') {
-        true => {
-          while self.peek() != '\n' && !self.is_at_end() {
-            self.advance();
-          }
-        },
-        false => self.add_token(Slash, None),
+      '/' => match self.peek() {
+        '/' => self.match_line_comment(),
+        '*' => self.match_multiline_comment(),
+        _ => self.add_token(Slash, None),
       },
       ' ' | '\r' | '\t' => {},
       '\n' => self.line_number += 1,
       '"' => self.match_string(),
-      _ => match self.is_digit(char) {
-        true => self.match_number(),
-        false => self.owner.report_error(self.line_number, None, &format!("Unexpected character: {}", char)),
-      },
+      char if self.is_digit(char) => self.match_number(),
+      char if self.is_alpha(char) => self.match_identifier(),
+      _ => self
+        .owner
+        .report_error(self.line_number, None, &format!("Unexpected character: {}", char)),
     }
   }
 
   #[named]
   pub fn add_token(&mut self, r#type: TokenType, literal: Option<TokenLiteral>) {
     let lexeme = &self.source[self.start..self.current];
-    self.tokens.push(Token::new(r#type,
-      &lexeme,
-      literal,
-      self.line_number,
-    ));
+    self.tokens.push(Token::new(r#type, &lexeme, literal, self.line_number));
   }
 
   #[named]
@@ -125,6 +118,23 @@ impl<'a> Scanner<'a> {
   }
 
   #[named]
+  pub fn match_line_comment(&mut self) {
+    while self.peek() != '\n' && !self.is_at_end() {
+      self.advance();
+    }
+  }
+
+  #[named]
+  pub fn match_multiline_comment(&mut self) {
+    while self.peek_next() != '*' && self.peek_at_offset(2) != '/' && !self.is_at_end() {
+      self.advance();
+    }
+    self.advance();
+    self.advance();
+    self.advance();
+  }
+
+  #[named]
   pub fn match_number(&mut self) {
     while self.is_digit(self.peek()) {
       self.advance();
@@ -136,7 +146,10 @@ impl<'a> Scanner<'a> {
       }
     }
     let value = &self.source[self.start..self.current];
-    self.add_token(TokenType::Number, Some(TokenLiteral::Number(value.parse::<f64>().unwrap())));
+    self.add_token(
+      TokenType::Number,
+      Some(TokenLiteral::Number(value.parse::<f64>().unwrap())),
+    );
   }
 
   #[named]
@@ -157,8 +170,31 @@ impl<'a> Scanner<'a> {
   }
 
   #[named]
+  pub fn match_identifier(&mut self) {
+    while self.is_alpha_numeric(self.peek()) {
+      self.advance();
+    }
+    let value = &self.source[self.start..self.current];
+    let value_type = match TOKEN_KEYWORDS.lock().unwrap().get(value) {
+      Some(token_type) => *token_type,
+      None => TokenType::Identifier,
+    };
+    self.add_token(value_type, None);
+  }
+
+  #[named]
   pub fn is_digit(&self, char: char) -> bool {
     char >= '0' && char <= '9'
+  }
+
+  #[named]
+  pub fn is_alpha(&self, char: char) -> bool {
+    (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z') || char == '_'
+  }
+
+  #[named]
+  pub fn is_alpha_numeric(&self, char: char) -> bool {
+    self.is_digit(char) || self.is_alpha(char)
   }
 
   #[named]
@@ -178,12 +214,10 @@ impl<'a> Scanner<'a> {
       false => self.source_bytes[self.current + offset] as char,
     }
   }
-
 }
 
 impl fmt::Display for Scanner<'_> {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-      write!(f, "Scanner")
+    write!(f, "Scanner")
   }
 }
-

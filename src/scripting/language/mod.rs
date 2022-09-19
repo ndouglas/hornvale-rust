@@ -9,12 +9,9 @@ pub struct ScriptingLanguage {
 }
 
 impl ScriptingLanguage {
-
   #[named]
   pub fn new() -> Self {
-    Self {
-      had_error: false,
-    }
+    Self { had_error: false }
   }
 
   #[named]
@@ -26,8 +23,9 @@ impl ScriptingLanguage {
     };
     let result = match self.had_error {
       true => Err(()),
-      false => Ok(()), 
+      false => Ok(()),
     };
+    error!("{:?}", tokens);
     trace_exit!();
     result
   }
@@ -52,5 +50,4 @@ impl ScriptingLanguage {
     self.had_error = true;
     trace_exit!();
   }
-
 }

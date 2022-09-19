@@ -1,5 +1,7 @@
 use std::fmt;
 
+pub mod keyword;
+pub use keyword::*;
 pub mod literal;
 pub use literal::*;
 pub mod r#type;
@@ -14,7 +16,6 @@ pub struct Token {
 }
 
 impl Token {
-
   pub fn new(r#type: TokenType, lexeme: &str, literal: Option<TokenLiteral>, line_number: usize) -> Self {
     Self {
       r#type,
@@ -23,12 +24,10 @@ impl Token {
       line_number,
     }
   }
-
 }
 
 impl fmt::Display for Token {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-      write!(f, "{} {} {:?}", self.r#type, self.lexeme, self.literal)
+    write!(f, "{} {} {:?}", self.r#type, self.lexeme, self.literal)
   }
 }
-

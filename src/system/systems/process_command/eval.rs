@@ -13,7 +13,7 @@ impl<'a> ProcessCommandSystem {
       if let Err(()) = interpreter.interpret(string) {
         data.output_event_channel.single_write(OutputEvent {
           string: format!("Encountered error parsing script... check logs for details."),
-        });        
+        });
       }
     }
     trace_exit!();

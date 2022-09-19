@@ -8,6 +8,6 @@ pub enum TokenLiteral {
 
 impl fmt::Display for TokenLiteral {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-      write!(f, "{:?}", self)
+    write!(f, "{:?}", self)
   }
 }
