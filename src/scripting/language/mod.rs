@@ -23,11 +23,19 @@ impl ScriptingLanguage {
       let mut scanner: Scanner = Scanner::new(source, self);
       scanner.scan_tokens()
     };
+    error!("{:?}", tokens);
+    let mut parser = Parser::new(tokens, self);
+    match parser.parse() {
+      Ok(expression) => error!("{}", expression.print_ast()),
+      Err(error) => error!("{:?}", error),
+    }
+    if let Ok(expression) = parser.parse() {
+      error!("{}", expression.print_ast());
+    }
     let result = match self.had_error {
       true => Err(()),
       false => Ok(()),
     };
-    error!("{:?}", tokens);
     trace_exit!();
     result
   }

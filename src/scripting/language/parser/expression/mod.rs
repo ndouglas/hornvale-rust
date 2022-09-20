@@ -2,10 +2,6 @@ use crate::scripting::language::token::{Token, TokenLiteral};
 
 #[derive(Clone, Debug)]
 pub enum Expression {
-  Unary {
-    operator: Token,
-    right: Box<Expression>,
-  },
   Binary { 
     left: Box<Expression>,
     operator: Token,
@@ -17,6 +13,10 @@ pub enum Expression {
   Literal {
     value: Option<TokenLiteral>,
   },
+  Unary {
+    operator: Token,
+    right: Box<Expression>,
+  },
 }
 
 impl Expression {
@@ -24,13 +24,13 @@ impl Expression {
   pub fn print_ast(&self) -> String {
     use Expression::*;
     match self {
-      Unary { operator, right } => self.parenthesize(&operator.lexeme, &vec![(*right).clone()]),
       Binary { left, operator, right } => self.parenthesize(&operator.lexeme, &vec![(*left).clone(), (*right).clone()]),
       Grouping { expression } => self.parenthesize("group", &vec![(*expression).clone()]),
       Literal { value } => match value {
         Some(inner_value) => format!("{}", inner_value),
         None => "nil".to_string(),
       },
+      Unary { operator, right } => self.parenthesize(&operator.lexeme, &vec![(*right).clone()]),
     }
   }
 
