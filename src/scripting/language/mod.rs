@@ -1,9 +1,13 @@
+pub mod interpreter;
+pub use interpreter::*;
 pub mod parser;
 pub use parser::*;
 pub mod scanner;
 pub use scanner::*;
 pub mod token;
 pub use token::*;
+pub mod value;
+pub use value::*;
 
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub struct ScriptingLanguage {
@@ -25,13 +29,15 @@ impl ScriptingLanguage {
     };
     error!("{:?}", tokens);
     let mut parser = Parser::new(tokens, self);
-    match parser.parse() {
-      Ok(expression) => error!("{}", expression.print_ast()),
-      Err(error) => error!("{:?}", error),
+    let parse_response = parser.parse();
+     match parse_response {
+      Ok(ref expression) => error!("{}", &expression.print_ast()),
+      Err(ref error) => error!("{:?}", &error),
     }
-    if let Ok(expression) = parser.parse() {
-      error!("{}", expression.print_ast());
-    }
+    let expression = parse_response.unwrap();
+    error!("{}", expression.print_ast());
+    let mut interpreter = Interpreter::new();
+    let answer = interpreter.interpret(expression);
     let result = match self.had_error {
       true => Err(()),
       false => Ok(()),
