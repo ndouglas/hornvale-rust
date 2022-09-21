@@ -1,3 +1,5 @@
+use std::io::{Error, ErrorKind};
+
 pub mod interpreter;
 pub use interpreter::*;
 pub mod parser;
@@ -21,33 +23,42 @@ impl ScriptingLanguage {
   }
 
   #[named]
-  pub fn run(&mut self, source: &str) -> Result<(), ()> {
+  pub fn run(&mut self, source: &str) -> Result<(), Error> {
     trace_enter!();
     let tokens: Vec<Token> = {
       let mut scanner: Scanner = Scanner::new(source, self);
       scanner.scan_tokens()
     };
-    error!("{:?}", tokens);
+    info!("Tokens: {:?}", tokens);
     let mut parser = Parser::new(tokens, self);
     let parse_response = parser.parse();
-     match parse_response {
-      Ok(ref expression) => error!("{}", &expression.print_ast()),
-      Err(ref error) => error!("{:?}", &error),
+    match parse_response {
+      Ok(ref expression) => {
+        info!("Abstract Syntax Tree: {}", &expression.print_ast());
+      },
+      Err(ref error) => {
+        error!("Parse Error: {:?}", &error);
+        return Err(Error::new(ErrorKind::Other, format!("Error: {:?}", *error)));
+      },
     }
     let expression = parse_response.unwrap();
-    error!("{}", expression.print_ast());
     let mut interpreter = Interpreter::new();
     let answer = interpreter.interpret(expression);
-    let result = match self.had_error {
-      true => Err(()),
-      false => Ok(()),
-    };
+    match answer {
+      Ok(value) => {
+        info!("Answer: {:?}", value);
+      },
+      Err(ref error) => {
+        error!("Runtime Error: {:?}", &error);
+        return Err(Error::new(ErrorKind::Other, format!("Error: {:?}", *error)));
+      },
+    }
     trace_exit!();
-    result
+    Ok(())
   }
 
   #[named]
-  pub fn interpret(&mut self, line: &str) -> Result<(), ()> {
+  pub fn interpret(&mut self, line: &str) -> Result<(), Error> {
     trace_enter!();
     let result = self.run(line);
     trace_exit!();

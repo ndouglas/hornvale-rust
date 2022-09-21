@@ -10,9 +10,9 @@ impl<'a> ProcessCommandSystem {
     trace_enter!();
     if let Command::Eval { string, .. } = command {
       let mut interpreter = ScriptingLanguage::new();
-      if let Err(()) = interpreter.interpret(string) {
+      if let Err(error) = interpreter.interpret(string) {
         data.output_event_channel.single_write(OutputEvent {
-          string: format!("Encountered error parsing script... check logs for details."),
+          string: format!("Eval Error: {:?}", error),
         });
       }
     }
