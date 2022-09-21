@@ -91,15 +91,26 @@ impl Expression {
     result
   }
 
+  pub fn evaluate_binary_string(&self, operator: &Token, x: String, y: String) -> Result<Value, Error> {
+    let result = match operator.r#type {
+      TokenType::Plus => Ok(Value::String(format!("{}{}", x, y))),
+      TokenType::GreaterThan => Ok(Value::Boolean(x.gt(&y))),
+      TokenType::GreaterThanOrEqual => Ok(Value::Boolean(x.ge(&y))),
+      TokenType::LessThan => Ok(Value::Boolean(x.lt(&y))),
+      TokenType::LessThanOrEqual => Ok(Value::Boolean(x.le(&y))),
+      TokenType::BangEqual => Ok(Value::Boolean(x.ne(&y))),
+      TokenType::EqualEqual => Ok(Value::Boolean(x.eq(&y))),
+      _ => Err(Error::new(ErrorKind::Other, format!("Bad operator {:?} for string operands {:?} and {:?}!", operator, x, y))),
+    };
+    debug!("{:?} {:?} {:?} => {:?}", x, operator, y, result);
+    result
+  }
   pub fn evaluate_binary(&self, left: &Expression, operator: &Token, right: &Expression) -> Result<Value, Error> {
     let left_value = left.get_value();
     let right_value = right.get_value();
     let result = match (left_value, right_value) {
       (Ok(Value::Number(x)), Ok(Value::Number(y))) => self.evaluate_binary_math(operator, x, y),
-      (Ok(Value::String(x)), Ok(Value::String(y))) => match operator.r#type {
-        TokenType::Plus => Ok(Value::String(format!("{}{}", x, y))),
-        _ => Err(Error::new(ErrorKind::Other, format!("Bad operator {:?} for string operands {:?} and {:?}!", operator, left, right))),
-      },
+      (Ok(Value::String(x)), Ok(Value::String(y))) => self.evaluate_binary_string(operator, x, y),
       _ => Err(Error::new(ErrorKind::Other, format!("Bad operands ({:?} and {:?}) for operator {:?}!", left, right, operator))),
     };
     debug!("{:?} {:?} {:?} => {:?}", left, operator, right, result);
