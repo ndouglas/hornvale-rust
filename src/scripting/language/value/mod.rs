@@ -1,3 +1,5 @@
+use std::fmt;
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum Value {
   Any(Box<Value>),
@@ -32,5 +34,17 @@ impl Value {
       _ => false,
     }
   }
+}
 
+impl fmt::Display for Value {
+  fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+    use Value::*;
+    match self {
+      Any(value) => write!(formatter, "{}", *value),
+      Boolean(value) => write!(formatter, "{}", if *value { "true" } else { "false" }),
+      Number(value) => write!(formatter, "{}", value),
+      String(value) => write!(formatter, "{}", value),
+      Nil => write!(formatter, "{}", "nil"),
+    }
+  }
 }

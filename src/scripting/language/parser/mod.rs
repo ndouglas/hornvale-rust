@@ -2,13 +2,14 @@ use std::io::{Error, ErrorKind};
 
 pub mod expression;
 pub use expression::*;
+pub mod statement;
+pub use statement::*;
 
 use crate::scripting::language::token::{Token, TokenLiteral, TokenType};
 use crate::scripting::language::ScriptingLanguage;
 
 use Expression::*;
 use TokenType::*;
-use TokenLiteral::*;
 
 pub struct Parser<'a> {
   pub tokens: Vec<Token>,
@@ -27,8 +28,23 @@ impl<'a> Parser<'a> {
   }
 
   #[named]
-  pub fn parse(&mut self) -> Result<Expression, Error> {
-    self.expression()
+  pub fn parse(&mut self) -> Result<Vec<Statement>, Error> {
+    let mut statements = Vec::new();
+    while !self.is_at_end() {
+      match self.statement() {
+        Ok(statement) => statements.push(statement),
+        Err(err) => return Err(err),
+      }
+    }
+    Ok(statements)
+  }
+
+  #[named]
+  pub fn statement(&mut self) -> Result<Statement, Error> {
+    if self.r#match(vec![TokenType::Print]) {
+      return self.print_statement();
+    }
+    self.expression_statement()
   }
 
   #[named]
@@ -133,26 +149,50 @@ impl<'a> Parser<'a> {
     }
     if self.r#match(vec![LeftParenthesis]) {
       let expression = self.expression()?;
-      self.consume(RightParenthesis, "Expect ')' after expression.");
+      self.consume(RightParenthesis, "Expect ')' after expression.")?;
       return Ok(Grouping {
-        expression: Box::new(expression)
+        expression: Box::new(expression),
       });
     }
     Err(Error::new(ErrorKind::Other, "Expected expression!"))
   }
 
   #[named]
-  pub fn consume(&mut self, r#type: TokenType, message: &'a str) -> Result<Token, (Token, &'a str)> {
-    if self.check(r#type) {
-      return Ok(self.advance())
+  pub fn print_statement(&mut self) -> Result<Statement, Error> {
+    let expression = self.expression();
+    match expression {
+      Ok(value) => {
+        self.consume(TokenType::Semicolon, "Expect ';' after value.")?;
+        Ok(Statement::Print(value))
+      },
+      Err(error) => Err(error),
     }
-    self.parse_error(self.peek(), message)
   }
 
   #[named]
-  pub fn parse_error(&mut self, token: Token, message: &'a str) -> Result<Token, (Token, &'a str)> {
-    self.owner.report_error(token.line_number, Some(&token.lexeme), message);
-    Err((self.peek(), message))
+  pub fn expression_statement(&mut self) -> Result<Statement, Error> {
+    let expression = self.expression();
+    match expression {
+      Ok(value) => {
+        self.consume(TokenType::Semicolon, "Expect ';' after value.")?;
+        Ok(Statement::Expression(value))
+      },
+      Err(error) => Err(error),
+    }
+  }
+
+  #[named]
+  pub fn consume(&mut self, r#type: TokenType, message: &'a str) -> Result<Token, Error> {
+    if self.check(r#type) {
+      return Ok(self.advance());
+    }
+    self.parse_error(self.peek(), Error::new(ErrorKind::Other, message))
+  }
+
+  #[named]
+  pub fn parse_error(&mut self, token: Token, error: Error) -> Result<Token, Error> {
+    self.owner.report_error(token.line_number, Some(&token.lexeme), &error.to_string());
+    Err(error)
   }
 
   #[named]
@@ -211,5 +251,4 @@ impl<'a> Parser<'a> {
   pub fn previous(&self) -> Token {
     self.tokens.get(self.current - 1).unwrap().clone()
   }
-
 }

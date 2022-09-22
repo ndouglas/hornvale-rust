@@ -1,6 +1,7 @@
 use std::fmt;
+use std::str::FromStr;
 
-use crate::scripting::language::token::{TOKEN_KEYWORDS, Token, TokenLiteral, TokenType};
+use crate::scripting::language::token::{Token, TokenLiteral, TokenType};
 use crate::scripting::language::ScriptingLanguage;
 
 #[derive(Debug, PartialEq)]
@@ -175,9 +176,9 @@ impl<'a> Scanner<'a> {
       self.advance();
     }
     let value = &self.source[self.start..self.current];
-    let value_type = match TOKEN_KEYWORDS.lock().unwrap().get(value) {
-      Some(token_type) => *token_type,
-      None => TokenType::Identifier,
+    let value_type = match TokenType::from_str(value) {
+      Ok(token_type) => token_type,
+      Err(_) => TokenType::Identifier,
     };
     self.add_token(value_type, None);
   }

@@ -1,23 +1,26 @@
 use std::io::Error;
 
-use crate::scripting::language::parser::expression::Expression;
-use crate::scripting::language::value::Value;
+use crate::scripting::language::ScriptingLanguage;
+use crate::scripting::language::parser::statement::Statement;
 
-
-#[derive(Clone, Debug)]
-pub struct Interpreter {
+#[derive(Debug)]
+pub struct Interpreter<'a> {
+  pub owner: &'a mut ScriptingLanguage,
 }
 
-impl Interpreter {
-
-  pub fn new() -> Self {
+impl<'a> Interpreter<'a> {
+  pub fn new(owner: &'a mut ScriptingLanguage) -> Self {
     Self {
-      
+      owner,
     }
   }
 
-  pub fn interpret(&self, expression: Expression) -> Result<Value, Error> {
-    expression.get_value()
+  pub fn interpret(&mut self, statements: Vec<Statement>) -> Result<(), Error> {
+    for statement in statements {
+      if let Err(error) = statement.evaluate(&mut self.owner) {
+        return Err(error);
+      }
+    }
+    Ok(())
   }
-
 }

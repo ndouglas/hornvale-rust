@@ -33,27 +33,26 @@ impl ScriptingLanguage {
     let mut parser = Parser::new(tokens, self);
     let parse_response = parser.parse();
     match parse_response {
-      Ok(ref expression) => {
-        info!("Abstract Syntax Tree: {}", &expression.print_ast());
-      },
+      Ok(_) => {},
       Err(ref error) => {
         error!("Parse Error: {:?}", &error);
         return Err(Error::new(ErrorKind::Other, format!("Error: {:?}", *error)));
       },
     }
-    let expression = parse_response.unwrap();
-    let mut interpreter = Interpreter::new();
-    let answer = interpreter.interpret(expression);
-    match answer {
-      Ok(value) => {
-        info!("Answer: {:?}", value);
-      },
-      Err(ref error) => {
-        error!("Runtime Error: {:?}", &error);
-        return Err(Error::new(ErrorKind::Other, format!("Error: {:?}", *error)));
-      },
+    let expressions = parse_response.unwrap();
+    let mut interpreter = Interpreter::new(self);
+    if let Err(error) = interpreter.interpret(expressions) {
+      error!("Runtime Error: {:?}", &error);
+      return Err(Error::new(ErrorKind::Other, format!("Error: {:?}", error)));
     }
     trace_exit!();
+    Ok(())
+  }
+
+  #[named]
+  pub fn print_value(&mut self, value: &Value) -> Result<(), Error> {
+    // todo: set up printing
+    error!("{}", value);
     Ok(())
   }
 

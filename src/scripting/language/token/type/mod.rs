@@ -1,4 +1,6 @@
 use std::fmt;
+use std::io::{Error, ErrorKind};
+use std::str::FromStr;
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq)]
 pub enum TokenType {
@@ -44,7 +46,6 @@ pub enum TokenType {
 }
 
 impl TokenType {
-
   #[named]
   pub fn get_all() -> Vec<TokenType> {
     use TokenType::*;
@@ -87,14 +88,40 @@ impl TokenType {
       True,
       Var,
       While,
-      Eof,    
+      Eof,
     ];
   }
-
 }
 
 impl fmt::Display for TokenType {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     write!(f, "{:?}", self)
+  }
+}
+
+impl FromStr for TokenType {
+  type Err = Error;
+
+  fn from_str(string: &str) -> Result<Self, Self::Err> {
+    use TokenType::*;
+    match string {
+      "and" => Ok(And),
+      "class" => Ok(Class),
+      "else" => Ok(Else),
+      "false" => Ok(False),
+      "fun" => Ok(Function),
+      "for" => Ok(For),
+      "if" => Ok(If),
+      "nil" => Ok(Nil),
+      "or" => Ok(Or),
+      "print" => Ok(Print),
+      "return" => Ok(Return),
+      "super" => Ok(Super),
+      "this" => Ok(This),
+      "true" => Ok(True),
+      "var" => Ok(Var),
+      "while" => Ok(While),
+      unknown => Err(Error::new(ErrorKind::Other, format!("Unknown keyword {}!", unknown))),
+    }
   }
 }
