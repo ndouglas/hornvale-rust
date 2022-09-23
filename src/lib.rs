@@ -3,7 +3,7 @@
 #[macro_use]
 extern crate function_name;
 pub use ::function_name::named;
-#[macro_use]
+// #[macro_use]
 extern crate lazy_static;
 #[macro_use]
 extern crate log;

@@ -80,7 +80,22 @@ impl<'a> Parser<'a> {
 
   #[named]
   pub fn expression(&mut self) -> Result<Expression, Error> {
-    self.equality()
+    self.assignment()
+  }
+
+  #[named]
+  pub fn assignment(&mut self) -> Result<Expression, Error> {
+    let result = self.equality()?;
+    if self.r#match(vec![Equal]) {
+      let _equals = self.previous();
+      let value = self.assignment()?;
+      match result {
+        Variable { identifier } => Ok(Assignment { identifier, value: Box::new(value) }),
+        _ => Err(Error::new(ErrorKind::Other, "Invalid assignment target.")),
+      }
+    } else {
+      Ok(result)
+    }
   }
 
   #[named]

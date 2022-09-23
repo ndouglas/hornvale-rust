@@ -39,7 +39,7 @@ impl Statement {
           }
           None => Value::Nil,
         };
-        environment.set(&name.lexeme, &value);
+        environment.define(&name.lexeme, &value);
         Ok(())
       },
     } 

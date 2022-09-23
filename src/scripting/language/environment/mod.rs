@@ -18,7 +18,18 @@ impl Environment {
   }
 
   #[named]
-  pub fn set(&mut self, name: &str, value: &Value) {
+  pub fn assign(&mut self, name: &Token, value: &Value) -> Result<Value, Error> {
+    let actual_name = &name.lexeme.to_string();
+    if !self.values.contains_key(actual_name) {
+      Err(Error::new(ErrorKind::Other, format!("Undefined variable '{}'!", name.lexeme)))
+    } else {
+      self.define(actual_name, value);
+      Ok(value.clone())
+    }
+  }
+
+  #[named]
+  pub fn define(&mut self, name: &str, value: &Value) {
     self.values.insert(name.to_string(), value.clone());
   }
 
