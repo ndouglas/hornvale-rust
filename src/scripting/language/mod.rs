@@ -1,5 +1,7 @@
 use std::io::{Error, ErrorKind};
 
+pub mod environment;
+pub use environment::*;
 pub mod interpreter;
 pub use interpreter::*;
 pub mod parser;

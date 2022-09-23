@@ -1,5 +1,6 @@
 use std::io::{Error, ErrorKind};
 
+use crate::scripting::language::environment::Environment;
 use crate::scripting::language::token::{Token, TokenLiteral, TokenType};
 use crate::scripting::language::value::Value;
 
@@ -20,6 +21,9 @@ pub enum Expression {
     operator: Token,
     right: Box<Expression>,
   },
+  Variable {
+    identifier: Token,
+  },
 }
 
 impl Expression {
@@ -34,6 +38,7 @@ impl Expression {
         None => "nil".to_string(),
       },
       Unary { operator, right } => self.parenthesize(&operator.lexeme, &vec![(*right).clone()]),
+      Variable { identifier } => identifier.lexeme.to_string(),
     }
   }
 
@@ -49,7 +54,7 @@ impl Expression {
   }
 
   #[named]
-  pub fn evaluate_literal(&self, value_option: &Option<TokenLiteral>) -> Result<Value, Error> {
+  pub fn evaluate_literal(&self, _environment: &Environment, value_option: &Option<TokenLiteral>) -> Result<Value, Error> {
     match value_option {
       Some(TokenLiteral::Number(number)) => Ok(Value::Number(*number)),
       Some(TokenLiteral::String(string)) => Ok(Value::String(string.to_string())),
@@ -58,8 +63,8 @@ impl Expression {
   }
 
   #[named]
-  pub fn evaluate_unary(&self, operator: &Token, right: &Expression) -> Result<Value, Error> {
-    let right_value = right.evaluate();
+  pub fn evaluate_unary(&self, environment: &Environment, operator: &Token, right: &Expression) -> Result<Value, Error> {
+    let right_value = right.evaluate(environment);
     let result = match operator.r#type {
       TokenType::Minus => match right_value {
         Ok(Value::Number(value)) => Ok(Value::Number(-(value as f64))),
@@ -83,7 +88,7 @@ impl Expression {
   }
 
   #[named]
-  pub fn evaluate_binary_math(&self, operator: &Token, x: f64, y: f64) -> Result<Value, Error> {
+  pub fn evaluate_binary_math(&self, _environment: &Environment, operator: &Token, x: f64, y: f64) -> Result<Value, Error> {
     let result = match operator.r#type {
       TokenType::Minus => Ok(Value::Number(x - y)),
       TokenType::Slash => Ok(Value::Number(x / y)),
@@ -105,7 +110,7 @@ impl Expression {
   }
 
   #[named]
-  pub fn evaluate_binary_string(&self, operator: &Token, x: String, y: String) -> Result<Value, Error> {
+  pub fn evaluate_binary_string(&self, _environment: &Environment, operator: &Token, x: String, y: String) -> Result<Value, Error> {
     let result = match operator.r#type {
       TokenType::Plus => Ok(Value::String(format!("{}{}", x, y))),
       TokenType::GreaterThan => Ok(Value::Boolean(x.gt(&y))),
@@ -124,12 +129,12 @@ impl Expression {
   }
 
   #[named]
-  pub fn evaluate_binary(&self, left: &Expression, operator: &Token, right: &Expression) -> Result<Value, Error> {
-    let left_value = left.evaluate();
-    let right_value = right.evaluate();
+  pub fn evaluate_binary(&self, environment: &Environment, left: &Expression, operator: &Token, right: &Expression) -> Result<Value, Error> {
+    let left_value = left.evaluate(environment);
+    let right_value = right.evaluate(environment);
     let result = match (left_value, right_value) {
-      (Ok(Value::Number(x)), Ok(Value::Number(y))) => self.evaluate_binary_math(operator, x, y),
-      (Ok(Value::String(x)), Ok(Value::String(y))) => self.evaluate_binary_string(operator, x, y),
+      (Ok(Value::Number(x)), Ok(Value::Number(y))) => self.evaluate_binary_math(environment, operator, x, y),
+      (Ok(Value::String(x)), Ok(Value::String(y))) => self.evaluate_binary_string(environment, operator, x, y),
       _ => Err(Error::new(
         ErrorKind::Other,
         format!("Bad operands ({:?} and {:?}) for operator {:?}!", left, right, operator),
@@ -140,14 +145,15 @@ impl Expression {
   }
 
   #[named]
-  pub fn evaluate(&self) -> Result<Value, Error> {
+  pub fn evaluate(&self, environment: &Environment) -> Result<Value, Error> {
     use Expression::*;
     info!("Abstract Syntax Tree: {}", self.print_ast());
     let result = match self {
-      Literal { value: value_option } => self.evaluate_literal(value_option),
-      Grouping { expression } => expression.evaluate(),
-      Unary { operator, right } => self.evaluate_unary(operator, right),
-      Binary { left, operator, right } => self.evaluate_binary(left, operator, right),
+      Literal { value: value_option } => self.evaluate_literal(environment, value_option),
+      Grouping { expression } => expression.evaluate(environment),
+      Unary { operator, right } => self.evaluate_unary(environment, operator, right),
+      Binary { left, operator, right } => self.evaluate_binary(environment, left, operator, right),
+      Variable { identifier } => environment.get(identifier),
     };
     debug!("{:?} => {:?}", self, result);
     result

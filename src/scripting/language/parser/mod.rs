@@ -31,12 +31,43 @@ impl<'a> Parser<'a> {
   pub fn parse(&mut self) -> Result<Vec<Statement>, Error> {
     let mut statements = Vec::new();
     while !self.is_at_end() {
-      match self.statement() {
-        Ok(statement) => statements.push(statement),
-        Err(err) => return Err(err),
+      match self.declaration() {
+        Ok(declaration) => statements.push(declaration),
+        Err(err) => {
+          self.synchronize();
+          return Err(err);
+        },
       }
     }
     Ok(statements)
+  }
+
+  #[named]
+  pub fn declaration(&mut self) -> Result<Statement, Error> {
+    if self.r#match(vec![TokenType::Var]) {
+      return self.var_declaration();
+    }
+    self.statement()
+  }
+
+  #[named]
+  pub fn var_declaration(&mut self) -> Result<Statement, Error> {
+    match self.consume(TokenType::Identifier, "Expected a variable name.") {
+      Ok(name) => {
+        let mut initializer = None;
+        if self.r#match(vec![TokenType::Equal]) {
+          match self.expression() {
+            Ok(expression) => initializer = Some(expression),
+            Err(error) => {
+              return Err(error);
+            }
+          }
+        }
+        self.consume(TokenType::Semicolon, "Expected ';' after variable declaration.")?;
+        Ok(Statement::Variable { name, initializer })
+      },
+      Err(error) => Err(error),
+    }
   }
 
   #[named]
@@ -145,6 +176,11 @@ impl<'a> Parser<'a> {
     if self.r#match(vec![TokenType::Number, TokenType::String]) {
       return Ok(Literal {
         value: self.previous().literal,
+      });
+    }
+    if self.r#match(vec![TokenType::Identifier]) {
+      return Ok(Variable {
+        identifier: self.previous(),
       });
     }
     if self.r#match(vec![LeftParenthesis]) {
