@@ -7,6 +7,11 @@ use crate::scripting::language::value::Value;
 
 #[derive(Clone, Debug)]
 pub enum Statement {
+  If {
+    condition: Expression,
+    then: Box<Statement>,
+    r#else: Option<Box<Statement>>,
+  },
   Block(Vec<Statement>),
   Variable {
     name: Token,
@@ -21,6 +26,14 @@ impl Statement {
   pub fn evaluate(&self, interpreter: &mut Interpreter) -> Result<(), Error> {
     use Statement::*;
     match self {
+      If { condition, then, r#else } => {
+        if condition.evaluate(interpreter)?.is_truthy() {
+          then.evaluate(interpreter)?;
+        } else if let Some(else_statement) = r#else {
+          else_statement.evaluate(interpreter)?;
+        }
+        Ok(())
+      }
       Block(statements) => {
         interpreter.push_env();
         for statement in statements {

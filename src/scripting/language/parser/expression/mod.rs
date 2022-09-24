@@ -89,7 +89,7 @@ impl Expression {
         err => err,
       },
       TokenType::Bang => match right_value {
-        Ok(inner) => Ok(Value::Boolean(!inner.get_truthiness())),
+        Ok(inner) => Ok(Value::Boolean(!inner.is_truthy())),
         err => err,
       },
       _ => Err(Error::new(

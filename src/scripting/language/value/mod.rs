@@ -11,7 +11,7 @@ pub enum Value {
 
 impl Value {
   #[named]
-  pub fn get_truthiness(&self) -> bool {
+  pub fn is_truthy(&self) -> bool {
     use Value::*;
     match self {
       &Boolean(boolean) => boolean,

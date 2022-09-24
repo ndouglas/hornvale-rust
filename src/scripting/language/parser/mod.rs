@@ -78,6 +78,9 @@ impl<'a> Parser<'a> {
     if self.r#match(vec![LeftBrace]) {
       return self.block();
     }
+    if self.r#match(vec![If]) {
+      return self.if_statement();
+    }
     self.expression_statement()
   }
 
@@ -246,6 +249,19 @@ impl<'a> Parser<'a> {
       },
       Err(error) => Err(error),
     }
+  }
+
+  #[named]
+  pub fn if_statement(&mut self) -> Result<Statement, Error> {
+    self.consume(LeftParenthesis, "Expect '(' after 'if'.")?;
+    let condition = self.expression()?;
+    self.consume(RightParenthesis, "Expect ')' after 'if' condition.")?;
+    let then = Box::new(self.statement()?);
+    let mut r#else = None;
+    if self.r#match(vec![Else]) {
+      r#else = Some(Box::new(self.statement()?));
+    }
+    Ok(Statement::If { condition, then, r#else })
   }
 
   #[named]
