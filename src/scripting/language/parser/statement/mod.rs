@@ -1,13 +1,13 @@
 use std::io::Error;
 
-use crate::scripting::language::environment::Environment;
+use crate::scripting::language::interpreter::Interpreter;
 use crate::scripting::language::parser::Expression;
-use crate::scripting::language::ScriptingLanguage;
 use crate::scripting::language::token::Token;
 use crate::scripting::language::value::Value;
 
 #[derive(Clone, Debug)]
 pub enum Statement {
+  Block(Vec<Statement>),
   Variable {
     name: Token,
     initializer: Option<Expression>,
@@ -18,30 +18,36 @@ pub enum Statement {
 
 impl Statement {
   #[named]
-  pub fn evaluate(&self, owner: &mut ScriptingLanguage, environment: &mut Environment) -> Result<(), Error> {
+  pub fn evaluate(&self, interpreter: &mut Interpreter) -> Result<(), Error> {
     use Statement::*;
     match self {
-      Expression(expression) => match expression.evaluate(environment) {
+      Block(statements) => {
+        interpreter.push_env();
+        for statement in statements {
+          statement.evaluate(interpreter)?;
+        }
+        interpreter.pop_env();
+        Ok(())
+      },
+      Expression(expression) => match expression.evaluate(interpreter) {
         Ok(_) => Ok(()),
         Err(error) => Err(error),
       },
-      Print(expression) => match expression.evaluate(environment) {
-        Ok(value) => owner.print_value(&value),
+      Print(expression) => match expression.evaluate(interpreter) {
+        Ok(value) => interpreter.owner.print_value(&value),
         Err(error) => Err(error),
       },
       Variable { name, initializer } => {
         let value = match initializer {
-          Some(init_expression) => {
-            match init_expression.evaluate(environment) {
-              Ok(expr_result) => expr_result,
-              Err(error) => return Err(error),
-            }
-          }
+          Some(init_expression) => match init_expression.evaluate(interpreter) {
+            Ok(expr_result) => expr_result,
+            Err(error) => return Err(error),
+          },
           None => Value::Nil,
         };
-        environment.define(&name.lexeme, &value);
+        interpreter.environment.define(&name.lexeme, &value);
         Ok(())
       },
-    } 
+    }
   }
 }

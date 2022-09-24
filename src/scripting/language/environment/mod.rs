@@ -1,19 +1,21 @@
 use std::collections::HashMap;
 use std::io::{Error, ErrorKind};
 
-use crate::scripting::language::value::Value;
 use crate::scripting::language::token::Token;
+use crate::scripting::language::value::Value;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Environment {
   pub values: HashMap<String, Value>,
+  pub parent: Option<Box<Environment>>,
 }
 
 impl Environment {
   #[named]
-  pub fn new() -> Self {
+  pub fn new(parent: Option<Box<Environment>>) -> Self {
     Self {
       values: HashMap::new(),
+      parent,
     }
   }
 
@@ -21,7 +23,14 @@ impl Environment {
   pub fn assign(&mut self, name: &Token, value: &Value) -> Result<Value, Error> {
     let actual_name = &name.lexeme.to_string();
     if !self.values.contains_key(actual_name) {
-      Err(Error::new(ErrorKind::Other, format!("Undefined variable '{}'!", name.lexeme)))
+      if let Some(parent_box) = self.parent.as_mut() {
+        let parent = &mut *parent_box;
+        return parent.assign(name, value);
+      }
+      Err(Error::new(
+        ErrorKind::Other,
+        format!("Undefined variable '{}'!", name.lexeme),
+      ))
     } else {
       self.define(actual_name, value);
       Ok(value.clone())
@@ -37,8 +46,13 @@ impl Environment {
   pub fn get(&self, name: &Token) -> Result<Value, Error> {
     match self.values.get(&name.lexeme.to_string()) {
       Some(value) => Ok(value.clone()),
-      None => Err(Error::new(ErrorKind::Other, format!("Undefined variable '{}'!", name.lexeme))),
+      None => match &self.parent {
+        Some(parent) => parent.get(name),
+        None => Err(Error::new(
+          ErrorKind::Other,
+          format!("Undefined variable '{}'!", name.lexeme),
+        )),
+      },
     }
   }
-
 }

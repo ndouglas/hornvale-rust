@@ -44,7 +44,7 @@ impl<'a> Parser<'a> {
 
   #[named]
   pub fn declaration(&mut self) -> Result<Statement, Error> {
-    if self.r#match(vec![TokenType::Var]) {
+    if self.r#match(vec![Var]) {
       return self.var_declaration();
     }
     self.statement()
@@ -52,18 +52,18 @@ impl<'a> Parser<'a> {
 
   #[named]
   pub fn var_declaration(&mut self) -> Result<Statement, Error> {
-    match self.consume(TokenType::Identifier, "Expected a variable name.") {
+    match self.consume(Identifier, "Expected a variable name.") {
       Ok(name) => {
         let mut initializer = None;
-        if self.r#match(vec![TokenType::Equal]) {
+        if self.r#match(vec![Equal]) {
           match self.expression() {
             Ok(expression) => initializer = Some(expression),
             Err(error) => {
               return Err(error);
-            }
+            },
           }
         }
-        self.consume(TokenType::Semicolon, "Expected ';' after variable declaration.")?;
+        self.consume(Semicolon, "Expected ';' after variable declaration.")?;
         Ok(Statement::Variable { name, initializer })
       },
       Err(error) => Err(error),
@@ -74,6 +74,9 @@ impl<'a> Parser<'a> {
   pub fn statement(&mut self) -> Result<Statement, Error> {
     if self.r#match(vec![TokenType::Print]) {
       return self.print_statement();
+    }
+    if self.r#match(vec![LeftBrace]) {
+      return self.block();
     }
     self.expression_statement()
   }
@@ -90,7 +93,10 @@ impl<'a> Parser<'a> {
       let _equals = self.previous();
       let value = self.assignment()?;
       match result {
-        Variable { identifier } => Ok(Assignment { identifier, value: Box::new(value) }),
+        Variable { identifier } => Ok(Assignment {
+          identifier,
+          value: Box::new(value),
+        }),
         _ => Err(Error::new(ErrorKind::Other, "Invalid assignment target.")),
       }
     } else {
@@ -188,12 +194,12 @@ impl<'a> Parser<'a> {
         value: Some(TokenLiteral::String("nil".to_string())),
       });
     }
-    if self.r#match(vec![TokenType::Number, TokenType::String]) {
+    if self.r#match(vec![Number, String]) {
       return Ok(Literal {
         value: self.previous().literal,
       });
     }
-    if self.r#match(vec![TokenType::Identifier]) {
+    if self.r#match(vec![Identifier]) {
       return Ok(Variable {
         identifier: self.previous(),
       });
@@ -206,6 +212,16 @@ impl<'a> Parser<'a> {
       });
     }
     Err(Error::new(ErrorKind::Other, "Expected expression!"))
+  }
+
+  #[named]
+  pub fn block(&mut self) -> Result<Statement, Error> {
+    let mut statements = Vec::new();
+    while !self.check(RightBrace) && !self.is_at_end() {
+      statements.push(self.declaration()?);
+    }
+    self.consume(RightBrace, "Expect '}' after block.")?;
+    Ok(Statement::Block(statements))
   }
 
   #[named]
@@ -242,7 +258,9 @@ impl<'a> Parser<'a> {
 
   #[named]
   pub fn parse_error(&mut self, token: Token, error: Error) -> Result<Token, Error> {
-    self.owner.report_error(token.line_number, Some(&token.lexeme), &error.to_string());
+    self
+      .owner
+      .report_error(token.line_number, Some(&token.lexeme), &error.to_string());
     Err(error)
   }
 
@@ -254,7 +272,7 @@ impl<'a> Parser<'a> {
         return;
       }
       match self.peek().r#type {
-        Class | For | Function | If | Print | Return | Var | While => return,
+        Class | For | Function | If | TokenType::Print | Return | Var | While => return,
         _ => {},
       }
       self.advance();
