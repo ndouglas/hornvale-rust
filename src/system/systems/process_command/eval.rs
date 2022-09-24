@@ -10,7 +10,13 @@ impl<'a> ProcessCommandSystem {
     trace_enter!();
     if let Command::Eval { string, .. } = command {
       let mut interpreter = ScriptingLanguage::new();
-      if let Err(error) = interpreter.interpret(string) {
+      let outcome = interpreter.interpret(string);
+      for string in interpreter.messages.iter() {
+        data.output_event_channel.single_write(OutputEvent {
+          string: string.to_string(),
+        });
+      }
+      if let Err(error) = outcome {
         data.output_event_channel.single_write(OutputEvent {
           string: format!("Eval Error: {:?}", error),
         });

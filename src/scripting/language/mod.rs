@@ -16,12 +16,17 @@ pub use value::*;
 #[derive(Clone, Debug, Hash, PartialEq)]
 pub struct ScriptingLanguage {
   pub had_error: bool,
+  pub messages: Vec<String>,
 }
 
 impl ScriptingLanguage {
   #[named]
   pub fn new() -> Self {
-    Self { had_error: false }
+    let messages = Vec::new();
+    Self {
+      had_error: false,
+      messages,
+    }
   }
 
   #[named]
@@ -43,18 +48,20 @@ impl ScriptingLanguage {
     }
     let expressions = parse_response.unwrap();
     let mut interpreter = Interpreter::new(self);
-    if let Err(error) = interpreter.interpret(expressions) {
-      error!("Runtime Error: {:?}", &error);
-      return Err(Error::new(ErrorKind::Other, format!("Error: {:?}", error)));
-    }
+    let result = match interpreter.interpret(expressions) {
+      Err(error) => {
+        error!("Runtime Error: {:?}", &error);
+        Err(Error::new(ErrorKind::Other, format!("Error: {:?}", error)))
+      },
+      Ok(()) => Ok(()),
+    };
     trace_exit!();
-    Ok(())
+    result
   }
 
   #[named]
   pub fn print_value(&mut self, value: &Value) -> Result<(), Error> {
-    // todo: set up printing
-    error!("{}", value);
+    self.messages.push(format!("{}", value));
     Ok(())
   }
 

@@ -291,7 +291,11 @@ impl<'a> Parser<'a> {
     if self.r#match(vec![Else]) {
       r#else = Some(Box::new(self.statement()?));
     }
-    Ok(Statement::If { condition, then, r#else })
+    Ok(Statement::If {
+      condition,
+      then,
+      r#else,
+    })
   }
 
   #[named]

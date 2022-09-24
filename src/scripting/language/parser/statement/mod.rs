@@ -26,7 +26,11 @@ impl Statement {
   pub fn evaluate(&self, interpreter: &mut Interpreter) -> Result<(), Error> {
     use Statement::*;
     match self {
-      If { condition, then, r#else } => {
+      If {
+        condition,
+        then,
+        r#else,
+      } => {
         error!("{:?}", condition);
         if condition.evaluate(interpreter)?.is_truthy() {
           then.evaluate(interpreter)?;
@@ -34,7 +38,7 @@ impl Statement {
           else_statement.evaluate(interpreter)?;
         }
         Ok(())
-      }
+      },
       Block(statements) => {
         interpreter.push_env();
         for statement in statements {

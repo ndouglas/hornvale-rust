@@ -47,7 +47,9 @@ impl Expression {
         Some(inner_value) => format!("{}", inner_value),
         None => "nil".to_string(),
       },
-      Logical { left, operator, right } => self.parenthesize(&operator.lexeme, &vec![(*left).clone(), (*right).clone()]),
+      Logical { left, operator, right } => {
+        self.parenthesize(&operator.lexeme, &vec![(*left).clone(), (*right).clone()])
+      },
       Unary { operator, right } => self.parenthesize(&operator.lexeme, &vec![(*right).clone()]),
       Variable { identifier } => identifier.lexeme.to_string(),
     }

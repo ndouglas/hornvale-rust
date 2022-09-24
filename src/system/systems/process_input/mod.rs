@@ -1,10 +1,11 @@
+use colored::*;
 use specs::prelude::*;
 use specs::shrev::{EventChannel, ReaderId};
 
 use crate::command::Command;
 
 use crate::component::components::*;
-use crate::event::{CommandEvent, InputEvent};
+use crate::event::{CommandEvent, InputEvent, OutputEvent};
 use crate::resource::*;
 
 pub struct ProcessInputSystem {
@@ -23,6 +24,7 @@ pub struct ProcessInputSystemData<'a> {
   pub is_in_room: ReadStorage<'a, IsInRoom>,
   pub input_event_channel: Read<'a, EventChannel<InputEvent>>,
   pub command_event_channel: Write<'a, EventChannel<CommandEvent>>,
+  pub output_event_channel: Write<'a, EventChannel<OutputEvent>>,
   pub player_resource: Read<'a, PlayerResource>,
 }
 
@@ -43,6 +45,9 @@ impl<'a> System<'a> for ProcessInputSystem {
     }
     info!("Processing {} input event(s)...", event_count);
     for event in input_events.iter() {
+      data.output_event_channel.single_write(OutputEvent {
+        string: format!("> {}", event.input.green()),
+      });
       if let Ok(command) = self.get_command(&event.input, &mut data) {
         data.command_event_channel.single_write(CommandEvent { command });
       } else {
