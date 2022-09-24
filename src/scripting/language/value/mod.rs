@@ -14,6 +14,7 @@ impl Value {
   pub fn is_truthy(&self) -> bool {
     use Value::*;
     match self {
+      Any(boxed_value) => boxed_value.is_truthy(),
       &Boolean(boolean) => boolean,
       Nil => false,
       _ => true,

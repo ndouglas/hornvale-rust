@@ -2,8 +2,10 @@ use std::fmt;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum TokenLiteral {
+  Boolean(bool),
   String(String),
   Number(f64),
+  Nil,
 }
 
 impl fmt::Display for TokenLiteral {

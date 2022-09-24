@@ -21,6 +21,11 @@ pub enum Expression {
   Literal {
     value: Option<TokenLiteral>,
   },
+  Logical {
+    left: Box<Expression>,
+    operator: Token,
+    right: Box<Expression>,
+  },
   Unary {
     operator: Token,
     right: Box<Expression>,
@@ -42,6 +47,7 @@ impl Expression {
         Some(inner_value) => format!("{}", inner_value),
         None => "nil".to_string(),
       },
+      Logical { left, operator, right } => self.parenthesize(&operator.lexeme, &vec![(*left).clone(), (*right).clone()]),
       Unary { operator, right } => self.parenthesize(&operator.lexeme, &vec![(*right).clone()]),
       Variable { identifier } => identifier.lexeme.to_string(),
     }
@@ -65,6 +71,8 @@ impl Expression {
     value_option: &Option<TokenLiteral>,
   ) -> Result<Value, Error> {
     match value_option {
+      Some(TokenLiteral::Boolean(boolean)) => Ok(Value::Boolean(*boolean)),
+      Some(TokenLiteral::Nil) => Ok(Value::Nil),
       Some(TokenLiteral::Number(number)) => Ok(Value::Number(*number)),
       Some(TokenLiteral::String(string)) => Ok(Value::String(string.to_string())),
       None => Ok(Value::Nil),
@@ -177,6 +185,31 @@ impl Expression {
   }
 
   #[named]
+  pub fn evaluate_logical(
+    &self,
+    interpreter: &mut Interpreter,
+    left: &Expression,
+    operator: &Token,
+    right: &Expression,
+  ) -> Result<Value, Error> {
+    let left_value = left.evaluate(interpreter)?;
+    let result = {
+      if operator.r#type == TokenType::Or {
+        if left_value.is_truthy() {
+          return Ok(left_value);
+        }
+      } else {
+        if !left_value.is_truthy() {
+          return Ok(left_value);
+        }
+      }
+      Ok(right.evaluate(interpreter)?)
+    };
+    debug!("{:?} {:?} {:?} => {:?}", left, operator, right, result);
+    result
+  }
+
+  #[named]
   pub fn evaluate(&self, interpreter: &mut Interpreter) -> Result<Value, Error> {
     use Expression::*;
     info!("Abstract Syntax Tree: {}", self.print_ast());
@@ -186,6 +219,7 @@ impl Expression {
         interpreter.environment.assign(identifier, final_value)
       },
       Literal { value: value_option } => self.evaluate_literal(interpreter, value_option),
+      Logical { left, operator, right } => self.evaluate_logical(interpreter, left, operator, right),
       Grouping { expression } => expression.evaluate(interpreter),
       Unary { operator, right } => self.evaluate_unary(interpreter, operator, right),
       Binary { left, operator, right } => self.evaluate_binary(interpreter, left, operator, right),

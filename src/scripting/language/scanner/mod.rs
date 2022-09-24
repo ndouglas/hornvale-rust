@@ -178,7 +178,9 @@ impl<'a> Scanner<'a> {
     let value = &self.source[self.start..self.current];
     let value_type = match TokenType::from_str(value) {
       Ok(token_type) => token_type,
-      Err(_) => TokenType::Identifier,
+      Err(error) => {
+        TokenType::Identifier
+      },
     };
     self.add_token(value_type, None);
   }

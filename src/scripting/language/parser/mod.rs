@@ -91,7 +91,7 @@ impl<'a> Parser<'a> {
 
   #[named]
   pub fn assignment(&mut self) -> Result<Expression, Error> {
-    let result = self.equality()?;
+    let result = self.or_expression()?;
     if self.r#match(vec![Equal]) {
       let _equals = self.previous();
       let value = self.assignment()?;
@@ -105,6 +105,36 @@ impl<'a> Parser<'a> {
     } else {
       Ok(result)
     }
+  }
+
+  #[named]
+  pub fn or_expression(&mut self) -> Result<Expression, Error> {
+    let mut result = self.and_expression()?;
+    while self.r#match(vec![Or]) {
+      let operator = self.previous();
+      let right = Box::new(self.and_expression()?);
+      result = Logical {
+        left: Box::new(result),
+        operator,
+        right,
+      };
+    }
+    Ok(result)
+  }
+
+  #[named]
+  pub fn and_expression(&mut self) -> Result<Expression, Error> {
+    let mut result = self.equality()?;
+    while self.r#match(vec![And]) {
+      let operator = self.previous();
+      let right = Box::new(self.equality()?);
+      result = Logical {
+        left: Box::new(result),
+        operator,
+        right,
+      };
+    }
+    Ok(result)
   }
 
   #[named]
@@ -184,17 +214,17 @@ impl<'a> Parser<'a> {
   pub fn primary(&mut self) -> Result<Expression, Error> {
     if self.r#match(vec![False]) {
       return Ok(Literal {
-        value: Some(TokenLiteral::String("false".to_string())),
+        value: Some(TokenLiteral::Boolean(false)),
       });
     }
     if self.r#match(vec![True]) {
       return Ok(Literal {
-        value: Some(TokenLiteral::String("true".to_string())),
+        value: Some(TokenLiteral::Boolean(true)),
       });
     }
     if self.r#match(vec![Nil]) {
       return Ok(Literal {
-        value: Some(TokenLiteral::String("nil".to_string())),
+        value: Some(TokenLiteral::Nil),
       });
     }
     if self.r#match(vec![Number, String]) {

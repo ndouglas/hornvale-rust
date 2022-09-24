@@ -27,6 +27,7 @@ impl Statement {
     use Statement::*;
     match self {
       If { condition, then, r#else } => {
+        error!("{:?}", condition);
         if condition.evaluate(interpreter)?.is_truthy() {
           then.evaluate(interpreter)?;
         } else if let Some(else_statement) = r#else {
