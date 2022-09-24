@@ -1,3 +1,4 @@
+use std::collections::VecDeque;
 use std::io::{Error, ErrorKind};
 
 pub mod expression;
@@ -77,6 +78,9 @@ impl<'a> Parser<'a> {
     }
     if self.r#match(vec![While]) {
       return self.while_statement();
+    }
+    if self.r#match(vec![For]) {
+      return self.for_statement();
     }
     if self.r#match(vec![LeftBrace]) {
       return self.block();
@@ -311,6 +315,56 @@ impl<'a> Parser<'a> {
       condition,
       body,
     })
+  }
+
+  #[named]
+  pub fn for_statement(&mut self) -> Result<Statement, Error> {
+    self.consume(LeftParenthesis, "Expect '(' after 'for'.")?;
+    let initializer = {
+      if self.r#match(vec![Semicolon]) {
+        None
+      } else if self.r#match(vec![Var]) {
+        Some(self.var_declaration()?)
+      } else {
+        Some(self.expression_statement()?)
+      }
+    };
+    let condition = {
+      if !self.check(Semicolon) {
+        Some(self.expression()?)
+      } else {
+        None
+      }
+    };
+    self.consume(Semicolon, "Expect ';' after 'for' loop condition.")?;
+    let increment = {
+      if !self.check(RightParenthesis) {
+        Some(self.expression()?)
+      } else {
+        None
+      }
+    };
+    self.consume(RightParenthesis, "Expect ')' after 'for' clauses.")?;
+    let mut body = Box::new(self.statement()?);
+    if let Some(increment_expression) = increment {
+      body = Box::new(Statement::Block(vec![
+        *body,
+        Statement::Expression(increment_expression),
+      ]));
+    }
+    if let Some(condition_expression) = condition {
+      body = Box::new(Statement::While {
+        condition: condition_expression,
+        body,
+      })
+    }
+    if let Some(initializer_expression) = initializer {
+      body = Box::new(Statement::Block(vec![
+        initializer_expression,
+        *body,
+      ]))
+    }
+    Ok(*body)
   }
 
   #[named]
