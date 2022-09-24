@@ -75,6 +75,9 @@ impl<'a> Parser<'a> {
     if self.r#match(vec![TokenType::Print]) {
       return self.print_statement();
     }
+    if self.r#match(vec![While]) {
+      return self.while_statement();
+    }
     if self.r#match(vec![LeftBrace]) {
       return self.block();
     }
@@ -295,6 +298,18 @@ impl<'a> Parser<'a> {
       condition,
       then,
       r#else,
+    })
+  }
+
+  #[named]
+  pub fn while_statement(&mut self) -> Result<Statement, Error> {
+    self.consume(LeftParenthesis, "Expect '(' after 'while'.")?;
+    let condition = self.expression()?;
+    self.consume(RightParenthesis, "Expect ')' after 'while' condition.")?;
+    let body = Box::new(self.statement()?);
+    Ok(Statement::While {
+      condition,
+      body,
     })
   }
 

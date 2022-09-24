@@ -12,6 +12,10 @@ pub enum Statement {
     then: Box<Statement>,
     r#else: Option<Box<Statement>>,
   },
+  While {
+    condition: Expression,
+    body: Box<Statement>,
+  },
   Block(Vec<Statement>),
   Variable {
     name: Token,
@@ -31,11 +35,19 @@ impl Statement {
         then,
         r#else,
       } => {
-        error!("{:?}", condition);
         if condition.evaluate(interpreter)?.is_truthy() {
           then.evaluate(interpreter)?;
         } else if let Some(else_statement) = r#else {
           else_statement.evaluate(interpreter)?;
+        }
+        Ok(())
+      },
+      While {
+        condition,
+        body,
+      } => {
+        while condition.evaluate(interpreter)?.is_truthy() {
+          body.evaluate(interpreter)?;
         }
         Ok(())
       },
