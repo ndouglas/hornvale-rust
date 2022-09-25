@@ -16,6 +16,11 @@ pub enum Expression {
     operator: Token,
     right: Box<Expression>,
   },
+  Call {
+    callee: Box<Expression>,
+    closing_parenthesis: Token,
+    arguments: Vec<Expression>,
+  },
   Grouping {
     expression: Box<Expression>,
   },
@@ -43,6 +48,7 @@ impl<'a> Expression {
     match self {
       Assignment { identifier, value } => self.parenthesize(&identifier.lexeme, &vec![(*value).clone()]),
       Binary { left, operator, right } => self.parenthesize(&operator.lexeme, &vec![(*left).clone(), (*right).clone()]),
+      Call { callee, arguments, .. } => self.parenthesize("function", &arguments.iter().map(|arg| Box::new((*arg).clone())).collect()),
       Grouping { expression } => self.parenthesize("group", &vec![(*expression).clone()]),
       Literal { value } => match value {
         Some(inner_value) => format!("{}", inner_value),
@@ -219,19 +225,45 @@ impl<'a> Expression {
   }
 
   #[named]
+  pub fn evaluate_call(
+    &self,
+    interpreter: &mut Interpreter,
+    callee: &Expression,
+    arguments: &[Expression],
+    closing_parenthesis: &Token,
+    data: &mut ProcessScriptSystemData<'a>
+  ) -> Result<Value, Error> {
+    let callee_value = callee.evaluate(interpreter, data)?;
+    let result = {
+      let mut argument_values = Vec::new();
+      for argument in arguments.iter() {
+        argument_values.push(argument.evaluate(interpreter, data)?);
+      }
+      if let Value::Callable(callable) = callee_value.clone() {
+        callable.call(interpreter, data, &argument_values)?
+      } else {
+        return Err(Error::new(ErrorKind::Other, "Can only call functions and classes."));
+      }
+    };
+    debug!("{:?}({:?}) => {:?}", callee_value, arguments, result);
+    Ok(result)
+  }
+  #[named]
   pub fn evaluate(&self, interpreter: &mut Interpreter, data: &mut ProcessScriptSystemData<'a>) -> Result<Value, Error> {
     use Expression::*;
     info!("Abstract Syntax Tree: {}", self.print_ast());
     let result = match self {
       Assignment { identifier, value } => {
         let final_value = &value.evaluate(interpreter, data)?;
-        interpreter.environment.assign(identifier, final_value)
+        interpreter.environment.assign(identifier, (*final_value).clone());
+        Ok(Value::Nil)
       },
       Literal { value: value_option } => self.evaluate_literal(interpreter, value_option, data),
       Logical { left, operator, right } => self.evaluate_logical(interpreter, left, operator, right, data),
       Grouping { expression } => expression.evaluate(interpreter, data),
       Unary { operator, right } => self.evaluate_unary(interpreter, operator, right, data),
       Binary { left, operator, right } => self.evaluate_binary(interpreter, left, operator, right, data),
+      Call { callee, arguments, closing_parenthesis } => self.evaluate_call(interpreter, callee, arguments, closing_parenthesis, data),
       Variable { identifier } => interpreter.environment.get(identifier),
     };
     debug!("{:?} => {:?}", self, result);

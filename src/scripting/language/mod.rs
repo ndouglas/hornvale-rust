@@ -1,3 +1,5 @@
+pub mod callable;
+pub use callable::*;
 pub mod environment;
 pub use environment::*;
 pub mod interpreter;

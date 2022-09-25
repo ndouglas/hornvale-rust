@@ -210,7 +210,39 @@ impl Parser {
         right: Box::new(right),
       });
     }
-    self.primary()
+    self.call()
+  }
+  
+  #[named]
+  pub fn call(&mut self) -> Result<Expression, Error> {
+    let mut result = self.primary()?;
+    loop {
+      if self.r#match(vec![LeftParenthesis]) {
+        result = self.finish_call(result)?;
+      } else {
+        break;
+      }
+    }
+    Ok(result)
+  }
+
+  #[named]
+  pub fn finish_call(&mut self, callee: Expression) -> Result<Expression, Error> {
+    let mut arguments = Vec::new();
+    if !self.check(RightParenthesis) {
+      loop {
+        arguments.push(self.expression()?);
+        if !self.r#match(vec![Comma]) {
+          break;
+        }
+      }
+    }
+    let closing_parenthesis = self.consume(RightParenthesis, "Expect ')' after arguments.")?;
+    Ok(Expression::Call {
+      callee: Box::new(callee),
+      closing_parenthesis,
+      arguments,
+    })
   }
 
   #[named]

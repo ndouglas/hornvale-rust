@@ -20,7 +20,7 @@ impl Environment {
   }
 
   #[named]
-  pub fn assign(&mut self, name: &Token, value: &Value) -> Result<Value, Error> {
+  pub fn assign(&mut self, name: &Token, value: Value) -> Result<(), Error> {
     let actual_name = &name.lexeme.to_string();
     if !self.values.contains_key(actual_name) {
       if let Some(parent_box) = self.parent.as_mut() {
@@ -33,12 +33,12 @@ impl Environment {
       ))
     } else {
       self.define(actual_name, value);
-      Ok(value.clone())
+      Ok(())
     }
   }
 
   #[named]
-  pub fn define(&mut self, name: &str, value: &Value) {
+  pub fn define(&mut self, name: &str, value: Value) {
     self.values.insert(name.to_string(), value.clone());
   }
 

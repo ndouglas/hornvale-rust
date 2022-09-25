@@ -27,9 +27,9 @@ pub enum Statement {
   Print(Expression),
 }
 
-impl<'a> Statement {
+impl Statement {
   #[named]
-  pub fn evaluate(&self, interpreter: &mut Interpreter, data: &mut ProcessScriptSystemData<'a>) -> Result<(), Error> {
+  pub fn evaluate<'a>(&self, interpreter: &mut Interpreter, data: &mut ProcessScriptSystemData<'a>) -> Result<(), Error> {
     use Statement::*;
     match self {
       If {
@@ -82,7 +82,7 @@ impl<'a> Statement {
           },
           None => Value::Nil,
         };
-        interpreter.environment.define(&name.lexeme, &value);
+        interpreter.environment.define(&name.lexeme, value.clone());
         Ok(())
       },
     }
