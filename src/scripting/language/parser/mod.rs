@@ -1,4 +1,3 @@
-use std::collections::VecDeque;
 use std::io::{Error, ErrorKind};
 
 pub mod expression;
@@ -7,24 +6,21 @@ pub mod statement;
 pub use statement::*;
 
 use crate::scripting::language::token::{Token, TokenLiteral, TokenType};
-use crate::scripting::language::ScriptingLanguage;
 
 use Expression::*;
 use TokenType::*;
 
-pub struct Parser<'a> {
+pub struct Parser {
   pub tokens: Vec<Token>,
   pub current: usize,
-  pub owner: &'a mut ScriptingLanguage,
 }
 
-impl<'a> Parser<'a> {
+impl Parser {
   #[named]
-  pub fn new(tokens: Vec<Token>, owner: &'a mut ScriptingLanguage) -> Self {
+  pub fn new(tokens: Vec<Token>) -> Self {
     Self {
       tokens,
       current: 0,
-      owner,
     }
   }
 
@@ -368,7 +364,7 @@ impl<'a> Parser<'a> {
   }
 
   #[named]
-  pub fn consume(&mut self, r#type: TokenType, message: &'a str) -> Result<Token, Error> {
+  pub fn consume<'a>(&mut self, r#type: TokenType, message: &'a str) -> Result<Token, Error> {
     if self.check(r#type) {
       return Ok(self.advance());
     }
@@ -377,9 +373,6 @@ impl<'a> Parser<'a> {
 
   #[named]
   pub fn parse_error(&mut self, token: Token, error: Error) -> Result<Token, Error> {
-    self
-      .owner
-      .report_error(token.line_number, Some(&token.lexeme), &error.to_string());
     Err(error)
   }
 

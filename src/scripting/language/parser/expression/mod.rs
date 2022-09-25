@@ -3,6 +3,7 @@ use std::io::{Error, ErrorKind};
 use crate::scripting::language::interpreter::Interpreter;
 use crate::scripting::language::token::{Token, TokenLiteral, TokenType};
 use crate::scripting::language::value::Value;
+use crate::system::systems::process_script::ProcessScriptSystemData;
 
 #[derive(Clone, Debug)]
 pub enum Expression {
@@ -35,7 +36,7 @@ pub enum Expression {
   },
 }
 
-impl Expression {
+impl<'a> Expression {
   #[named]
   pub fn print_ast(&self) -> String {
     use Expression::*;
@@ -71,6 +72,7 @@ impl Expression {
     &self,
     _interpreter: &mut Interpreter,
     value_option: &Option<TokenLiteral>,
+    data: &mut ProcessScriptSystemData<'a>
   ) -> Result<Value, Error> {
     match value_option {
       Some(TokenLiteral::Boolean(boolean)) => Ok(Value::Boolean(*boolean)),
@@ -87,8 +89,9 @@ impl Expression {
     interpreter: &mut Interpreter,
     operator: &Token,
     right: &Expression,
+    data: &mut ProcessScriptSystemData<'a>
   ) -> Result<Value, Error> {
-    let right_value = right.evaluate(interpreter);
+    let right_value = right.evaluate(interpreter, data);
     let result = match operator.r#type {
       TokenType::Minus => match right_value {
         Ok(Value::Number(value)) => Ok(Value::Number(-(value as f64))),
@@ -118,6 +121,7 @@ impl Expression {
     operator: &Token,
     x: f64,
     y: f64,
+    data: &mut ProcessScriptSystemData<'a>
   ) -> Result<Value, Error> {
     let result = match operator.r#type {
       TokenType::Minus => Ok(Value::Number(x - y)),
@@ -146,6 +150,7 @@ impl Expression {
     operator: &Token,
     x: String,
     y: String,
+    data: &mut ProcessScriptSystemData<'a>
   ) -> Result<Value, Error> {
     let result = match operator.r#type {
       TokenType::Plus => Ok(Value::String(format!("{}{}", x, y))),
@@ -171,12 +176,13 @@ impl Expression {
     left: &Expression,
     operator: &Token,
     right: &Expression,
+    data: &mut ProcessScriptSystemData<'a>
   ) -> Result<Value, Error> {
-    let left_value = left.evaluate(interpreter);
-    let right_value = right.evaluate(interpreter);
+    let left_value = left.evaluate(interpreter, data);
+    let right_value = right.evaluate(interpreter, data);
     let result = match (left_value, right_value) {
-      (Ok(Value::Number(x)), Ok(Value::Number(y))) => self.evaluate_binary_math(interpreter, operator, x, y),
-      (Ok(Value::String(x)), Ok(Value::String(y))) => self.evaluate_binary_string(interpreter, operator, x, y),
+      (Ok(Value::Number(x)), Ok(Value::Number(y))) => self.evaluate_binary_math(interpreter, operator, x, y, data),
+      (Ok(Value::String(x)), Ok(Value::String(y))) => self.evaluate_binary_string(interpreter, operator, x, y, data),
       _ => Err(Error::new(
         ErrorKind::Other,
         format!("Bad operands ({:?} and {:?}) for operator {:?}!", left, right, operator),
@@ -193,8 +199,9 @@ impl Expression {
     left: &Expression,
     operator: &Token,
     right: &Expression,
+    data: &mut ProcessScriptSystemData<'a>
   ) -> Result<Value, Error> {
-    let left_value = left.evaluate(interpreter)?;
+    let left_value = left.evaluate(interpreter, data)?;
     let result = {
       if operator.r#type == TokenType::Or {
         if left_value.is_truthy() {
@@ -205,26 +212,26 @@ impl Expression {
           return Ok(left_value);
         }
       }
-      Ok(right.evaluate(interpreter)?)
+      Ok(right.evaluate(interpreter, data)?)
     };
     debug!("{:?} {:?} {:?} => {:?}", left, operator, right, result);
     result
   }
 
   #[named]
-  pub fn evaluate(&self, interpreter: &mut Interpreter) -> Result<Value, Error> {
+  pub fn evaluate(&self, interpreter: &mut Interpreter, data: &mut ProcessScriptSystemData<'a>) -> Result<Value, Error> {
     use Expression::*;
     info!("Abstract Syntax Tree: {}", self.print_ast());
     let result = match self {
       Assignment { identifier, value } => {
-        let final_value = &value.evaluate(interpreter)?;
+        let final_value = &value.evaluate(interpreter, data)?;
         interpreter.environment.assign(identifier, final_value)
       },
-      Literal { value: value_option } => self.evaluate_literal(interpreter, value_option),
-      Logical { left, operator, right } => self.evaluate_logical(interpreter, left, operator, right),
-      Grouping { expression } => expression.evaluate(interpreter),
-      Unary { operator, right } => self.evaluate_unary(interpreter, operator, right),
-      Binary { left, operator, right } => self.evaluate_binary(interpreter, left, operator, right),
+      Literal { value: value_option } => self.evaluate_literal(interpreter, value_option, data),
+      Logical { left, operator, right } => self.evaluate_logical(interpreter, left, operator, right, data),
+      Grouping { expression } => expression.evaluate(interpreter, data),
+      Unary { operator, right } => self.evaluate_unary(interpreter, operator, right, data),
+      Binary { left, operator, right } => self.evaluate_binary(interpreter, left, operator, right, data),
       Variable { identifier } => interpreter.environment.get(identifier),
     };
     debug!("{:?} => {:?}", self, result);

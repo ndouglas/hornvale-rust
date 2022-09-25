@@ -1,22 +1,22 @@
 use std::fmt;
+use std::io::{Error, ErrorKind};
 use std::str::FromStr;
 
+use crate::event::ErrorEvent;
 use crate::scripting::language::token::{Token, TokenLiteral, TokenType};
-use crate::scripting::language::ScriptingLanguage;
+use crate::system::systems::process_script::ProcessScriptSystemData;
 
-#[derive(Debug, PartialEq)]
-pub struct Scanner<'a> {
+pub struct Scanner {
   pub source: String,
   pub source_bytes: Vec<u8>,
   pub tokens: Vec<Token>,
-  pub owner: &'a mut ScriptingLanguage,
   pub start: usize,
   pub current: usize,
   pub line_number: usize,
 }
 
-impl<'a> Scanner<'a> {
-  pub fn new(source: &str, owner: &'a mut ScriptingLanguage) -> Self {
+impl Scanner {
+  pub fn new(source: &str) -> Self {
     let tokens = vec![];
     let owned_string = source.to_string();
     let source_bytes = owned_string.as_bytes().to_vec();
@@ -24,7 +24,6 @@ impl<'a> Scanner<'a> {
       source: owned_string,
       source_bytes,
       tokens,
-      owner,
       start: 0,
       current: 0,
       line_number: 0,
@@ -37,17 +36,17 @@ impl<'a> Scanner<'a> {
   }
 
   #[named]
-  pub fn scan_tokens(&mut self) -> Vec<Token> {
+  pub fn scan_tokens<'a>(&mut self, data: &mut ProcessScriptSystemData<'a>) -> Result<Vec<Token>, Error> {
     while !self.is_at_end() {
       self.start = self.current;
-      self.scan_token();
+      self.scan_token()?;
     }
     self.tokens.push(Token::new(TokenType::Eof, "", None, self.line_number));
-    self.tokens.clone()
+    Ok(self.tokens.clone())
   }
 
   #[named]
-  pub fn scan_token(&mut self) {
+  pub fn scan_token(&mut self) -> Result<(), Error> {
     let char = self.advance();
     use TokenType::*;
     match char {
@@ -84,13 +83,12 @@ impl<'a> Scanner<'a> {
       },
       ' ' | '\r' | '\t' => {},
       '\n' => self.line_number += 1,
-      '"' => self.match_string(),
+      '"' => self.match_string()?,
       char if self.is_digit(char) => self.match_number(),
       char if self.is_alpha(char) => self.match_identifier(),
-      _ => self
-        .owner
-        .report_error(self.line_number, None, &format!("Unexpected character: {}", char)),
+      _ => return Err(create_error!(self.line_number, None, &format!("Unexpected character: {}", char))),
     }
+    Ok(())
   }
 
   #[named]
@@ -154,7 +152,7 @@ impl<'a> Scanner<'a> {
   }
 
   #[named]
-  pub fn match_string(&mut self) {
+  pub fn match_string(&mut self) -> Result<(), Error> {
     while self.peek() != '"' && !self.is_at_end() {
       if self.peek() == '\n' {
         self.line_number += 1;
@@ -162,12 +160,12 @@ impl<'a> Scanner<'a> {
       self.advance();
     }
     if self.is_at_end() {
-      self.owner.report_error(self.line_number, None, "Unterminated string.");
-      return;
+      return Err(create_error!(self.line_number, None, &format!("Unterminated string.")));
     }
     self.advance();
     let value = &self.source[self.start + 1..self.current - 1];
     self.add_token(TokenType::String, Some(TokenLiteral::String(value.to_string())));
+    Ok(())
   }
 
   #[named]
@@ -217,7 +215,7 @@ impl<'a> Scanner<'a> {
   }
 }
 
-impl fmt::Display for Scanner<'_> {
+impl fmt::Display for Scanner {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     write!(f, "Scanner")
   }

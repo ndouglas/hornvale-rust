@@ -4,7 +4,7 @@ use specs::shrev::{EventChannel, ReaderId};
 
 use crate::command::Command;
 
-use crate::event::{ActionEvent, CommandEvent, OutputEvent};
+use crate::event::{ActionEvent, CommandEvent, OutputEvent, ScriptEvent};
 
 pub struct ProcessCommandSystem {
   pub reader_id: ReaderId<CommandEvent>,
@@ -18,6 +18,7 @@ pub struct ProcessCommandSystemData<'a> {
   pub action_event_channel: Write<'a, EventChannel<ActionEvent>>,
   pub command_event_channel: Read<'a, EventChannel<CommandEvent>>,
   pub output_event_channel: Write<'a, EventChannel<OutputEvent>>,
+  pub script_event_channel: Write<'a, EventChannel<ScriptEvent>>,
 }
 
 impl<'a> System<'a> for ProcessCommandSystem {
@@ -42,7 +43,9 @@ impl<'a> System<'a> for ProcessCommandSystem {
       match command {
         Echo { .. } => self.process_echo(command, &mut data.output_event_channel),
         Quit { .. } => self.process_quit(),
-        Eval { .. } => self.process_eval(command, &mut data),
+        Eval { string, .. } => data.script_event_channel.single_write(ScriptEvent {
+          script: string.to_string(),
+        }),
         _ => {
           if let Ok(action) = command.get_action() {
             info!("Calculated action {:?} for command {:?}...", action, command);
@@ -61,5 +64,4 @@ impl<'a> System<'a> for ProcessCommandSystem {
 
 mod action;
 mod echo;
-mod eval;
 mod quit;

@@ -3,18 +3,17 @@ use std::io::Error;
 
 use crate::scripting::language::environment::Environment;
 use crate::scripting::language::parser::statement::Statement;
-use crate::scripting::language::ScriptingLanguage;
+use crate::system::systems::process_script::ProcessScriptSystemData;
 
 #[derive(Debug)]
-pub struct Interpreter<'a> {
-  pub owner: &'a mut ScriptingLanguage,
+pub struct Interpreter {
   pub environment: Environment,
 }
 
-impl<'a> Interpreter<'a> {
-  pub fn new(owner: &'a mut ScriptingLanguage) -> Self {
+impl<'a> Interpreter {
+  pub fn new() -> Self {
     let environment = Environment::new(None);
-    Self { owner, environment }
+    Self { environment }
   }
 
   pub fn push_env(&mut self) {
@@ -35,9 +34,9 @@ impl<'a> Interpreter<'a> {
     self.environment = *current;
   }
 
-  pub fn interpret(&mut self, statements: Vec<Statement>) -> Result<(), Error> {
+  pub fn interpret(&mut self, statements: Vec<Statement>, data: &mut ProcessScriptSystemData<'a>) -> Result<(), Error> {
     for statement in statements {
-      if let Err(error) = statement.evaluate(self) {
+      if let Err(error) = statement.evaluate(self, data) {
         return Err(error);
       }
     }
