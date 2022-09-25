@@ -48,7 +48,10 @@ impl<'a> Expression {
     match self {
       Assignment { identifier, value } => self.parenthesize(&identifier.lexeme, &vec![(*value).clone()]),
       Binary { left, operator, right } => self.parenthesize(&operator.lexeme, &vec![(*left).clone(), (*right).clone()]),
-      Call { callee, arguments, .. } => self.parenthesize("function", &arguments.iter().map(|arg| Box::new((*arg).clone())).collect()),
+      Call { callee, arguments, .. } => self.parenthesize(
+        "function",
+        &arguments.iter().map(|arg| Box::new((*arg).clone())).collect(),
+      ),
       Grouping { expression } => self.parenthesize("group", &vec![(*expression).clone()]),
       Literal { value } => match value {
         Some(inner_value) => format!("{}", inner_value),
@@ -78,7 +81,7 @@ impl<'a> Expression {
     &self,
     _interpreter: &mut Interpreter,
     value_option: &Option<TokenLiteral>,
-    data: &mut ProcessScriptSystemData<'a>
+    data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, Error> {
     match value_option {
       Some(TokenLiteral::Boolean(boolean)) => Ok(Value::Boolean(*boolean)),
@@ -95,7 +98,7 @@ impl<'a> Expression {
     interpreter: &mut Interpreter,
     operator: &Token,
     right: &Expression,
-    data: &mut ProcessScriptSystemData<'a>
+    data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, Error> {
     let right_value = right.evaluate(interpreter, data);
     let result = match operator.r#type {
@@ -127,7 +130,7 @@ impl<'a> Expression {
     operator: &Token,
     x: f64,
     y: f64,
-    data: &mut ProcessScriptSystemData<'a>
+    data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, Error> {
     let result = match operator.r#type {
       TokenType::Minus => Ok(Value::Number(x - y)),
@@ -156,7 +159,7 @@ impl<'a> Expression {
     operator: &Token,
     x: String,
     y: String,
-    data: &mut ProcessScriptSystemData<'a>
+    data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, Error> {
     let result = match operator.r#type {
       TokenType::Plus => Ok(Value::String(format!("{}{}", x, y))),
@@ -182,7 +185,7 @@ impl<'a> Expression {
     left: &Expression,
     operator: &Token,
     right: &Expression,
-    data: &mut ProcessScriptSystemData<'a>
+    data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, Error> {
     let left_value = left.evaluate(interpreter, data);
     let right_value = right.evaluate(interpreter, data);
@@ -205,7 +208,7 @@ impl<'a> Expression {
     left: &Expression,
     operator: &Token,
     right: &Expression,
-    data: &mut ProcessScriptSystemData<'a>
+    data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, Error> {
     let left_value = left.evaluate(interpreter, data)?;
     let result = {
@@ -231,7 +234,7 @@ impl<'a> Expression {
     callee: &Expression,
     arguments: &[Expression],
     closing_parenthesis: &Token,
-    data: &mut ProcessScriptSystemData<'a>
+    data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, Error> {
     let callee_value = callee.evaluate(interpreter, data)?;
     let result = {
@@ -240,6 +243,16 @@ impl<'a> Expression {
         argument_values.push(argument.evaluate(interpreter, data)?);
       }
       if let Value::Callable(callable) = callee_value.clone() {
+        if argument_values.len() != callable.get_arity() {
+          return Err(Error::new(
+            ErrorKind::Other,
+            format!(
+              "Expected {} arguments but got {}.",
+              callable.get_arity(),
+              argument_values.len()
+            ),
+          ));
+        }
         callable.call(interpreter, data, &argument_values)?
       } else {
         return Err(Error::new(ErrorKind::Other, "Can only call functions and classes."));
@@ -249,7 +262,11 @@ impl<'a> Expression {
     Ok(result)
   }
   #[named]
-  pub fn evaluate(&self, interpreter: &mut Interpreter, data: &mut ProcessScriptSystemData<'a>) -> Result<Value, Error> {
+  pub fn evaluate(
+    &self,
+    interpreter: &mut Interpreter,
+    data: &mut ProcessScriptSystemData<'a>,
+  ) -> Result<Value, Error> {
     use Expression::*;
     info!("Abstract Syntax Tree: {}", self.print_ast());
     let result = match self {
@@ -263,7 +280,11 @@ impl<'a> Expression {
       Grouping { expression } => expression.evaluate(interpreter, data),
       Unary { operator, right } => self.evaluate_unary(interpreter, operator, right, data),
       Binary { left, operator, right } => self.evaluate_binary(interpreter, left, operator, right, data),
-      Call { callee, arguments, closing_parenthesis } => self.evaluate_call(interpreter, callee, arguments, closing_parenthesis, data),
+      Call {
+        callee,
+        arguments,
+        closing_parenthesis,
+      } => self.evaluate_call(interpreter, callee, arguments, closing_parenthesis, data),
       Variable { identifier } => interpreter.environment.get(identifier),
     };
     debug!("{:?} => {:?}", self, result);

@@ -13,15 +13,32 @@ pub enum Callable {
 }
 
 impl Callable {
-
   #[named]
-  pub fn call<'a>(&self, interpreter: &Interpreter, data: &mut ProcessScriptSystemData<'a>, arguments: &Vec<Value>) -> Result<Value, Error> {
-    Ok(Value::Nil)
+  pub fn call<'a>(
+    &self,
+    interpreter: &Interpreter,
+    data: &mut ProcessScriptSystemData<'a>,
+    arguments: &Vec<Value>,
+  ) -> Result<Value, Error> {
+    use Callable::*;
+    match self {
+      NativeFunction(func) => (func.function)(interpreter, data, arguments),
+    }
   }
 
   #[named]
   pub fn get_name(&self) -> String {
-    "Steve".to_owned()
+    use Callable::*;
+    match self {
+      NativeFunction(func) => func.name.to_string(),
+    }
   }
 
+  #[named]
+  pub fn get_arity(&self) -> usize {
+    use Callable::*;
+    match self {
+      NativeFunction(func) => func.arity,
+    }
+  }
 }

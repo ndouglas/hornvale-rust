@@ -40,7 +40,6 @@ impl<'a> System<'a> for ProcessScriptSystem {
     }
     trace_exit!();
   }
-
 }
 
 mod interpret;

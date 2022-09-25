@@ -18,10 +18,7 @@ pub struct Parser {
 impl Parser {
   #[named]
   pub fn new(tokens: Vec<Token>) -> Self {
-    Self {
-      tokens,
-      current: 0,
-    }
+    Self { tokens, current: 0 }
   }
 
   #[named]
@@ -212,7 +209,7 @@ impl Parser {
     }
     self.call()
   }
-  
+
   #[named]
   pub fn call(&mut self) -> Result<Expression, Error> {
     let mut result = self.primary()?;
@@ -339,10 +336,7 @@ impl Parser {
     let condition = self.expression()?;
     self.consume(RightParenthesis, "Expect ')' after 'while' condition.")?;
     let body = Box::new(self.statement()?);
-    Ok(Statement::While {
-      condition,
-      body,
-    })
+    Ok(Statement::While { condition, body })
   }
 
   #[named]
@@ -387,10 +381,7 @@ impl Parser {
       })
     }
     if let Some(initializer_expression) = initializer {
-      body = Box::new(Statement::Block(vec![
-        initializer_expression,
-        *body,
-      ]))
+      body = Box::new(Statement::Block(vec![initializer_expression, *body]))
     }
     Ok(*body)
   }

@@ -86,7 +86,13 @@ impl Scanner {
       '"' => self.match_string()?,
       char if self.is_digit(char) => self.match_number(),
       char if self.is_alpha(char) => self.match_identifier(),
-      _ => return Err(create_error!(self.line_number, None, &format!("Unexpected character: {}", char))),
+      _ => {
+        return Err(create_error!(
+          self.line_number,
+          None,
+          &format!("Unexpected character: {}", char)
+        ))
+      },
     }
     Ok(())
   }

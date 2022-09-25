@@ -8,7 +8,6 @@ use crate::scripting::language::token::Token;
 use super::*;
 
 impl<'a> ProcessScriptSystem {
-
   #[named]
   pub fn interpret(&self, script: &str, data: &mut ProcessScriptSystemData<'a>) {
     trace_enter!();
@@ -49,5 +48,4 @@ impl<'a> ProcessScriptSystem {
     }
     trace_exit!();
   }
-
 }

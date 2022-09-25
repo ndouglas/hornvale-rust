@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::io::Error;
 
+use crate::scripting::language::callable::native_function::NativeFunction;
+use crate::scripting::language::callable::Callable;
 use crate::scripting::language::environment::Environment;
 use crate::scripting::language::parser::statement::Statement;
 use crate::scripting::language::value::Value;
@@ -42,12 +44,22 @@ impl Interpreter {
 
   #[named]
   pub fn define_globals(&mut self) {
-    self.globals.define("clock", Value::Number(3.0));
+    self.globals.define(
+      "clock",
+      Value::Callable(Callable::NativeFunction(NativeFunction {
+        name: "clock".into(),
+        arity: 0,
+        function: |interpreter, data, arguments| Ok(Value::Number(3.0)),
+      })),
+    );
   }
 
-
   #[named]
-  pub fn interpret<'a>(&mut self, statements: Vec<Statement>, data: &mut ProcessScriptSystemData<'a>) -> Result<(), Error> {
+  pub fn interpret<'a>(
+    &mut self,
+    statements: Vec<Statement>,
+    data: &mut ProcessScriptSystemData<'a>,
+  ) -> Result<(), Error> {
     self.define_globals();
     for statement in statements {
       let evaluation = statement.evaluate(self, data);

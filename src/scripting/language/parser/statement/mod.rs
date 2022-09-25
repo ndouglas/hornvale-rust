@@ -29,7 +29,11 @@ pub enum Statement {
 
 impl Statement {
   #[named]
-  pub fn evaluate<'a>(&self, interpreter: &mut Interpreter, data: &mut ProcessScriptSystemData<'a>) -> Result<(), Error> {
+  pub fn evaluate<'a>(
+    &self,
+    interpreter: &mut Interpreter,
+    data: &mut ProcessScriptSystemData<'a>,
+  ) -> Result<(), Error> {
     use Statement::*;
     match self {
       If {
@@ -44,10 +48,7 @@ impl Statement {
         }
         Ok(())
       },
-      While {
-        condition,
-        body,
-      } => {
+      While { condition, body } => {
         while condition.evaluate(interpreter, data)?.is_truthy() {
           body.evaluate(interpreter, data)?;
         }
@@ -67,9 +68,9 @@ impl Statement {
       },
       Print(expression) => match expression.evaluate(interpreter, data) {
         Ok(value) => {
-          data
-          .output_event_channel
-          .single_write(OutputEvent { string: format!("{}", value), });
+          data.output_event_channel.single_write(OutputEvent {
+            string: format!("{}", value),
+          });
           Ok(())
         },
         Err(error) => Err(error),

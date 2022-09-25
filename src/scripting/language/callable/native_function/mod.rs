@@ -8,7 +8,7 @@ use crate::system::systems::process_script::ProcessScriptSystemData;
 pub struct NativeFunction {
   pub name: String,
   pub arity: usize,
-  pub callable: fn(&Interpreter, &mut ProcessScriptSystemData, &Vec<Value>) -> Result<Value, Error>,
+  pub function: fn(&Interpreter, &mut ProcessScriptSystemData, &Vec<Value>) -> Result<Value, Error>,
 }
 
 impl Clone for NativeFunction {
@@ -16,7 +16,7 @@ impl Clone for NativeFunction {
     NativeFunction {
       name: (&self.name).to_string(),
       arity: self.arity,
-      callable: self.callable,
+      function: self.function,
     }
   }
 }
