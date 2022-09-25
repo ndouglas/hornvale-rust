@@ -30,7 +30,8 @@ impl<'a> ProcessScriptSystem {
         let new_error = Error::new(ErrorKind::Other, format!("Parse Error: {:?}", error));
         data.output_event_channel.single_write(OutputEvent {
           string: format!("{}", new_error.to_string().red()),
-        })
+        });
+        return;
       },
     }
     let expressions = parse_response.unwrap();
@@ -42,7 +43,8 @@ impl<'a> ProcessScriptSystem {
         let new_error = Error::new(ErrorKind::Other, format!("Runtime Error: {:?}", error));
         data.output_event_channel.single_write(OutputEvent {
           string: format!("{}", new_error.to_string().red()),
-        })
+        });
+        return;
       },
     }
     trace_exit!();
