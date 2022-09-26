@@ -1,8 +1,7 @@
 use std::fmt;
-use std::io::{Error, ErrorKind};
+use std::io::Error;
 use std::str::FromStr;
 
-use crate::event::ErrorEvent;
 use crate::scripting::language::token::{Token, TokenLiteral, TokenType};
 use crate::system::systems::process_script::ProcessScriptSystemData;
 

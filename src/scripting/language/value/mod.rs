@@ -46,7 +46,7 @@ impl fmt::Display for Value {
     match self {
       Any(value) => write!(formatter, "{}", *value),
       Boolean(value) => write!(formatter, "{}", if *value { "true" } else { "false" }),
-      Callable(value) => write!(formatter, "{}", value.get_name()),
+      Callable(value) => write!(formatter, "Callable {}", value.name),
       Number(value) => write!(formatter, "{}", value),
       String(value) => write!(formatter, "{}", value),
       Nil => write!(formatter, "{}", "nil"),

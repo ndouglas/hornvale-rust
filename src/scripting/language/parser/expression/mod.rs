@@ -243,12 +243,12 @@ impl<'a> Expression {
         argument_values.push(argument.evaluate(interpreter, data)?);
       }
       if let Value::Callable(callable) = callee_value.clone() {
-        if argument_values.len() != callable.get_arity() {
+        if argument_values.len() != callable.arity {
           return Err(Error::new(
             ErrorKind::Other,
             format!(
               "Expected {} arguments but got {}.",
-              callable.get_arity(),
+              callable.arity,
               argument_values.len()
             ),
           ));

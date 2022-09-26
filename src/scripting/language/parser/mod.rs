@@ -41,6 +41,9 @@ impl Parser {
     if self.r#match(vec![Var]) {
       return self.var_declaration();
     }
+    if self.r#match(vec![Function]) {
+      return self.function_declaration("function");
+    }
     self.statement()
   }
 
@@ -62,6 +65,28 @@ impl Parser {
       },
       Err(error) => Err(error),
     }
+  }
+
+  #[named]
+  pub fn function_declaration(&mut self, kind: &str) -> Result<Statement, Error> {
+    let name = self.consume(Identifier, &format!("Expect {} name.", kind))?;
+    self.consume(LeftParenthesis, &format!("Expect '(' after {} name.", kind))?;
+    let mut parameters = Vec::new();
+    if !self.check(RightParenthesis) {
+      loop {
+        if parameters.len() > 255 {
+          return Err(Error::new(ErrorKind::Other, "Can't have more than 255 parameters."));
+        }
+        parameters.push(self.consume(Identifier, "Expect parameter name.")?);
+        if !self.r#match(vec![Comma]) {
+          break;
+        }
+      }
+    }
+    self.consume(RightParenthesis, "Expect ')' after parameters.")?;
+    self.consume(LeftBrace, &format!("Expect '{{' before {} body.", kind))?;
+    let body = Box::new(self.block()?);
+    Ok(Statement::Function { name, parameters, body })
   }
 
   #[named]

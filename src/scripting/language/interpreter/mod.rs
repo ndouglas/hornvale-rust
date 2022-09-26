@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::io::Error;
 
 use crate::scripting::language::callable::native_function::NativeFunction;
-use crate::scripting::language::callable::Callable;
+use crate::scripting::language::callable::{Callable, CallableKind};
 use crate::scripting::language::environment::Environment;
 use crate::scripting::language::parser::statement::Statement;
 use crate::scripting::language::value::Value;
@@ -17,8 +17,8 @@ pub struct Interpreter {
 impl Interpreter {
   #[named]
   pub fn new() -> Self {
-    let environment = Environment::new(None);
     let globals = Environment::new(None);
+    let environment = Environment::new(None);
     Self { environment, globals }
   }
 
@@ -46,11 +46,11 @@ impl Interpreter {
   pub fn define_globals(&mut self) {
     self.globals.define(
       "clock",
-      Value::Callable(Callable::NativeFunction(NativeFunction {
+      Value::Callable(Callable {
         name: "clock".into(),
         arity: 0,
-        function: |interpreter, data, arguments| Ok(Value::Number(3.0)),
-      })),
+        kind: CallableKind::NativeFunction(NativeFunction(|_, _, _| { Ok(Value::Number(3.0)) })),
+      }),
     );
   }
 

@@ -5,6 +5,7 @@ use crate::scripting::language::interpreter::Interpreter;
 use crate::scripting::language::parser::Expression;
 use crate::scripting::language::token::Token;
 use crate::scripting::language::value::Value;
+use crate::scripting::language::callable::{Callable, CallableKind};
 use crate::system::systems::process_script::ProcessScriptSystemData;
 
 #[derive(Clone, Debug)]
@@ -19,6 +20,11 @@ pub enum Statement {
     body: Box<Statement>,
   },
   Block(Vec<Statement>),
+  Function {
+    name: Token,
+    parameters: Vec<Token>,
+    body: Box<Statement>,
+  },
   Variable {
     name: Token,
     initializer: Option<Expression>,
@@ -66,6 +72,15 @@ impl Statement {
         Ok(_) => Ok(()),
         Err(error) => Err(error),
       },
+      Function { name, parameters, body } => {
+        let function = Callable {
+          name: name.lexeme.to_string(),
+          arity: parameters.len(),
+          kind: CallableKind::DeclaredFunction(self.clone()),
+        };
+        interpreter.environment.define(&name.lexeme, Value::Callable(function));
+        Ok(())
+      }
       Print(expression) => match expression.evaluate(interpreter, data) {
         Ok(value) => {
           data.output_event_channel.single_write(OutputEvent {
