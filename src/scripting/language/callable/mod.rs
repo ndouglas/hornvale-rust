@@ -37,7 +37,7 @@ impl Callable {
         if let Statement::Function { parameters, body, .. } = declaration {
           for (index, parameter) in parameters.iter().enumerate() {
             if let Some(value) = arguments.get(index) {
-              interpreter.environment.define(&parameter.lexeme, value.clone());
+              interpreter.environment.define(&parameter, value.clone());
             }
           }  
           body.evaluate(interpreter, data);

@@ -32,14 +32,24 @@ impl Environment {
         format!("Undefined variable '{}'!", name.lexeme),
       ))
     } else {
-      self.define(actual_name, value);
+      self.define(name, value);
       Ok(())
     }
   }
 
   #[named]
-  pub fn define(&mut self, name: &str, value: Value) {
-    self.values.insert(name.to_string(), value.clone());
+  pub fn define(&mut self, name: &Token, value: Value) {
+    self.values.insert(name.lexeme.to_string(), value.clone());
+  }
+
+  #[named]
+  pub fn define_global(&mut self, name: &Token, value: Value) {
+    if let Some(parent_box) = self.parent.as_mut() {
+      let parent = &mut *parent_box;
+      parent.define_global(name, value)
+    } else {
+      self.define(name, value)
+    }
   }
 
   #[named]

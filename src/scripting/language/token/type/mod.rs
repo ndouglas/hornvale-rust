@@ -105,21 +105,21 @@ impl FromStr for TokenType {
   fn from_str(string: &str) -> Result<Self, Self::Err> {
     use TokenType::*;
     match string {
-      "and" => Ok(And),
+      "and" | "&&" => Ok(And),
       "class" => Ok(Class),
       "else" => Ok(Else),
       "false" => Ok(False),
-      "fun" => Ok(Function),
+      "fun" | "func" | "fn" | "function" => Ok(Function),
       "for" => Ok(For),
       "if" => Ok(If),
       "nil" => Ok(Nil),
-      "or" => Ok(Or),
+      "or" | "||" => Ok(Or),
       "print" => Ok(Print),
       "return" => Ok(Return),
       "super" => Ok(Super),
       "this" => Ok(This),
       "true" => Ok(True),
-      "var" => Ok(Var),
+      "var" | "let" => Ok(Var),
       "while" => Ok(While),
       unknown => Err(Error::new(ErrorKind::Other, format!("Unknown keyword {}!", unknown))),
     }

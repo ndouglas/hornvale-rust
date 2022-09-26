@@ -78,7 +78,7 @@ impl Statement {
           arity: parameters.len(),
           kind: CallableKind::DeclaredFunction(self.clone()),
         };
-        interpreter.environment.define(&name.lexeme, Value::Callable(function));
+        interpreter.environment.define(name, Value::Callable(function));
         Ok(())
       }
       Print(expression) => match expression.evaluate(interpreter, data) {
@@ -98,7 +98,7 @@ impl Statement {
           },
           None => Value::Nil,
         };
-        interpreter.environment.define(&name.lexeme, value.clone());
+        interpreter.environment.define(name, value.clone());
         Ok(())
       },
     }

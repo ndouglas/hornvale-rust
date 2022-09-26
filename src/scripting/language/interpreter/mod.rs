@@ -6,20 +6,19 @@ use crate::scripting::language::callable::{Callable, CallableKind};
 use crate::scripting::language::environment::Environment;
 use crate::scripting::language::parser::statement::Statement;
 use crate::scripting::language::value::Value;
+use crate::scripting::language::token::{Token, TokenType};
 use crate::system::systems::process_script::ProcessScriptSystemData;
 
 #[derive(Debug)]
 pub struct Interpreter {
   pub environment: Environment,
-  pub globals: Environment,
 }
 
 impl Interpreter {
   #[named]
   pub fn new() -> Self {
-    let globals = Environment::new(None);
     let environment = Environment::new(None);
-    Self { environment, globals }
+    Self { environment }
   }
 
   #[named]
@@ -44,8 +43,8 @@ impl Interpreter {
 
   #[named]
   pub fn define_globals(&mut self) {
-    self.globals.define(
-      "clock",
+    self.environment.define_global(
+      &Token::new(TokenType::Identifier, "clock", None, 0),
       Value::Callable(Callable {
         name: "clock".into(),
         arity: 0,
