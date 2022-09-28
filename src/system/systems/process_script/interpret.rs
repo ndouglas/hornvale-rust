@@ -14,7 +14,7 @@ impl<'a> ProcessScriptSystem {
       let mut scanner: Scanner = Scanner::new(script);
       scanner.scan_tokens(data)
     };
-    if let Err(error) = token_result {
+    if let Err(_error) = token_result {
       return;
     }
     let tokens = token_result.unwrap();

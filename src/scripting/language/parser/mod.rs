@@ -94,6 +94,9 @@ impl Parser {
     if self.r#match(vec![TokenType::Print]) {
       return self.print_statement();
     }
+    if self.r#match(vec![Return]) {
+      return self.return_statement();
+    }
     if self.r#match(vec![While]) {
       return self.while_statement();
     }
@@ -327,6 +330,17 @@ impl Parser {
   }
 
   #[named]
+  pub fn return_statement(&mut self) -> Result<Statement, Error> {
+    let token = self.previous();
+    let mut expression = None;
+    if !self.check(Semicolon) {
+      expression = Some(self.expression()?);
+    }
+    self.consume(Semicolon, "Expect ';' after 'return' value.")?;
+    Ok(Statement::Return { token, expression })
+  }
+
+  #[named]
   pub fn expression_statement(&mut self) -> Result<Statement, Error> {
     let expression = self.expression();
     match expression {
@@ -420,7 +434,7 @@ impl Parser {
   }
 
   #[named]
-  pub fn parse_error(&mut self, token: Token, error: Error) -> Result<Token, Error> {
+  pub fn parse_error(&mut self, _token: Token, error: Error) -> Result<Token, Error> {
     Err(error)
   }
 

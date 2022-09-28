@@ -1,7 +1,7 @@
 use std::fmt;
-use std::io::Error;
 use std::str::FromStr;
 
+use crate::scripting::language::script_error::ScriptError;
 use crate::scripting::language::token::{Token, TokenLiteral, TokenType};
 use crate::system::systems::process_script::ProcessScriptSystemData;
 
@@ -35,7 +35,7 @@ impl Scanner {
   }
 
   #[named]
-  pub fn scan_tokens<'a>(&mut self, data: &mut ProcessScriptSystemData<'a>) -> Result<Vec<Token>, Error> {
+  pub fn scan_tokens<'a>(&mut self, _data: &mut ProcessScriptSystemData<'a>) -> Result<Vec<Token>, ScriptError> {
     while !self.is_at_end() {
       self.start = self.current;
       self.scan_token()?;
@@ -45,7 +45,7 @@ impl Scanner {
   }
 
   #[named]
-  pub fn scan_token(&mut self) -> Result<(), Error> {
+  pub fn scan_token(&mut self) -> Result<(), ScriptError> {
     let char = self.advance();
     use TokenType::*;
     match char {
@@ -86,11 +86,10 @@ impl Scanner {
       char if self.is_digit(char) => self.match_number(),
       char if self.is_alpha(char) => self.match_identifier(),
       _ => {
-        return Err(create_error!(
-          self.line_number,
-          None,
-          &format!("Unexpected character: {}", char)
-        ))
+        return Err(ScriptError::Error {
+          token: None,
+          message: format!("Unexpected character: {}", char),
+        })
       },
     }
     Ok(())
@@ -157,7 +156,7 @@ impl Scanner {
   }
 
   #[named]
-  pub fn match_string(&mut self) -> Result<(), Error> {
+  pub fn match_string(&mut self) -> Result<(), ScriptError> {
     while self.peek() != '"' && !self.is_at_end() {
       if self.peek() == '\n' {
         self.line_number += 1;
@@ -165,7 +164,10 @@ impl Scanner {
       self.advance();
     }
     if self.is_at_end() {
-      return Err(create_error!(self.line_number, None, &format!("Unterminated string.")));
+      return Err(ScriptError::Error {
+        token: None,
+        message: format!("Unterminated string."),
+      });
     }
     self.advance();
     let value = &self.source[self.start + 1..self.current - 1];

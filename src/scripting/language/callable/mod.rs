@@ -1,7 +1,6 @@
-use std::io::{Error, ErrorKind};
-
 use crate::scripting::language::interpreter::Interpreter;
 use crate::scripting::language::parser::statement::Statement;
+use crate::scripting::language::script_error::ScriptError;
 use crate::scripting::language::value::Value;
 use crate::system::systems::process_script::ProcessScriptSystemData;
 
@@ -28,26 +27,30 @@ impl Callable {
     interpreter: &mut Interpreter,
     data: &mut ProcessScriptSystemData<'a>,
     arguments: &Vec<Value>,
-  ) -> Result<Value, Error> {
+  ) -> Result<Value, ScriptError> {
     use CallableKind::*;
-    interpreter.push_env();
     let result = match &self.kind {
       NativeFunction(function) => (function.0)(interpreter, data, arguments),
       DeclaredFunction(declaration) => {
         if let Statement::Function { parameters, body, .. } = declaration {
+          interpreter.push_env();
           for (index, parameter) in parameters.iter().enumerate() {
             if let Some(value) = arguments.get(index) {
               interpreter.environment.define(&parameter, value.clone());
             }
-          }  
-          body.evaluate(interpreter, data);
+          }
+          let result = body.evaluate(interpreter, data);
+          interpreter.pop_env();
+          result?;
           Ok(Value::Nil)
         } else {
-          Err(Error::new(ErrorKind::Other, "Function was not executable."))
+          Err(ScriptError::Error {
+            token: None,
+            message: "Function was not executable.".to_string(),
+          })
         }
       },
     };
-    interpreter.pop_env();
     result
   }
 }

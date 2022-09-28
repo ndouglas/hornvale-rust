@@ -8,6 +8,8 @@ pub mod parser;
 pub use parser::*;
 pub mod scanner;
 pub use scanner::*;
+pub mod script_error;
+pub use script_error::*;
 pub mod token;
 pub use token::*;
 pub mod value;

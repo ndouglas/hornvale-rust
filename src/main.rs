@@ -30,8 +30,8 @@ async fn main() -> Result<()> {
   let (sync_io_tx, mut sync_io_rx) = channel::<IoEvent>(100);
 
   // Configure logs.
-  init_logger(LevelFilter::Debug).unwrap();
-  set_default_level(log::LevelFilter::Debug);
+  init_logger(LevelFilter::Error).unwrap();
+  set_default_level(log::LevelFilter::Error);
   // We need to share the App between threads.
   let app = Arc::new(Mutex::new(application::Application::new(sync_io_tx.clone())));
   let app_ui = Arc::clone(&app);

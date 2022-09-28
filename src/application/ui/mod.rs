@@ -53,7 +53,7 @@ where
 {
   let layout = Layout::default()
     .direction(Direction::Vertical)
-    .constraints([Constraint::Min(1), Constraint::Length(12), Constraint::Length(3)].as_slice());
+    .constraints([Constraint::Min(1), Constraint::Length(16), Constraint::Length(3)].as_slice());
   let chunks = layout.split(rect.size());
 
   // Hornvale!
@@ -117,10 +117,10 @@ fn draw_body<'a>(state: &'a mut State<'_>, height: u16, width: u16) -> Paragraph
 fn draw_logs<'a>() -> TuiLoggerWidget<'a> {
   TuiLoggerWidget::default()
     .style_error(Style::default().fg(Color::Yellow))
-    .style_debug(Style::default().fg(Color::Yellow))
-    .style_warn(Style::default().fg(Color::Yellow))
-    .style_trace(Style::default().fg(Color::Yellow))
-    .style_info(Style::default().fg(Color::Yellow))
+    //.style_warn(Style::default().fg(Color::Yellow))
+    //.style_info(Style::default().fg(Color::Yellow))
+    //.style_debug(Style::default().fg(Color::Yellow))
+    //.style_trace(Style::default().fg(Color::Yellow))
     .block(
       Block::default()
         .title("Logs")

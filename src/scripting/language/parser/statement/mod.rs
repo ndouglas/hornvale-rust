@@ -1,11 +1,10 @@
-use std::io::Error;
-
 use crate::event::OutputEvent;
+use crate::scripting::language::callable::{Callable, CallableKind};
 use crate::scripting::language::interpreter::Interpreter;
 use crate::scripting::language::parser::Expression;
+use crate::scripting::language::script_error::ScriptError;
 use crate::scripting::language::token::Token;
 use crate::scripting::language::value::Value;
-use crate::scripting::language::callable::{Callable, CallableKind};
 use crate::system::systems::process_script::ProcessScriptSystemData;
 
 #[derive(Clone, Debug)]
@@ -31,6 +30,10 @@ pub enum Statement {
   },
   Expression(Expression),
   Print(Expression),
+  Return {
+    token: Token,
+    expression: Option<Expression>,
+  },
 }
 
 impl Statement {
@@ -39,7 +42,7 @@ impl Statement {
     &self,
     interpreter: &mut Interpreter,
     data: &mut ProcessScriptSystemData<'a>,
-  ) -> Result<(), Error> {
+  ) -> Result<(), ScriptError> {
     use Statement::*;
     match self {
       If {
@@ -63,7 +66,10 @@ impl Statement {
       Block(statements) => {
         interpreter.push_env();
         for statement in statements {
-          statement.evaluate(interpreter, data)?;
+          if let Err(error) = statement.evaluate(interpreter, data) {
+            interpreter.pop_env();
+            return Err(error);
+          }
         }
         interpreter.pop_env();
         Ok(())
@@ -72,7 +78,11 @@ impl Statement {
         Ok(_) => Ok(()),
         Err(error) => Err(error),
       },
-      Function { name, parameters, body } => {
+      Function {
+        name,
+        parameters,
+        body: _,
+      } => {
         let function = Callable {
           name: name.lexeme.to_string(),
           arity: parameters.len(),
@@ -80,7 +90,7 @@ impl Statement {
         };
         interpreter.environment.define(name, Value::Callable(function));
         Ok(())
-      }
+      },
       Print(expression) => match expression.evaluate(interpreter, data) {
         Ok(value) => {
           data.output_event_channel.single_write(OutputEvent {
@@ -89,6 +99,19 @@ impl Statement {
           Ok(())
         },
         Err(error) => Err(error),
+      },
+      Return { token, expression } => match expression {
+        None => Err(ScriptError::Return {
+          token: (*token).clone(),
+          value: None,
+        }),
+        Some(expression) => match expression.evaluate(interpreter, data) {
+          Ok(value) => Err(ScriptError::Return {
+            token: token.clone(),
+            value: Some(value),
+          }),
+          Err(error) => Err(error),
+        },
       },
       Variable { name, initializer } => {
         let value = match initializer {

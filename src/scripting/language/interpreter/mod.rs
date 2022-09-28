@@ -1,12 +1,12 @@
 use std::collections::HashMap;
-use std::io::Error;
 
 use crate::scripting::language::callable::native_function::NativeFunction;
 use crate::scripting::language::callable::{Callable, CallableKind};
 use crate::scripting::language::environment::Environment;
 use crate::scripting::language::parser::statement::Statement;
-use crate::scripting::language::value::Value;
+use crate::scripting::language::script_error::ScriptError;
 use crate::scripting::language::token::{Token, TokenType};
+use crate::scripting::language::value::Value;
 use crate::system::systems::process_script::ProcessScriptSystemData;
 
 #[derive(Debug)]
@@ -48,7 +48,7 @@ impl Interpreter {
       Value::Callable(Callable {
         name: "clock".into(),
         arity: 0,
-        kind: CallableKind::NativeFunction(NativeFunction(|_, _, _| { Ok(Value::Number(3.0)) })),
+        kind: CallableKind::NativeFunction(NativeFunction(|_, _, _| Ok(Value::Number(3.0)))),
       }),
     );
   }
@@ -58,11 +58,11 @@ impl Interpreter {
     &mut self,
     statements: Vec<Statement>,
     data: &mut ProcessScriptSystemData<'a>,
-  ) -> Result<(), Error> {
+  ) -> Result<(), ScriptError> {
     self.define_globals();
     for statement in statements {
       let evaluation = statement.evaluate(self, data);
-      if let Err(error) = evaluation {
+      if let Err(_error) = evaluation {
         return Ok(());
       }
     }

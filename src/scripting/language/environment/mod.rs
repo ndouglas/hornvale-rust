@@ -1,6 +1,6 @@
 use std::collections::HashMap;
-use std::io::{Error, ErrorKind};
 
+use crate::scripting::language::script_error::ScriptError;
 use crate::scripting::language::token::Token;
 use crate::scripting::language::value::Value;
 
@@ -20,17 +20,17 @@ impl Environment {
   }
 
   #[named]
-  pub fn assign(&mut self, name: &Token, value: Value) -> Result<(), Error> {
+  pub fn assign(&mut self, name: &Token, value: Value) -> Result<(), ScriptError> {
     let actual_name = &name.lexeme.to_string();
     if !self.values.contains_key(actual_name) {
       if let Some(parent_box) = self.parent.as_mut() {
         let parent = &mut *parent_box;
         return parent.assign(name, value);
       }
-      Err(Error::new(
-        ErrorKind::Other,
-        format!("Undefined variable '{}'!", name.lexeme),
-      ))
+      Err(ScriptError::Error {
+        token: Some(name.clone()),
+        message: format!("Undefined variable '{}'!", name.lexeme),
+      })
     } else {
       self.define(name, value);
       Ok(())
@@ -53,15 +53,15 @@ impl Environment {
   }
 
   #[named]
-  pub fn get(&self, name: &Token) -> Result<Value, Error> {
+  pub fn get(&self, name: &Token) -> Result<Value, ScriptError> {
     match self.values.get(&name.lexeme.to_string()) {
       Some(value) => Ok(value.clone()),
       None => match &self.parent {
         Some(parent) => parent.get(name),
-        None => Err(Error::new(
-          ErrorKind::Other,
-          format!("Undefined variable '{}'!", name.lexeme),
-        )),
+        None => Err(ScriptError::Error {
+          token: Some(name.clone()),
+          message: format!("Undefined variable '{}'!", name.lexeme),
+        }),
       },
     }
   }
