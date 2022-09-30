@@ -91,3 +91,10 @@ _Super_ early development.  No, earlier than that.
 At present, you can navigate between rooms... provided you created the connections between those rooms in a rather painstaking process, lol.
 
 <img width="803" alt="Screen Shot 2022-09-18 at 5 16 12 PM" src="https://user-images.githubusercontent.com/1318579/190928457-e553472e-5388-486f-aa5e-1c43f26d23c7.png">
+
+Possible future architecture:
+- Hornvale: Frontend
+- Goldengrove: Narrative PCG and tools
+- Lasthearth: Embedded scripting language
+- Breakwater: Environmental PCG and tools
+- Brownhollow: Life/factional/economic PCG and tools
