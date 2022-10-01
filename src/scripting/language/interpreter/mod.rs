@@ -1,4 +1,6 @@
+use std::cell::RefCell;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 use crate::scripting::language::callable::native_function::NativeFunction;
 use crate::scripting::language::callable::{Callable, CallableKind};
@@ -11,39 +13,39 @@ use crate::system::systems::process_script::ProcessScriptSystemData;
 
 #[derive(Debug)]
 pub struct Interpreter {
-  pub environment: Environment,
+  pub environment: Rc<RefCell<Environment>>,
 }
 
 impl Interpreter {
   #[named]
   pub fn new() -> Self {
-    let environment = Environment::new(None);
+    let environment = Rc::new(RefCell::new(Environment::new(None)));
     Self { environment }
   }
 
   #[named]
   pub fn push_env(&mut self) {
-    self.environment = Environment {
+    self.environment = Rc::new(RefCell::new(Environment {
       values: HashMap::new(),
-      parent: Some(Box::new(std::mem::replace(
-        &mut self.environment,
+      parent: Some(Rc::new(RefCell::new(std::mem::replace(
+        &mut self.environment.take(),
         Environment {
           values: HashMap::new(),
           parent: None,
         },
-      ))),
-    };
+      )))),
+    }));
   }
 
   #[named]
   pub fn pop_env(&mut self) {
-    let current = self.environment.parent.take().unwrap();
-    self.environment = *current;
+    let current = self.environment.take().parent.take().unwrap();
+    self.environment = current;
   }
 
   #[named]
   pub fn define_globals(&mut self) {
-    self.environment.define_global(
+    self.environment.borrow_mut().define_global(
       &Token::new(TokenType::Identifier, "clock", None, 0),
       Value::Callable(Callable {
         name: "clock".into(),

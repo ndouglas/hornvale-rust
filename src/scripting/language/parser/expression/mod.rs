@@ -289,7 +289,7 @@ impl<'a> Expression {
     let result = match self {
       Assignment { identifier, value } => {
         let final_value = &value.evaluate(interpreter, data)?;
-        interpreter.environment.assign(identifier, (*final_value).clone())?;
+        interpreter.environment.borrow_mut().assign(identifier, (*final_value).clone())?;
         Ok(Value::Nil)
       },
       Literal { value: value_option } => self.evaluate_literal(interpreter, value_option, data),
@@ -302,7 +302,7 @@ impl<'a> Expression {
         arguments,
         closing_parenthesis,
       } => self.evaluate_call(interpreter, callee, arguments, closing_parenthesis, data),
-      Variable { identifier } => interpreter.environment.get(identifier),
+      Variable { identifier } => interpreter.environment.borrow().get(identifier),
     };
     debug!("{:?} => {:?}", self, result);
     result

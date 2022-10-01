@@ -36,7 +36,7 @@ impl Callable {
           interpreter.push_env();
           for (index, parameter) in parameters.iter().enumerate() {
             if let Some(value) = arguments.get(index) {
-              interpreter.environment.define(&parameter, value.clone());
+              interpreter.environment.borrow_mut().define(&parameter, value.clone());
             }
           }
           let result = body.evaluate(interpreter, data);
