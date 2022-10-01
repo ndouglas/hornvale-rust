@@ -1,4 +1,7 @@
-use crate::scripting::language::interpreter::Interpreter;
+use std::cell::RefCell;
+use std::rc::Rc;
+
+use crate::scripting::language::environment::Environment;
 use crate::scripting::language::parser::statement::Statement;
 use crate::scripting::language::script_error::ScriptError;
 use crate::scripting::language::value::Value;
@@ -12,6 +15,7 @@ pub struct Callable {
   pub name: String,
   pub arity: usize,
   pub kind: CallableKind,
+  pub environment: Rc<RefCell<Environment>>,
 }
 
 #[derive(Clone, Debug)]
@@ -22,25 +26,19 @@ pub enum CallableKind {
 
 impl Callable {
   #[named]
-  pub fn call<'a>(
-    &self,
-    interpreter: &mut Interpreter,
-    data: &mut ProcessScriptSystemData<'a>,
-    arguments: &Vec<Value>,
-  ) -> Result<Value, ScriptError> {
+  pub fn call<'a>(&self, data: &mut ProcessScriptSystemData<'a>, arguments: &Vec<Value>) -> Result<Value, ScriptError> {
     use CallableKind::*;
     let result = match &self.kind {
-      NativeFunction(function) => (function.0)(interpreter, data, arguments),
+      NativeFunction(function) => (function.0)(&self.environment, data, arguments),
       DeclaredFunction(declaration) => {
         if let Statement::Function { parameters, body, .. } = declaration {
-          interpreter.push_env();
+          let environment = Rc::new(RefCell::new(Environment::new(Some(Rc::clone(&self.environment)))));
           for (index, parameter) in parameters.iter().enumerate() {
             if let Some(value) = arguments.get(index) {
-              interpreter.environment.borrow_mut().define(&parameter, value.clone());
+              environment.borrow_mut().define(&parameter, value.clone());
             }
           }
-          let result = body.evaluate(interpreter, data);
-          interpreter.pop_env();
+          let result = body.evaluate(&environment, data);
           result?;
           Ok(Value::Nil)
         } else {

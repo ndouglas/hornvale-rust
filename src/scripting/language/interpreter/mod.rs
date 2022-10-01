@@ -51,6 +51,7 @@ impl Interpreter {
         name: "clock".into(),
         arity: 0,
         kind: CallableKind::NativeFunction(NativeFunction(|_, _, _| Ok(Value::Number(3.0)))),
+        environment: Rc::clone(&self.environment),
       }),
     );
   }
@@ -63,7 +64,7 @@ impl Interpreter {
   ) -> Result<(), ScriptError> {
     self.define_globals();
     for statement in statements {
-      let evaluation = statement.evaluate(self, data);
+      let evaluation = statement.evaluate(&self.environment, data);
       if let Err(_error) = evaluation {
         return Ok(());
       }

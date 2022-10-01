@@ -1,6 +1,9 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use crate::event::OutputEvent;
 use crate::scripting::language::callable::{Callable, CallableKind};
-use crate::scripting::language::interpreter::Interpreter;
+use crate::scripting::language::environment::Environment;
 use crate::scripting::language::parser::Expression;
 use crate::scripting::language::script_error::ScriptError;
 use crate::scripting::language::token::Token;
@@ -40,7 +43,7 @@ impl Statement {
   #[named]
   pub fn evaluate<'a>(
     &self,
-    interpreter: &mut Interpreter,
+    environment: &Rc<RefCell<Environment>>,
     data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<(), ScriptError> {
     use Statement::*;
@@ -50,31 +53,29 @@ impl Statement {
         then,
         r#else,
       } => {
-        if condition.evaluate(interpreter, data)?.is_truthy() {
-          then.evaluate(interpreter, data)?;
+        if condition.evaluate(environment, data)?.is_truthy() {
+          then.evaluate(environment, data)?;
         } else if let Some(else_statement) = r#else {
-          else_statement.evaluate(interpreter, data)?;
+          else_statement.evaluate(environment, data)?;
         }
         Ok(())
       },
       While { condition, body } => {
-        while condition.evaluate(interpreter, data)?.is_truthy() {
-          body.evaluate(interpreter, data)?;
+        while condition.evaluate(environment, data)?.is_truthy() {
+          body.evaluate(environment, data)?;
         }
         Ok(())
       },
       Block(statements) => {
-        interpreter.push_env();
+        let inner_environment = Rc::new(RefCell::new(Environment::new(Some(Rc::clone(&environment)))));
         for statement in statements {
-          if let Err(error) = statement.evaluate(interpreter, data) {
-            interpreter.pop_env();
+          if let Err(error) = statement.evaluate(&inner_environment, data) {
             return Err(error);
           }
         }
-        interpreter.pop_env();
         Ok(())
       },
-      Expression(expression) => match expression.evaluate(interpreter, data) {
+      Expression(expression) => match expression.evaluate(environment, data) {
         Ok(_) => Ok(()),
         Err(error) => Err(error),
       },
@@ -87,11 +88,12 @@ impl Statement {
           name: name.lexeme.to_string(),
           arity: parameters.len(),
           kind: CallableKind::DeclaredFunction(self.clone()),
+          environment: Rc::clone(&environment),
         };
-        interpreter.environment.borrow_mut().define(name, Value::Callable(function));
+        environment.borrow_mut().define(name, Value::Callable(function));
         Ok(())
       },
-      Print(expression) => match expression.evaluate(interpreter, data) {
+      Print(expression) => match expression.evaluate(environment, data) {
         Ok(value) => {
           data.output_event_channel.single_write(OutputEvent {
             string: format!("{}", value),
@@ -105,7 +107,7 @@ impl Statement {
           token: (*token).clone(),
           value: None,
         }),
-        Some(expression) => match expression.evaluate(interpreter, data) {
+        Some(expression) => match expression.evaluate(environment, data) {
           Ok(value) => Err(ScriptError::Return {
             token: token.clone(),
             value: Some(value),
@@ -115,13 +117,13 @@ impl Statement {
       },
       Variable { name, initializer } => {
         let value = match initializer {
-          Some(init_expression) => match init_expression.evaluate(interpreter, data) {
+          Some(init_expression) => match init_expression.evaluate(environment, data) {
             Ok(expr_result) => expr_result,
             Err(error) => return Err(error),
           },
           None => Value::Nil,
         };
-        interpreter.environment.borrow_mut().define(name, value.clone());
+        environment.borrow_mut().define(name, value.clone());
         Ok(())
       },
     }

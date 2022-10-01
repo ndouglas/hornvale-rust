@@ -61,7 +61,7 @@ impl Environment {
           token: Some(name.clone()),
           message: format!("Undefined variable '{}'!", name.lexeme),
         }),
-      }
+      },
     }
   }
 }
