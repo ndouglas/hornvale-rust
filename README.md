@@ -93,8 +93,16 @@ At present, you can navigate between rooms... provided you created the connectio
 <img width="803" alt="Screen Shot 2022-09-18 at 5 16 12 PM" src="https://user-images.githubusercontent.com/1318579/190928457-e553472e-5388-486f-aa5e-1c43f26d23c7.png">
 
 Possible future architecture:
-- Hornvale: Frontend
-- Goldengrove: Narrative PCG and tools
-- Lasthearth: Embedded scripting language
-- Breakwater: Environmental PCG and tools
-- Brownhollow: Life/factional/economic PCG and tools
+- Hornvale: Frontend and Game Logic.
+- Goldengrove: Narrative PCG and tools.
+- Lasthearth: Embedded scripting language.
+- Breakwater: Environmental PCG and tools.  
+- Brownhollow: Life/factional/economic PCG and tools.
+
+General roadmap:
+- Complete the interpreter-based embedded scripting language.  This is mostly a learning project and preparation for a more solid project to follow.
+- Reimplement scripting language as a bytecode interpreter as a separate project (Lasthearth).
+- Expand core functionality so that I can basically re-implement Zork.  This is the main focus of the Hornvale project.
+- Shift environmental work into a separate project (Breakwater).  I'm interested in both roguelikes and text adventures, and possibly mixing the two together.  It'd be neat to work out common concepts and make the two interoperable and interchangeable.  I like the idea of simulating weather too, and I think that fits in here too.
+- Shift NPC elements into a separate project (Brownhollow).  This is one of my primary areas of interest; I'd like to be able to sort of simulate history.  We might only see a very thin slice of this in a given game, but I'm enchanted by the idea of being able to observe NPCs interacting with one another.
+- Build some narrative PCG elements in a separate project (Goldengrove).  I'm deeply interested in the idea of PCG narratives.  Of course, these can inform NPCs, and inform environments, and vice-versa.
