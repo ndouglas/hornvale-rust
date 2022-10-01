@@ -24,26 +24,6 @@ impl Interpreter {
   }
 
   #[named]
-  pub fn push_env(&mut self) {
-    self.environment = Rc::new(RefCell::new(Environment {
-      values: HashMap::new(),
-      parent: Some(Rc::new(RefCell::new(std::mem::replace(
-        &mut self.environment.take(),
-        Environment {
-          values: HashMap::new(),
-          parent: None,
-        },
-      )))),
-    }));
-  }
-
-  #[named]
-  pub fn pop_env(&mut self) {
-    let current = self.environment.take().parent.take().unwrap();
-    self.environment = current;
-  }
-
-  #[named]
   pub fn define_globals(&mut self) {
     self.environment.borrow_mut().define_global(
       &Token::new(TokenType::Identifier, "clock", None, 0),
