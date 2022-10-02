@@ -2,6 +2,7 @@ use std::io::{Error, ErrorKind};
 
 use crate::scripting::language::interpreter::Interpreter;
 use crate::scripting::language::parser::Parser;
+use crate::scripting::language::resolver::Resolver;
 use crate::scripting::language::scanner::Scanner;
 
 use super::*;
@@ -32,9 +33,21 @@ impl<'a> ProcessScriptSystem {
         return;
       },
     }
-    let expressions = parse_response.unwrap();
+    let mut statements = parse_response.unwrap();
     let mut interpreter = Interpreter::new();
-    match interpreter.interpret(expressions, data) {
+    let mut resolver = Resolver::new(&mut interpreter);
+    match resolver.resolve(&mut statements) {
+      Ok(()) => {},
+      Err(error) => {
+        error!("Resolution Error: {:?}", &error);
+        let new_error = Error::new(ErrorKind::Other, format!("Runtime Error: {:?}", error));
+        data.output_event_channel.single_write(OutputEvent {
+          string: format!("{}", new_error.to_string().red()),
+        });
+        return;
+      },
+    }
+    match interpreter.interpret(statements, data) {
       Ok(()) => {},
       Err(error) => {
         error!("Runtime Error: {:?}", &error);

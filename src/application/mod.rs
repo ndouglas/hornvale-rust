@@ -109,6 +109,7 @@ impl<'a> Application<'a> {
 }
 
 #[named]
+#[allow(unused_must_use)]
 pub async fn start_ui<'a>(app: &Arc<Mutex<Application<'a>>>) -> Result<()> {
   // Setup.
   let stdout = stdout();

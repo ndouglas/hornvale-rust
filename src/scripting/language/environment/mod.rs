@@ -22,46 +22,72 @@ impl Environment {
   }
 
   #[named]
-  pub fn assign(&mut self, name: &Token, value: Value) -> Result<(), ScriptError> {
-    let actual_name = &name.lexeme.to_string();
-    if !self.values.contains_key(actual_name) {
-      match self.parent {
-        Some(ref mut parent) => parent.borrow_mut().assign(name, value),
-        None => Err(ScriptError::Error {
-          token: Some(name.clone()),
-          message: format!("Undefined variable '{}'!", name.lexeme),
-        }),
-      }
-    } else {
+  pub fn assign(&mut self, name: &Token, value: &Value) -> Result<(), ScriptError> {
+    if self.values.contains_key(&name.lexeme.to_string()) {
       self.define(name, value);
       Ok(())
+    } else {
+      Err(ScriptError::Error {
+        token: Some(name.clone()),
+        message: format!("Undefined variable '{}'!", name.lexeme),
+      })
     }
   }
 
   #[named]
-  pub fn define(&mut self, name: &Token, value: Value) {
+  pub fn define(&mut self, name: &Token, value: &Value) {
     self.values.insert(name.lexeme.to_string(), value.clone());
-  }
-
-  #[named]
-  pub fn define_global(&mut self, name: &Token, value: Value) {
-    match self.parent {
-      Some(ref mut parent) => parent.borrow_mut().define_global(name, value),
-      None => self.define(name, value),
-    }
   }
 
   #[named]
   pub fn get(&self, name: &Token) -> Result<Value, ScriptError> {
     match self.values.get(&name.lexeme.to_string()) {
       Some(value) => Ok(value.clone()),
-      None => match self.parent {
-        Some(ref parent) => parent.borrow().get(name),
-        None => Err(ScriptError::Error {
-          token: Some(name.clone()),
-          message: format!("Undefined variable '{}'!", name.lexeme),
-        }),
-      },
+      None => Err(ScriptError::Error {
+        token: Some(name.clone()),
+        message: format!("Undefined variable '{}'!", name.lexeme),
+      }),
     }
+  }
+
+  #[named]
+  pub fn get_ancestor(&self, distance: usize) -> Option<Rc<RefCell<Environment>>> {
+    let mut result = match self.parent {
+      Some(ref environment) => environment.clone(),
+      None => return None,
+    };
+    for _ in 1..distance {
+      let found = match result.borrow().parent {
+        Some(ref environment) => environment.clone(),
+        None => return None,
+      };
+      result = found;
+    }
+    Some(result)
+  }
+
+  #[named]
+  pub fn get_at(&self, distance: usize, name: &Token) -> Result<Value, ScriptError> {
+    if distance == 0 {
+      return self.get(name);
+    }
+    let ancestor = self.get_ancestor(distance);
+    match ancestor {
+      Some(environment) => environment.borrow().get(name),
+      None => Err(ScriptError::Error {
+        token: Some(name.clone()),
+        message: format!("Undefined variable '{}'!", name.lexeme),
+      }),
+    }
+  }
+
+  #[named]
+  pub fn assign_at(&mut self, distance: usize, name: &Token, value: &Value) -> Result<(), ScriptError> {
+    let ancestor = self.get_ancestor(distance);
+    match ancestor {
+      Some(environment) => environment.borrow_mut().assign(name, value)?,
+      None => self.assign(name, value)?,
+    };
+    Ok(())
   }
 }

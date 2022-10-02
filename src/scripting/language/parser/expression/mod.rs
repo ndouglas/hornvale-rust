@@ -2,16 +2,19 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use crate::scripting::language::environment::Environment;
+use crate::scripting::language::interpreter::Interpreter;
+use crate::scripting::language::resolver::Resolver;
 use crate::scripting::language::script_error::ScriptError;
 use crate::scripting::language::token::{Token, TokenLiteral, TokenType};
 use crate::scripting::language::value::Value;
 use crate::system::systems::process_script::ProcessScriptSystemData;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Expression {
   Assignment {
     identifier: Token,
     value: Box<Expression>,
+    scope_distance: Option<usize>,
   },
   Binary {
     left: Box<Expression>,
@@ -40,6 +43,7 @@ pub enum Expression {
   },
   Variable {
     identifier: Token,
+    scope_distance: Option<usize>,
   },
 }
 
@@ -48,7 +52,7 @@ impl<'a> Expression {
   pub fn print_ast(&self) -> String {
     use Expression::*;
     match self {
-      Assignment { identifier, value } => self.parenthesize(&identifier.lexeme, &vec![(*value).clone()]),
+      Assignment { identifier, value, .. } => self.parenthesize(&identifier.lexeme, &vec![(*value).clone()]),
       Binary { left, operator, right } => self.parenthesize(&operator.lexeme, &vec![(*left).clone(), (*right).clone()]),
       Call {
         callee: _, arguments, ..
@@ -65,7 +69,7 @@ impl<'a> Expression {
         self.parenthesize(&operator.lexeme, &vec![(*left).clone(), (*right).clone()])
       },
       Unary { operator, right } => self.parenthesize(&operator.lexeme, &vec![(*right).clone()]),
-      Variable { identifier } => identifier.lexeme.to_string(),
+      Variable { identifier, .. } => identifier.lexeme.to_string(),
     }
   }
 
@@ -83,6 +87,7 @@ impl<'a> Expression {
   #[named]
   pub fn evaluate_literal(
     &self,
+    _interpreter: &Interpreter,
     _environment: &Rc<RefCell<Environment>>,
     value_option: &Option<TokenLiteral>,
     _data: &mut ProcessScriptSystemData<'a>,
@@ -99,12 +104,13 @@ impl<'a> Expression {
   #[named]
   pub fn evaluate_unary(
     &self,
+    interpreter: &Interpreter,
     environment: &Rc<RefCell<Environment>>,
     operator: &Token,
     right: &Expression,
     data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, ScriptError> {
-    let right_value = right.evaluate(environment, data);
+    let right_value = right.evaluate(interpreter, environment, data);
     let result = match operator.r#type {
       TokenType::Minus => match right_value {
         Ok(Value::Number(value)) => Ok(Value::Number(-(value as f64))),
@@ -130,6 +136,7 @@ impl<'a> Expression {
   #[named]
   pub fn evaluate_binary_math(
     &self,
+    _interpreter: &Interpreter,
     _environment: &Rc<RefCell<Environment>>,
     operator: &Token,
     x: f64,
@@ -159,6 +166,7 @@ impl<'a> Expression {
   #[named]
   pub fn evaluate_binary_string(
     &self,
+    _interpreter: &Interpreter,
     _environment: &Rc<RefCell<Environment>>,
     operator: &Token,
     x: String,
@@ -185,19 +193,28 @@ impl<'a> Expression {
   #[named]
   pub fn evaluate_binary(
     &self,
+    interpreter: &Interpreter,
     environment: &Rc<RefCell<Environment>>,
     left: &Expression,
     operator: &Token,
     right: &Expression,
     data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, ScriptError> {
-    let left_value = left.evaluate(environment, data);
-    let right_value = right.evaluate(environment, data);
+    let left_value = left.evaluate(interpreter, environment, data);
+    let right_value = right.evaluate(interpreter, environment, data);
     let result = match (left_value, right_value) {
-      (Ok(Value::Number(x)), Ok(Value::Number(y))) => self.evaluate_binary_math(environment, operator, x, y, data),
-      (Ok(Value::String(x)), Ok(Value::String(y))) => self.evaluate_binary_string(environment, operator, x, y, data),
-      (Ok(Value::String(x)), Ok(y)) => self.evaluate_binary_string(environment, operator, x, format!("{}", y), data),
-      (Ok(x), Ok(Value::String(y))) => self.evaluate_binary_string(environment, operator, format!("{}", x), y, data),
+      (Ok(Value::Number(x)), Ok(Value::Number(y))) => {
+        self.evaluate_binary_math(interpreter, environment, operator, x, y, data)
+      },
+      (Ok(Value::String(x)), Ok(Value::String(y))) => {
+        self.evaluate_binary_string(interpreter, environment, operator, x, y, data)
+      },
+      (Ok(Value::String(x)), Ok(y)) => {
+        self.evaluate_binary_string(interpreter, environment, operator, x, format!("{}", y), data)
+      },
+      (Ok(x), Ok(Value::String(y))) => {
+        self.evaluate_binary_string(interpreter, environment, operator, format!("{}", x), y, data)
+      },
       _ => Err(ScriptError::Error {
         token: Some((*operator).clone()),
         message: format!("Bad operands ({:?} and {:?}) for operator {:?}!", left, right, operator),
@@ -210,13 +227,14 @@ impl<'a> Expression {
   #[named]
   pub fn evaluate_logical(
     &self,
+    interpreter: &Interpreter,
     environment: &Rc<RefCell<Environment>>,
     left: &Expression,
     operator: &Token,
     right: &Expression,
     data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, ScriptError> {
-    let left_value = left.evaluate(environment, data)?;
+    let left_value = left.evaluate(interpreter, environment, data)?;
     let result = {
       if operator.r#type == TokenType::Or {
         if left_value.is_truthy() {
@@ -227,7 +245,7 @@ impl<'a> Expression {
           return Ok(left_value);
         }
       }
-      Ok(right.evaluate(environment, data)?)
+      Ok(right.evaluate(interpreter, environment, data)?)
     };
     debug!("{:?} {:?} {:?} => {:?}", left, operator, right, result);
     result
@@ -236,17 +254,18 @@ impl<'a> Expression {
   #[named]
   pub fn evaluate_call(
     &self,
+    interpreter: &Interpreter,
     environment: &Rc<RefCell<Environment>>,
     callee: &Expression,
     arguments: &[Expression],
     closing_parenthesis: &Token,
     data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, ScriptError> {
-    let callee_value = callee.evaluate(environment, data)?;
+    let callee_value = callee.evaluate(interpreter, environment, data)?;
     let result = {
       let mut argument_values = Vec::new();
       for argument in arguments.iter() {
-        argument_values.push(argument.evaluate(environment, data)?);
+        argument_values.push(argument.evaluate(interpreter, environment, data)?);
       }
       if let Value::Callable(callable) = callee_value.clone() {
         if argument_values.len() != callable.arity {
@@ -259,7 +278,7 @@ impl<'a> Expression {
             ),
           });
         }
-        let response = callable.call(data, &argument_values);
+        let response = callable.call(interpreter, data, &argument_values);
         match response {
           Err(ScriptError::Return {
             value: value_option, ..
@@ -284,30 +303,84 @@ impl<'a> Expression {
   #[named]
   pub fn evaluate(
     &self,
+    interpreter: &Interpreter,
     environment: &Rc<RefCell<Environment>>,
     data: &mut ProcessScriptSystemData<'a>,
   ) -> Result<Value, ScriptError> {
     use Expression::*;
-    info!("Abstract Syntax Tree: {}", self.print_ast());
     let result = match self {
-      Assignment { identifier, value } => {
-        let final_value = &value.evaluate(environment, data)?;
-        environment.borrow_mut().assign(identifier, (*final_value).clone())?;
+      Assignment { identifier, value, scope_distance } => {
+        let final_value = &value.evaluate(interpreter, environment, data)?;
+        if let Some(distance) = scope_distance {
+          environment
+            .borrow_mut()
+            .assign_at(*distance, identifier, &final_value)?;
+        } else {
+          interpreter.globals.borrow_mut().assign(identifier, &final_value)?;
+        }
         Ok(Value::Nil)
       },
-      Literal { value: value_option } => self.evaluate_literal(environment, value_option, data),
-      Logical { left, operator, right } => self.evaluate_logical(environment, left, operator, right, data),
-      Grouping { expression } => expression.evaluate(environment, data),
-      Unary { operator, right } => self.evaluate_unary(environment, operator, right, data),
-      Binary { left, operator, right } => self.evaluate_binary(environment, left, operator, right, data),
+      Literal { value: value_option } => self.evaluate_literal(interpreter, environment, value_option, data),
+      Logical { left, operator, right } => self.evaluate_logical(interpreter, environment, left, operator, right, data),
+      Grouping { expression } => expression.evaluate(interpreter, environment, data),
+      Unary { operator, right } => self.evaluate_unary(interpreter, environment, operator, right, data),
+      Binary { left, operator, right } => self.evaluate_binary(interpreter, environment, left, operator, right, data),
       Call {
         callee,
         arguments,
         closing_parenthesis,
-      } => self.evaluate_call(environment, callee, arguments, closing_parenthesis, data),
-      Variable { identifier } => environment.borrow().get(identifier),
+      } => self.evaluate_call(interpreter, environment, callee, arguments, closing_parenthesis, data),
+      Variable { identifier, scope_distance } => {
+        if let Some(distance) = scope_distance {
+          environment.borrow().get_at(*distance, identifier)
+        } else {
+          interpreter.globals.borrow().get(identifier)
+        }
+      },
     };
     debug!("{:?} => {:?}", self, result);
     result
+  }
+
+  #[named]
+  pub fn resolve(&mut self, resolver: &mut Resolver) -> Result<(), ScriptError> {
+    use Expression::*;
+    match self {
+      Assignment { identifier, value, ref mut scope_distance } => {
+        value.resolve(resolver)?;
+        *scope_distance = resolver.resolve_local(identifier);
+        Ok(())
+      },
+      Literal { .. } => Ok(()),
+      Logical { left, right, .. } => {
+        left.resolve(resolver)?;
+        right.resolve(resolver)?;
+        Ok(())
+      },
+      Grouping { expression } => expression.resolve(resolver),
+      Unary { right, .. } => right.resolve(resolver),
+      Binary { left, right, .. } => {
+        left.resolve(resolver)?;
+        right.resolve(resolver)?;
+        Ok(())
+      },
+      Call { callee, arguments, .. } => {
+        callee.resolve(resolver)?;
+        for argument in arguments {
+          argument.resolve(resolver)?;
+        }
+        Ok(())
+      },
+      Variable { identifier, ref mut scope_distance } => {
+        if resolver.scopes.len() > 0 && resolver.is_only_declared(identifier) {
+          return Err(ScriptError::Error {
+            token: Some(identifier.clone()),
+            message: "Can't read local variable in its own initializer!".to_string(),
+          });
+        }
+        *scope_distance = resolver.resolve_local(identifier);
+        Ok(())
+      },
+    }
   }
 }

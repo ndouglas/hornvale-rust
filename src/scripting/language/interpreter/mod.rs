@@ -1,5 +1,4 @@
 use std::cell::RefCell;
-use std::collections::HashMap;
 use std::rc::Rc;
 
 use crate::scripting::language::callable::native_function::NativeFunction;
@@ -13,25 +12,30 @@ use crate::system::systems::process_script::ProcessScriptSystemData;
 
 #[derive(Debug)]
 pub struct Interpreter {
+  pub globals: Rc<RefCell<Environment>>,
   pub environment: Rc<RefCell<Environment>>,
 }
 
 impl Interpreter {
   #[named]
   pub fn new() -> Self {
-    let environment = Rc::new(RefCell::new(Environment::new(None)));
-    Self { environment }
+    let globals = Rc::new(RefCell::new(Environment::new(None)));
+    let environment = Rc::clone(&globals);
+    Self {
+      globals,
+      environment,
+    }
   }
 
   #[named]
   pub fn define_globals(&mut self) {
-    self.environment.borrow_mut().define_global(
+    self.globals.borrow_mut().define(
       &Token::new(TokenType::Identifier, "clock", None, 0),
-      Value::Callable(Callable {
+      &Value::Callable(Callable {
         name: "clock".into(),
         arity: 0,
         kind: CallableKind::NativeFunction(NativeFunction(|_, _, _| Ok(Value::Number(3.0)))),
-        environment: Rc::clone(&self.environment),
+        environment: Rc::clone(&self.globals),
       }),
     );
   }
@@ -44,11 +48,12 @@ impl Interpreter {
   ) -> Result<(), ScriptError> {
     self.define_globals();
     for statement in statements {
-      let evaluation = statement.evaluate(&self.environment, data);
+      let evaluation = statement.evaluate(self, &self.environment, data);
       if let Err(_error) = evaluation {
         return Ok(());
       }
     }
     Ok(())
   }
+
 }

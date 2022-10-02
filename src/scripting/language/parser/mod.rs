@@ -124,9 +124,10 @@ impl Parser {
       let _equals = self.previous();
       let value = self.assignment()?;
       match result {
-        Variable { identifier } => Ok(Assignment {
+        Variable { identifier, .. } => Ok(Assignment {
           identifier,
           value: Box::new(value),
+          scope_distance: None,
         }),
         _ => Err(Error::new(ErrorKind::Other, "Invalid assignment target.")),
       }
@@ -295,6 +296,7 @@ impl Parser {
     if self.r#match(vec![Identifier]) {
       return Ok(Variable {
         identifier: self.previous(),
+        scope_distance: None,
       });
     }
     if self.r#match(vec![LeftParenthesis]) {

@@ -6,6 +6,8 @@ pub mod interpreter;
 pub use interpreter::*;
 pub mod parser;
 pub use parser::*;
+pub mod resolver;
+pub use resolver::*;
 pub mod scanner;
 pub use scanner::*;
 pub mod script_error;
