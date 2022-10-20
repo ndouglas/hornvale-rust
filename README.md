@@ -1,4 +1,4 @@
-## I've archived this because I've shifted my efforts to a total rewrite.  Check out the new hotness [here](https://github.com/ndouglas/hornvale/).
+## _I've archived this because I've shifted my efforts to a total rewrite.  Check out the new hotness [here](https://github.com/ndouglas/hornvale/)._
 
 # Hornvale
 An experimental prose-based roguelike, written in Rust.
